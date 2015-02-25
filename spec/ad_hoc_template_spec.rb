@@ -14,5 +14,12 @@ describe AdHocTemplate do
                                                                                                                                  [[" the second tag "]],
                                                                                                                                  [") in it"]])
     end
+
+    it "allows to have a nested tag" do
+      expect(AdHocTemplate::Parser.parse("a test string with a nested tag; <% an outer tag and <% an inner tag %> %>")).to eq([["a test string with a nested tag; "],
+                                                                                                                                [[" an outer tag and "],
+                                                                                                                                 [[" an inner tag "]],
+                                                                                                                                 [" "]]])
+    end
   end
 end
