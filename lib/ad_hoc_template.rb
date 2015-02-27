@@ -57,10 +57,8 @@ module AdHocTemplate
     end
 
     def self.read_header_part(lines, config)
-      until lines.empty?
-        line = lines.shift.chomp
-        return config if line.empty?
-        key, val = line.split(SEPARATOR, 2)
+      while line = lines.shift and not EMPTY_LINE.match(line)
+        key, val = line.chomp.split(SEPARATOR, 2)
         config[key] = val
       end
     end
