@@ -44,4 +44,58 @@ module AdHocTemplate
       self
     end
   end
+
+  module ConfigReader
+    SEPARATOR = /:\s*/o
+    BLOCK_HEAD = /^\/\/@/o
+    EMPTY_LINE = /^\r?\n/o
+
+    def self.remove_leading_empty_lines(lines)
+      until lines.empty? or /\S/o.match(lines.first)
+        lines.shift
+      end
+    end
+
+    def self.read_header_part(lines, config)
+      until lines.empty?
+        line = lines.shift.chomp
+        return config if line.empty?
+        key, val = line.split(SEPARATOR, 2)
+        config[key] = val
+      end
+    end
+
+    def self.read_block(lines, config, block_head)
+      block = []
+      while line = lines.shift
+        if m = BLOCK_HEAD.match(line)
+          remove_leading_empty_lines(block)
+          block.pop while not block.empty? and EMPTY_LINE.match(block.last)
+          config[block_head] = block.join
+          return m.post_match.chomp
+        end
+
+        block.push(line)
+      end
+      config[block_head] = block.join
+    end
+
+    def self.read_block_part(lines, config, block_head)
+      until lines.empty? or not block_head
+        block_head = read_block(lines, config, block_head)
+      end
+    end
+
+    def self.read_config(input)
+      lines = input.each_line.to_a
+      config = {}
+      read_header_part(lines, config)
+      remove_leading_empty_lines(lines)
+      unless lines.empty?
+        m = BLOCK_HEAD.match(lines.shift)
+        read_block_part(lines, config, m.post_match.chomp)
+      end
+      config
+    end
+  end
 end
