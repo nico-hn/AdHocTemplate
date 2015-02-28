@@ -45,7 +45,7 @@ module AdHocTemplate
     end
   end
 
-  module ConfigReader
+  module ConfigurationReader
     SEPARATOR = /:\s*/o
     BLOCK_HEAD = /^\/\/@/o
     EMPTY_LINE = /^\r?\n/o
@@ -118,7 +118,7 @@ module AdHocTemplate
   class Converter
     def self.convert(config_data, template, formatter=DefaultTagFormatter.new)
       tree = AdHocTemplate::Parser.parse(template)
-      config = AdHocTemplate::ConfigReader.read_config(config_data)
+      config = AdHocTemplate::ConfigurationReader.read_config(config_data)
       AdHocTemplate::Converter.new(config, formatter).format(tree)
     end
 

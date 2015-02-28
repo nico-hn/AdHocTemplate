@@ -23,7 +23,7 @@ describe AdHocTemplate do
     end
   end
 
-  describe AdHocTemplate::ConfigReader do
+  describe AdHocTemplate::ConfigurationReader do
     it "reads configuration data and turns them into a hash object" do
       data = <<CONFIG
 key1: value1
@@ -51,7 +51,7 @@ expected_config = {
         "block1" => "the first line of block1\nthe second line of block1\n\nthe second paragraph in block1\n",
         "block2" => "the first line of block2\nthe second line of block2\n\nthe second paragraph of block2\n"
       }
-      expect(AdHocTemplate::ConfigReader.read_config(data)).to eq(expected_config)
+      expect(AdHocTemplate::ConfigurationReader.read_config(data)).to eq(expected_config)
     end
   end
 
@@ -64,7 +64,7 @@ key2: value2
 CONFIG
 
       tree = AdHocTemplate::Parser.parse(template)
-      config = AdHocTemplate::ConfigReader.read_config(config_data)
+      config = AdHocTemplate::ConfigurationReader.read_config(config_data)
       expect(AdHocTemplate::Converter.new(config).format(tree)).to eq("a test string with tags (value1 and value2) in it")
     end
   end
