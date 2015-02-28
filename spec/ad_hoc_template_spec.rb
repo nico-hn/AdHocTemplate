@@ -54,4 +54,18 @@ expected_config = {
       expect(AdHocTemplate::ConfigReader.read_config(data)).to eq(expected_config)
     end
   end
+
+  describe AdHocTemplate::Converter do
+    it "returns the result of conversion." do
+      template = "a test string with tags (<%= key1 %> and <%= key2 %>) in it"
+      config_data = <<CONFIG
+key1: value1
+key2: value2
+CONFIG
+
+      tree = AdHocTemplate::Parser.parse(template)
+      config = AdHocTemplate::ConfigReader.read_config(config_data)
+      expect(AdHocTemplate::Converter.new(config).format(tree)).to eq("a test string with tags (value1 and value2) in it")
+    end
+  end
 end
