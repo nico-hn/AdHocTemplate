@@ -1,6 +1,10 @@
 # AdHocTemplate
 
-TODO: Write a gem description
+AdHocTemplate is a template processor with simple but sufficent rules for some ad hoc tasks.
+
+I conceived this template as a workaroud for some tasks in a working environment completely left behind the times (maybe 10-15 years or so?), where they don't seem to know what a database is.
+
+And I hope this tool saves you from meaningless tasks when you have to face such a situation.
 
 ## Installation
 
