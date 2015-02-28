@@ -98,7 +98,6 @@ module AdHocTemplate
   end
 
   class DefaultTagFormatter
-
     def find_function(tag_type)
       @@function_table[tag_type]||:default
     end
@@ -117,7 +116,6 @@ module AdHocTemplate
   end
 
   class Converter
-
     def self.convert(config_data, template, formatter=DefaultTagFormatter.new)
       tree = AdHocTemplate::Parser.parse(template)
       config = AdHocTemplate::ConfigReader.read_config(config_data)
