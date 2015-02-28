@@ -96,4 +96,59 @@ module AdHocTemplate
       config
     end
   end
+
+  class DefaultTagFormatter
+
+    def find_function(tag_type)
+      @@function_table[tag_type]||:default
+    end
+
+    def format(tag_type, var, config)
+      self.send(find_function(tag_type), var, config)
+    end
+
+    def default(var, config)
+      config[var]||"[#{var}]"
+    end
+
+    @@function_table = {
+      "=" => :default
+    }
+  end
+
+  class Converter
+
+    def self.convert(config_data, template, formatter=DefaultTagFormatter.new)
+      tree = AdHocTemplate::Parser.parse(template)
+      config = AdHocTemplate::ConfigReader.read_config(config_data)
+      AdHocTemplate::Converter.new(config, formatter).format(tree)
+    end
+
+    def initialize(config, formatter=DefaultTagFormatter.new)
+      @config = config
+      @formatter = formatter
+    end
+
+    def visit(tree)
+      if tree.kind_of? Parser::TagNode
+        format_tag(tree)
+      elsif tree.kind_of? Parser::Leaf
+        tree.join
+      else
+        tree.map {|node| node.accept(self) }
+      end
+    end
+
+    def format_tag(tag_node)
+      leafs = tag_node.map {|leaf| leaf.accept(self) }
+      first_leaf = leafs[0]
+      tag_type, first_leaf_content = first_leaf.split(/\s+/o, 2)
+      leafs[0] = first_leaf_content||""
+      @formatter.format(tag_type, leafs.join.strip, @config)
+    end
+
+    def format(tree)
+      tree.accept(self).join
+    end
+  end
 end
