@@ -6,7 +6,7 @@ I conceived this template as a workaroud for some tasks in a working environment
 
 And I hope this tool saves you from meaningless tasks when you have to face such a situation.
 
-## Installation
+## Installation (not published to RubyGems.org yet)
 
 Add this line to your application's Gemfile:
 
