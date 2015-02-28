@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = AdHocTemplate::VERSION
   spec.authors       = ["HASHIMOTO, Naoki"]
   spec.email         = ["hashimoto.naoki@gmail.com"]
-  spec.description   = %q{TODO: Write a gem description}
-  spec.summary       = %q{TODO: Write a gem summary}
+  spec.description   = %q{AdHocTemplate is a template processor with simple but sufficient rules for some ad hoc tasks.}
+  spec.summary       = %q{A tiny template processor}
   spec.homepage      = ""
   spec.license       = "MIT"
 
