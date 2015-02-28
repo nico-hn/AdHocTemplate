@@ -43,6 +43,21 @@ module AdHocTemplate
       end
       self
     end
+
+    class TagNode
+      attr_reader :type
+
+      def push(node=TreeStack::Node.new)
+        if self.empty?
+          first_leaf = node[0]
+          if first_leaf.kind_of? String and /^\S/o.match(first_leaf)
+            @type, first_leaf_content = first_leaf.split(/\s+/o, 2)
+            node[0] = first_leaf_content||""
+          end
+        end
+        super
+      end
+    end
   end
 
   module ConfigurationReader
@@ -139,10 +154,7 @@ module AdHocTemplate
 
     def format_tag(tag_node)
       leafs = tag_node.map {|leaf| leaf.accept(self) }
-      first_leaf = leafs[0]
-      tag_type, first_leaf_content = first_leaf.split(/\s+/o, 2)
-      leafs[0] = first_leaf_content||""
-      @formatter.format(tag_type, leafs.join.strip, @config)
+      @formatter.format(tag_node.type, leafs.join.strip, @config)
     end
 
     def format(tree)
