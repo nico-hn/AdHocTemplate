@@ -3,8 +3,23 @@ require "pseudohiki/inlineparser"
 
 module AdHocTemplate
   class Parser < TreeStack
-    class TagNode < Parser::Node; end
-    class IterationTagNode < Parser::Node; end
+    class TagNode < Parser::Node
+      attr_reader :type
+
+      def push(node=TreeStack::Node.new)
+        node[0] = assign_type(node[0]) if self.empty?
+        super
+      end
+
+      def assign_type(first_leaf)
+        return first_leaf unless first_leaf.kind_of? String and /^\S/o.match(first_leaf)
+        @type, first_leaf_content = first_leaf.split(/\s+/o, 2)
+        first_leaf_content||""
+      end
+      private :assign_type
+    end
+
+    class IterationTagNode < TagNode; end
     class Leaf < Parser::Leaf; end
 
     HEAD, TAIL = {}, {}
@@ -44,22 +59,6 @@ module AdHocTemplate
         self.push Leaf.create(token)
       end
       self
-    end
-
-    class TagNode
-      attr_reader :type
-
-      def push(node=TreeStack::Node.new)
-        node[0] = assign_type(node[0]) if self.empty?
-        super
-      end
-
-      def assign_type(first_leaf)
-        return first_leaf unless first_leaf.kind_of? String and /^\S/o.match(first_leaf)
-        @type, first_leaf_content = first_leaf.split(/\s+/o, 2)
-        first_leaf_content||""
-      end
-      private :assign_type
     end
   end
 
