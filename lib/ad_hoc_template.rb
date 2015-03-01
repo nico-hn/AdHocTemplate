@@ -138,7 +138,8 @@ module AdHocTemplate
       remove_leading_empty_lines(lines)
       unless lines.empty?
         m = BLOCK_HEAD.match(lines.shift)
-        read_block_part(lines, config, m.post_match.chomp)
+        block_head = read_iteration_block_part(lines, config, m.post_match.chomp)
+        read_block_part(lines, config, block_head) if block_head
       end
       config
     end
