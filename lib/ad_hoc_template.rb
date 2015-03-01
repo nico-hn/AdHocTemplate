@@ -175,7 +175,9 @@ module AdHocTemplate
     end
 
     def visit(tree)
-      if tree.kind_of? Parser::TagNode
+      if tree.class == Parser::IterationTagNode
+        format_iteration_tag(tree)
+      elsif tree.class == Parser::TagNode
         format_tag(tree)
       elsif tree.kind_of? Parser::Leaf
         tree.join
@@ -187,6 +189,15 @@ module AdHocTemplate
     def format_tag(tag_node)
       leafs = tag_node.map {|leaf| leaf.accept(self) }
       @formatter.format(tag_node.type, leafs.join.strip, @config)
+    end
+
+    def format_iteration_tag(tag_node)
+      subconfigs = @config["#"+tag_node.type]
+      tag_node = Parser::TagNode.new.concat(tag_node.clone)
+      subconfigs.map do |config|
+        converter = AdHocTemplate::Converter.new(config, @formatter)
+        tag_node.map {|leaf| leaf.accept(converter) }.join
+      end
     end
 
     def format(tree)
