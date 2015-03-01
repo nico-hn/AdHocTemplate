@@ -6,6 +6,29 @@ describe AdHocTemplate do
     AdHocTemplate::VERSION.should_not be_nil
   end
 
+  describe AdHocTemplate::ConfigurationReader do
+    it "can read several header type configurations at once." do
+      data = <<CONFIGS
+
+key1-1: value1-1
+key1-2: value1-2
+
+key2-1: value2-1
+key2-2: value2-2
+
+key3-1: value3-1
+key3-2: value3-2
+
+CONFIGS
+
+config = {}
+AdHocTemplate::ConfigurationReader.read_configs(data.each_line.to_a, config, "#configs")
+      expect(config).to eq({"#configs"=>[{"key1-1"=>"value1-1", "key1-2"=>"value1-2"},
+                                         {"key2-1"=>"value2-1", "key2-2"=>"value2-2"},
+                                         {"key3-1"=>"value3-1", "key3-2"=>"value3-2"}]})
+    end
+  end
+
   describe AdHocTemplate::Parser do
     it "returns a tree of TagNode and Leaf" do
       expect(AdHocTemplate::Parser.parse("a test string with tags (<% the first tag %> and <% the second tag %>) in it")).to eq([["a test string with tags ("],
