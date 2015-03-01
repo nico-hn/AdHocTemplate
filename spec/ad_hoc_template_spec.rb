@@ -85,6 +85,39 @@ expected_config = {
       }
       expect(AdHocTemplate::ConfigurationReader.read_config(data)).to eq(expected_config)
     end
+
+    it "can read configuration data with 3 different kind of sections" do
+      data = <<CONFIG
+key1: value1
+key2: value2
+key3: value3
+
+//@#subconfigs
+
+key1-1: value1-1
+key1-2: value1-2
+
+key2-1: value2-1
+key2-2: value2-2
+
+//@block
+
+the first line of block
+the second line of block
+
+the second paragraph in block
+
+CONFIG
+
+expected_config = {
+        "key1" => "value1",
+        "key2" => "value2",
+        "key3" => "value3",
+        "#subconfigs" => [{"key1-1"=>"value1-1", "key1-2"=>"value1-2"}, {"key2-1"=>"value2-1", "key2-2"=>"value2-2"}],
+        "block" => "the first line of block\nthe second line of block\n\nthe second paragraph in block\n"
+      }
+      expect(AdHocTemplate::ConfigurationReader.read_config(data)).to eq(expected_config)
+    end
   end
 
   describe AdHocTemplate::Converter do
