@@ -21,6 +21,17 @@ describe AdHocTemplate do
                                                                                                                                  [[" an inner tag "]],
                                                                                                                                  [" "]]])
     end
+
+    it "may have iteration tags." do
+      tree = AdHocTemplate::Parser.parse("a test string with a nested tag: <%# an iteration tag and <% an inner tag %> #%> and <% another tag %>")
+      expect(tree).to eq([["a test string with a nested tag: "],
+                          [[" an iteration tag and "],
+                           [[" an inner tag "]],
+                           [" "]],
+                          [" and "],
+                         [[" another tag "]]])
+      expect(tree[1]).to be_a_kind_of(AdHocTemplate::Parser::IterationTagNode)
+    end
   end
 
   describe AdHocTemplate::ConfigurationReader do
