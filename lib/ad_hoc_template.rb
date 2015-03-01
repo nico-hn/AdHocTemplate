@@ -93,6 +93,8 @@ module AdHocTemplate
 
         block.push(line)
       end
+      remove_leading_empty_lines(block)
+      block.pop while not block.empty? and EMPTY_LINE.match(block.last)
       config[block_head] = block.join
     end
 
