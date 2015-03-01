@@ -102,6 +102,25 @@ module AdHocTemplate
       end
     end
 
+    def self.read_configs(lines, config, block_head)
+      configs = []
+      while line = lines.shift
+        if m = BLOCK_HEAD.match(line)
+          config[block_head] = configs
+          return m.post_match.chomp
+        elsif EMPTY_LINE.match(line)
+          next
+        else
+          sub_config = {}
+          lines.unshift line
+          read_header_part(lines, sub_config)
+          configs.push sub_config
+        end
+      end
+      config[block_head] = configs
+      nil
+    end
+
     def self.read_config(input)
       lines = input.each_line.to_a
       config = {}
