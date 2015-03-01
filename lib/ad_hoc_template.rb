@@ -4,11 +4,13 @@ require "pseudohiki/inlineparser"
 module AdHocTemplate
   class Parser < TreeStack
     class TagNode < Parser::Node; end
+    class IterationTagNode < Parser::Node; end
     class Leaf < Parser::Leaf; end
 
     HEAD, TAIL = {}, {}
 
-    [[TagNode, "<%", "%>"]].each do |type, head, tail|
+    [[TagNode, "<%", "%>"],
+     [IterationTagNode, "<%#", "#%>"]].each do |type, head, tail|
       HEAD[head] = type
       TAIL[tail] = type
     end
