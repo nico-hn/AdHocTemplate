@@ -67,6 +67,7 @@ module AdHocTemplate
     SEPARATOR = /:\s*/o
     BLOCK_HEAD = /^\/\/@/o
     EMPTY_LINE = /^\r?\n/o
+    ITERATION_MARK = /^#/o
 
     def self.remove_leading_empty_lines(lines)
       until lines.empty? or /\S/o.match(lines.first)
@@ -121,6 +122,13 @@ module AdHocTemplate
       end
       config[block_head] = configs
       nil
+    end
+
+    def self.read_iteration_block_part(lines, config, block_head)
+      while not lines.empty? and block_head and ITERATION_MARK.match(block_head)
+        block_head = read_iteration_block(lines, config, block_head)
+      end
+      block_head
     end
 
     def self.read_config(input)
