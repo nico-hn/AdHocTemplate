@@ -102,7 +102,7 @@ module AdHocTemplate
       end
     end
 
-    def self.read_configs(lines, config, block_head)
+    def self.read_iteration_block(lines, config, block_head)
       configs = []
       while line = lines.shift
         if m = BLOCK_HEAD.match(line)
