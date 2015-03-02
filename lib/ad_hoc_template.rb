@@ -74,7 +74,7 @@ module AdHocTemplate
       end
     end
 
-    def self.read_header_part(lines, config)
+    def self.read_key_value_list(lines, config)
       while line = lines.shift and not EMPTY_LINE.match(line)
         key, val = line.chomp.split(SEPARATOR, 2)
         config[key] = val
@@ -115,7 +115,7 @@ module AdHocTemplate
         else
           sub_config = {}
           lines.unshift line
-          read_header_part(lines, sub_config)
+          read_key_value_list(lines, sub_config)
           configs.push sub_config
         end
       end
@@ -133,7 +133,7 @@ module AdHocTemplate
     def self.read_config(input)
       lines = input.each_line.to_a
       config = {}
-      read_header_part(lines, config)
+      read_key_value_list(lines, config)
       remove_leading_empty_lines(lines)
       unless lines.empty?
         m = BLOCK_HEAD.match(lines.shift)
