@@ -1,5 +1,6 @@
 require "ad_hoc_template/version"
 require "pseudohiki/inlineparser"
+require "htmlelement"
 
 module AdHocTemplate
   class Parser < TreeStack
@@ -169,8 +170,13 @@ module AdHocTemplate
       config[var]||"[#{var}]"
     end
 
+    def html_encode(var ,config)
+      HtmlElement.escape(config[var]||var)
+    end
+
     FUNCTION_TABLE = {
-      "=" => :default
+      "=" => :default,
+      "h" => :html_encode
     }
   end
 
