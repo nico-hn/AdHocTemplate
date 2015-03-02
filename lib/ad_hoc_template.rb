@@ -147,7 +147,7 @@ module AdHocTemplate
 
   class DefaultTagFormatter
     def find_function(tag_type)
-      @@function_table[tag_type]||:default
+      FUNCTION_TABLE[tag_type]||:default
     end
 
     def format(tag_type, var, config)
@@ -158,7 +158,7 @@ module AdHocTemplate
       config[var]||"[#{var}]"
     end
 
-    @@function_table = {
+    FUNCTION_TABLE = {
       "=" => :default
     }
   end
