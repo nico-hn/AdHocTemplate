@@ -74,6 +74,11 @@ module AdHocTemplate
       end
     end
 
+    def self.strip_blank_lines(block)
+      remove_leading_empty_lines(block)
+      block.pop while not block.empty? and EMPTY_LINE.match(block.last)
+    end
+
     def self.read_key_value_list(lines, config)
       while line = lines.shift and not EMPTY_LINE.match(line)
         key, val = line.chomp.split(SEPARATOR, 2)
@@ -85,16 +90,14 @@ module AdHocTemplate
       block = []
       while line = lines.shift
         if m = BLOCK_HEAD.match(line)
-          remove_leading_empty_lines(block)
-          block.pop while not block.empty? and EMPTY_LINE.match(block.last)
+          strip_blank_lines(block)
           config[block_head] = block.join
           return m.post_match.chomp
         end
 
         block.push(line)
       end
-      remove_leading_empty_lines(block)
-      block.pop while not block.empty? and EMPTY_LINE.match(block.last)
+      strip_blank_lines(block)
       config[block_head] = block.join
     end
 
