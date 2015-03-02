@@ -117,10 +117,8 @@ module AdHocTemplate
         elsif EMPTY_LINE.match(line)
           next
         else
-          sub_config = {}
           lines.unshift line
-          read_key_value_list(lines, sub_config)
-          configs.push sub_config
+          configs.push read_key_value_list(lines, {})
         end
       end
       config[block_head] = configs
@@ -136,8 +134,7 @@ module AdHocTemplate
 
     def self.read_config(input)
       lines = input.each_line.to_a
-      config = {}
-      read_key_value_list(lines, config)
+      config = read_key_value_list(lines, {})
       remove_leading_empty_lines(lines)
       unless lines.empty?
         m = BLOCK_HEAD.match(lines.shift)
