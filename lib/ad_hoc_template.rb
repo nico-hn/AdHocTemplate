@@ -68,9 +68,9 @@ module AdHocTemplate
 
   module ConfigurationReader
     SEPARATOR = /:\s*/o
-    BLOCK_HEAD = /^\/\/@/o
-    EMPTY_LINE = /^\r?\n/o
-    ITERATION_MARK = /^#/o
+    BLOCK_HEAD = /\A\/\/@/o
+    EMPTY_LINE = /\A\r?\n\Z/o
+    ITERATION_MARK = /\A#/o
 
     def self.remove_leading_empty_lines(lines)
       until lines.empty? or /\S/o.match(lines.first)
