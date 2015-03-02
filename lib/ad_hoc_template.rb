@@ -84,6 +84,7 @@ module AdHocTemplate
         key, val = line.chomp.split(SEPARATOR, 2)
         config[key] = val
       end
+      config
     end
 
     def self.read_block(lines, config, block_head)
