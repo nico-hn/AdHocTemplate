@@ -178,11 +178,12 @@ module AdHocTemplate
     end
 
     def visit(tree)
-      if tree.class == Parser::IterationTagNode
+      case tree
+      when Parser::IterationTagNode
         format_iteration_tag(tree)
-      elsif tree.class == Parser::TagNode
+      when Parser::TagNode
         format_tag(tree)
-      elsif tree.kind_of? Parser::Leaf
+      when Parser::Leaf
         tree.join
       else
         tree.map {|node| node.accept(self) }
