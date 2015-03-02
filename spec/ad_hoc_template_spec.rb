@@ -132,5 +132,60 @@ CONFIG
       config = AdHocTemplate::ConfigurationReader.read_config(config_data)
       expect(AdHocTemplate::Converter.new(config).format(tree)).to eq("a test string with tags (value1 and value2) in it")
     end
+
+    it "accepts a template with an iteration block and evaluate repeatedly the block" do
+      template = <<TEMPLATE
+a test string with tags (<%= key1 %> and <%= key2 %>) in it
+
+<%#iteration_block
+the value of sub_key1 is <%= sub_key1 %>
+the value of sub_key2 is <%= sub_key2 %>
+
+#%>
+<%= block %>
+TEMPLATE
+
+      config_data = <<CONFIG
+key1: value1
+key2: value2
+key3: value3
+
+//@#iteration_block
+
+sub_key1: value1-1
+sub_key2: value1-2
+
+sub_key1: value2-1
+sub_key2: value2-2
+
+//@block
+
+the first line of block
+the second line of block
+
+the second paragraph in block
+
+CONFIG
+
+expected_result = <<RESULT
+a test string with tags (value1 and value2) in it
+
+the value of sub_key1 is value1-1
+the value of sub_key2 is value1-2
+
+the value of sub_key1 is value2-1
+the value of sub_key2 is value2-2
+
+
+the first line of block
+the second line of block
+
+the second paragraph in block
+
+RESULT
+      tree = AdHocTemplate::Parser.parse(template)
+      config = AdHocTemplate::ConfigurationReader.read_config(config_data)
+      expect(AdHocTemplate::Converter.new(config).format(tree)).to eq(expected_result)
+    end
   end
 end
