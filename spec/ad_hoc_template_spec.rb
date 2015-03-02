@@ -187,5 +187,11 @@ RESULT
       config = AdHocTemplate::ConfigurationReader.read_config(config_data)
       expect(AdHocTemplate::Converter.new(config).format(tree)).to eq(expected_result)
     end
+
+    it 'can convert &"<> into character entities' do
+      result = AdHocTemplate::Converter.convert('characters: &, ", < and >',
+                                       'a string with characters (<%h characters %>) that should be represented as character entities.')
+      expect(result).to eq('a string with characters (&amp;, &quot;, &lt; and &gt;) that should be represented as character entities.')
+    end
   end
 end
