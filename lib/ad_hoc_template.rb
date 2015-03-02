@@ -34,11 +34,13 @@ module AdHocTemplate
 
     def self.split_into_tokens(str)
       tokens = []
+
       while m = TOKEN_PAT.match(str)
         tokens.push m.pre_match unless m.pre_match.empty?
         tokens.push m[0]
         str = m.post_match
       end
+
       tokens.push str unless str.empty?
       tokens
     end
@@ -58,6 +60,7 @@ module AdHocTemplate
         next if HEAD[token] and self.push HEAD[token].new
         self.push Leaf.create(token)
       end
+
       self
     end
   end
@@ -84,11 +87,13 @@ module AdHocTemplate
         key, val = line.chomp.split(SEPARATOR, 2)
         config[key] = val
       end
+
       config
     end
 
     def self.read_block(lines, config, block_head)
       block = []
+
       while line = lines.shift
         if m = BLOCK_HEAD.match(line)
           strip_blank_lines(block)
@@ -98,6 +103,7 @@ module AdHocTemplate
 
         block.push(line)
       end
+
       strip_blank_lines(block)
       config[block_head] = block.join
     end
@@ -110,6 +116,7 @@ module AdHocTemplate
 
     def self.read_iteration_block(lines, config, block_head)
       configs = []
+
       while line = lines.shift
         if m = BLOCK_HEAD.match(line)
           config[block_head] = configs
@@ -121,6 +128,7 @@ module AdHocTemplate
           configs.push read_key_value_list(lines, {})
         end
       end
+
       config[block_head] = configs
       nil
     end
@@ -129,6 +137,7 @@ module AdHocTemplate
       while not lines.empty? and block_head and ITERATION_MARK.match(block_head)
         block_head = read_iteration_block(lines, config, block_head)
       end
+
       block_head
     end
 
@@ -136,11 +145,13 @@ module AdHocTemplate
       lines = input.each_line.to_a
       config = read_key_value_list(lines, {})
       remove_leading_empty_lines(lines)
+
       unless lines.empty?
         m = BLOCK_HEAD.match(lines.shift)
         block_head = read_iteration_block_part(lines, config, m.post_match.chomp)
         read_block_part(lines, config, block_head) if block_head
       end
+
       config
     end
   end
@@ -188,18 +199,19 @@ module AdHocTemplate
       end
     end
 
-    def format_tag(tag_node)
-      leafs = tag_node.map {|leaf| leaf.accept(self) }
-      @formatter.format(tag_node.type, leafs.join.strip, @config)
-    end
-
     def format_iteration_tag(tag_node)
       subconfigs = @config["#"+tag_node.type]
       tag_node = Parser::TagNode.new.concat(tag_node.clone)
+
       subconfigs.map do |config|
         converter = AdHocTemplate::Converter.new(config, @formatter)
         tag_node.map {|leaf| leaf.accept(converter) }.join
       end
+    end
+
+    def format_tag(tag_node)
+      leafs = tag_node.map {|leaf| leaf.accept(self) }
+      @formatter.format(tag_node.type, leafs.join.strip, @config)
     end
 
     def format(tree)
