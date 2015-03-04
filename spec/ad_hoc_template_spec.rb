@@ -83,7 +83,7 @@ expected_config = {
         "block1" => "the first line of block1\nthe second line of block1\n\nthe second paragraph in block1\n",
         "block2" => "the first line of block2\nthe second line of block2\n\nthe second paragraph of block2\n"
       }
-      expect(AdHocTemplate::RecordReader.read_config(data)).to eq(expected_config)
+      expect(AdHocTemplate::RecordReader.read_record(data)).to eq(expected_config)
     end
 
     it "can read configuration data with 3 different kind of sections" do
@@ -116,7 +116,7 @@ expected_config = {
         "#subconfigs" => [{"key1-1"=>"value1-1", "key1-2"=>"value1-2"}, {"key2-1"=>"value2-1", "key2-2"=>"value2-2"}],
         "block" => "the first line of block\nthe second line of block\n\nthe second paragraph in block\n"
       }
-      expect(AdHocTemplate::RecordReader.read_config(data)).to eq(expected_config)
+      expect(AdHocTemplate::RecordReader.read_record(data)).to eq(expected_config)
     end
   end
 
@@ -129,7 +129,7 @@ key2: value2
 CONFIG
 
       tree = AdHocTemplate::Parser.parse(template)
-      config = AdHocTemplate::RecordReader.read_config(config_data)
+      config = AdHocTemplate::RecordReader.read_record(config_data)
       expect(AdHocTemplate::Converter.new(config).format(tree)).to eq("a test string with tags (value1 and value2) in it")
     end
 
@@ -184,7 +184,7 @@ the second paragraph in block
 
 RESULT
       tree = AdHocTemplate::Parser.parse(template)
-      config = AdHocTemplate::RecordReader.read_config(config_data)
+      config = AdHocTemplate::RecordReader.read_record(config_data)
       expect(AdHocTemplate::Converter.new(config).format(tree)).to eq(expected_result)
     end
 

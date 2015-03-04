@@ -142,7 +142,7 @@ module AdHocTemplate
       block_head
     end
 
-    def self.read_config(input)
+    def self.read_record(input)
       lines = input.each_line.to_a
       record = read_key_value_list(lines, {})
       remove_leading_empty_lines(lines)
@@ -183,7 +183,7 @@ module AdHocTemplate
   class Converter
     def self.convert(record_data, template, formatter=DefaultTagFormatter.new)
       tree = AdHocTemplate::Parser.parse(template)
-      record = AdHocTemplate::RecordReader.read_config(record_data)
+      record = AdHocTemplate::RecordReader.read_record(record_data)
       AdHocTemplate::Converter.new(record, formatter).format(tree)
     end
 
