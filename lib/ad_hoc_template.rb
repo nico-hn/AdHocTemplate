@@ -83,22 +83,22 @@ module AdHocTemplate
       block.pop while not block.empty? and EMPTY_LINE.match(block.last)
     end
 
-    def self.read_key_value_list(lines, config)
+    def self.read_key_value_list(lines, record)
       while line = lines.shift and not EMPTY_LINE.match(line)
         key, val = line.chomp.split(SEPARATOR, 2)
-        config[key] = val
+        record[key] = val
       end
 
-      config
+      record
     end
 
-    def self.read_block(lines, config, block_head)
+    def self.read_block(lines, record, block_head)
       block = []
 
       while line = lines.shift
         if m = BLOCK_HEAD.match(line)
           strip_blank_lines(block)
-          config[block_head] = block.join
+          record[block_head] = block.join
           return m.post_match.chomp
         end
 
@@ -106,37 +106,37 @@ module AdHocTemplate
       end
 
       strip_blank_lines(block)
-      config[block_head] = block.join
+      record[block_head] = block.join
     end
 
-    def self.read_block_part(lines, config, block_head)
+    def self.read_block_part(lines, record, block_head)
       until lines.empty? or not block_head
-        block_head = read_block(lines, config, block_head)
+        block_head = read_block(lines, record, block_head)
       end
     end
 
-    def self.read_iteration_block(lines, config, block_head)
-      configs = []
+    def self.read_iteration_block(lines, record, block_head)
+      records = []
 
       while line = lines.shift
         if m = BLOCK_HEAD.match(line)
-          config[block_head] = configs
+          record[block_head] = records
           return m.post_match.chomp
         elsif EMPTY_LINE.match(line)
           next
         else
           lines.unshift line
-          configs.push read_key_value_list(lines, {})
+          records.push read_key_value_list(lines, {})
         end
       end
 
-      config[block_head] = configs
+      record[block_head] = records
       nil
     end
 
-    def self.read_iteration_block_part(lines, config, block_head)
+    def self.read_iteration_block_part(lines, record, block_head)
       while not lines.empty? and block_head and ITERATION_MARK.match(block_head)
-        block_head = read_iteration_block(lines, config, block_head)
+        block_head = read_iteration_block(lines, record, block_head)
       end
 
       block_head
@@ -144,16 +144,16 @@ module AdHocTemplate
 
     def self.read_config(input)
       lines = input.each_line.to_a
-      config = read_key_value_list(lines, {})
+      record = read_key_value_list(lines, {})
       remove_leading_empty_lines(lines)
 
       unless lines.empty?
         m = BLOCK_HEAD.match(lines.shift)
-        block_head = read_iteration_block_part(lines, config, m.post_match.chomp)
-        read_block_part(lines, config, block_head) if block_head
+        block_head = read_iteration_block_part(lines, record, m.post_match.chomp)
+        read_block_part(lines, record, block_head) if block_head
       end
 
-      config
+      record
     end
   end
 
@@ -162,16 +162,16 @@ module AdHocTemplate
       FUNCTION_TABLE[tag_type]||:default
     end
 
-    def format(tag_type, var, config)
-      self.send(find_function(tag_type), var, config)
+    def format(tag_type, var, record)
+      self.send(find_function(tag_type), var, record)
     end
 
-    def default(var, config)
-      config[var]||"[#{var}]"
+    def default(var, record)
+      record[var]||"[#{var}]"
     end
 
-    def html_encode(var ,config)
-      HtmlElement.escape(config[var]||var)
+    def html_encode(var ,record)
+      HtmlElement.escape(record[var]||var)
     end
 
     FUNCTION_TABLE = {
@@ -181,14 +181,14 @@ module AdHocTemplate
   end
 
   class Converter
-    def self.convert(config_data, template, formatter=DefaultTagFormatter.new)
+    def self.convert(record_data, template, formatter=DefaultTagFormatter.new)
       tree = AdHocTemplate::Parser.parse(template)
-      config = AdHocTemplate::RecordReader.read_config(config_data)
-      AdHocTemplate::Converter.new(config, formatter).format(tree)
+      record = AdHocTemplate::RecordReader.read_config(record_data)
+      AdHocTemplate::Converter.new(record, formatter).format(tree)
     end
 
-    def initialize(config, formatter=DefaultTagFormatter.new)
-      @config = config
+    def initialize(record, formatter=DefaultTagFormatter.new)
+      @record = record
       @formatter = formatter
     end
 
@@ -206,18 +206,18 @@ module AdHocTemplate
     end
 
     def format_iteration_tag(tag_node)
-      subconfigs = @config["#"+tag_node.type]
+      sub_records = @record["#"+tag_node.type]
       tag_node = Parser::TagNode.new.concat(tag_node.clone)
 
-      subconfigs.map do |config|
-        converter = AdHocTemplate::Converter.new(config, @formatter)
+      sub_records.map do |record|
+        converter = AdHocTemplate::Converter.new(record, @formatter)
         tag_node.map {|leaf| leaf.accept(converter) }.join
       end
     end
 
     def format_tag(tag_node)
       leafs = tag_node.map {|leaf| leaf.accept(self) }
-      @formatter.format(tag_node.type, leafs.join.strip, @config)
+      @formatter.format(tag_node.type, leafs.join.strip, @record)
     end
 
     def format(tree)
