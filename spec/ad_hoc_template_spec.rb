@@ -3,7 +3,7 @@ require 'ad_hoc_template'
 
 describe AdHocTemplate do
   it 'should have a version number' do
-    AdHocTemplate::VERSION.should_not be_nil
+    expect(AdHocTemplate::VERSION).to_not be_nil
   end
 
   describe AdHocTemplate::Parser do
