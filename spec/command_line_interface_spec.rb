@@ -35,5 +35,14 @@ describe AdHocTemplate do
       expect(command_line_interface.class::Encoding.default_external.names).to include("UTF-8")
       expect(command_line_interface.class::Encoding.default_internal.names).to include("Shift_JIS")
     end
+
+    it "can specify the output file from command line" do
+      pwd = File.expand_path(".")
+      output_filename = "file_for_saving_result.txt"
+      command_line_interface = AdHocTemplate::CommandLineInterface.new
+      set_argv("-o #{output_filename}")
+      command_line_interface.parse_command_line_options
+      expect(command_line_interface.output_filename).to eq(File.join(pwd, output_filename))
+    end
   end
 end
