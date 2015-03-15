@@ -44,5 +44,22 @@ describe AdHocTemplate do
       command_line_interface.parse_command_line_options
       expect(command_line_interface.output_filename).to eq(File.join(pwd, output_filename))
     end
+
+    it "reads input data from command line" do
+      template_filename = "template.txt"
+      record_filename = "record.txt"
+      template = "a dummy content of template file"
+      record = "a dummy content of record file"
+
+      allow(File).to receive(:read).with(File.expand_path(template_filename)).and_return(template)
+      allow(File).to receive(:read).with(File.expand_path(record_filename)).and_return(record)
+
+      set_argv("#{template_filename} #{record_filename}")
+      command_line_interface = AdHocTemplate::CommandLineInterface.new
+      command_line_interface.read_input_files
+
+      expect(command_line_interface.template_data).to eq(template)
+      expect(command_line_interface.record_data).to eq(record)
+    end
   end
 end
