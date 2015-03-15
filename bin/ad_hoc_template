@@ -1,3 +1,6 @@
 #!/usr/bin/env ruby
 
 require 'ad_hoc_template'
+require 'ad_hoc_template/command_line_interface'
+
+AdHocTemplate::CommandLineInterface.new.execute
