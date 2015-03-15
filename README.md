@@ -22,7 +22,68 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+The following is an example of template format:
+
+```
+a test string with tags (<%= key1 %> and <%= key2 %>) in it
+
+<%#iteration_block
+the value of sub_key1 is <%= sub_key1 %>
+the value of sub_key2 is <%= sub_key2 %>
+
+#%>
+<%= block %>
+```
+
+And suppose you want to fill the template with sample data below:
+
+```
+key1: value1
+key2: value2
+key3: value3
+
+//@#iteration_block
+
+sub_key1: value1-1
+sub_key2: value1-2
+
+sub_key1: value2-1
+sub_key2: value2-2
+
+//@block
+
+the first line of block
+the second line of block
+
+the second paragraph in block
+
+```
+
+1. Save the template and sample data above as 'template.txt' and 'sample\_data.txt' respectively.
+2. Execute the following at the command line:
+
+```
+ad_hoc_template template.txt sample_data.txt
+```
+
+Then you will get the following result:
+
+```
+a test string with tags (value1 and value2) in it
+
+the value of sub_key1 is value1-1
+the value of sub_key2 is value1-2
+
+the value of sub_key1 is value2-1
+the value of sub_key2 is value2-2
+
+
+the first line of block
+the second line of block
+
+the second paragraph in block
+
+```
 
 ## Contributing
 
