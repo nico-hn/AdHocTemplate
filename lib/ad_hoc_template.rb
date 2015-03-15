@@ -18,6 +18,14 @@ module AdHocTemplate
         first_leaf_content||""
       end
       private :assign_type
+
+      def contains_any_value_assigned_tag_node?(record)
+        self.select {|n| n.kind_of?(TagNode) }.each do |node|
+          val = record[node.join.strip]
+          return true if val and not val.empty?
+        end
+        false
+      end
     end
 
     class IterationTagNode < TagNode; end
@@ -210,8 +218,12 @@ module AdHocTemplate
       tag_node = Parser::TagNode.new.concat(tag_node.clone)
 
       sub_records.map do |record|
-        converter = AdHocTemplate::Converter.new(record, @formatter)
-        tag_node.map {|leaf| leaf.accept(converter) }.join
+        if tag_node.contains_any_value_assigned_tag_node?(record)
+          converter = AdHocTemplate::Converter.new(record, @formatter)
+          tag_node.map {|leaf| leaf.accept(converter) }.join
+        else
+          "".freeze
+        end
       end
     end
 
