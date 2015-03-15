@@ -197,6 +197,10 @@ the value of key1 is <%= key1 %>
 the value of key2 is <%= key2 %>
 
 #%>
+<%#
+the value of key2 is <%= non-existent-key %>
+the value of key2 is <%= key-without-value %>
+#%>
 <%= block %>
 TEMPLATE
 
@@ -204,6 +208,7 @@ TEMPLATE
 key1: value1
 key2: value2
 key3: value3
+key-without-value: 
 
 //@block
 
@@ -219,6 +224,7 @@ a test string with tags (value1 and value2) in it
 
 the value of key1 is value1
 the value of key2 is value2
+
 
 
 the first line of block
