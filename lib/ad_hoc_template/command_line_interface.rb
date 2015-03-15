@@ -8,6 +8,7 @@ module AdHocTemplate
     attr_accessor :output_filename, :template_data, :record_data
 
     def initialize
+      @formatter = AdHocTemplate::DefaultTagFormatter.new
       @output_filename = nil
     end
 
@@ -42,6 +43,28 @@ module AdHocTemplate
       end
 
       @record_data = record ? File.read(record) : ARGF.read
+    end
+
+    def convert
+      AdHocTemplate::Converter.convert(@record_data, @template_data, @formatter)
+    end
+
+    def open_output
+      if @output_filename
+        open(@output_filename, "wb") do |out|
+          yield out
+        end
+      else
+        yield STDOUT
+      end
+    end
+
+    def execute
+      parse_command_line_options
+      read_input_files
+      open_output do |out|
+        out.print convert
+      end
     end
   end
 end
