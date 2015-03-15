@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["hashimoto.naoki@gmail.com"]
   spec.description   = %q{AdHocTemplate is a template processor with simple but sufficient rules for some ad hoc tasks.}
   spec.summary       = %q{A tiny template processor}
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/nico-hn/AdHocTemplate"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
@@ -20,6 +20,6 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "pseudohikiparser", "0.0.2"
 
   spec.add_development_dependency "bundler", "~> 1.3"
-  spec.add_development_dependency "rake"
-  spec.add_development_dependency "rspec"
+  spec.add_development_dependency "rake", "~> 10.1"
+  spec.add_development_dependency "rspec", "~> 3.2"
 end
