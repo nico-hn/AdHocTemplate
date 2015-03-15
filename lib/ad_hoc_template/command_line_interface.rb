@@ -5,7 +5,7 @@ require 'optparse'
 
 module AdHocTemplate
   class CommandLineInterface
-    attr_accessor :output_filename
+    attr_accessor :output_filename, :template_data, :record_data
 
     def initialize
       @output_filename = nil
@@ -31,6 +31,17 @@ module AdHocTemplate
 
        opt.parse!
       end
+    end
+
+    def read_input_files
+      template, record = ARGV.map {|arg| File.expand_path(arg) if arg }
+      if template
+        @template_data = File.read(template)
+      else
+        STDERR.puts "No template file is given."
+      end
+
+      @record_data = record ? File.read(record) : ARGF.read
     end
   end
 end
