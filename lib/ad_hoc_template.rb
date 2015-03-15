@@ -206,7 +206,7 @@ module AdHocTemplate
     end
 
     def format_iteration_tag(tag_node)
-      sub_records = @record["#"+tag_node.type]
+      sub_records = @record["#"+tag_node.type]||[@record]
       tag_node = Parser::TagNode.new.concat(tag_node.clone)
 
       sub_records.map do |record|
