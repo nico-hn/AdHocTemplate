@@ -201,6 +201,7 @@ the value of key2 is <%= key2 %>
 the value of key2 is <%= non-existent-key %>
 the value of key2 is <%= key-without-value %>
 #%>
+<%# the value of key2 is <%= non-existent-key %> #%>
 <%= block %>
 TEMPLATE
 
