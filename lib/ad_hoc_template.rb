@@ -15,6 +15,7 @@ module AdHocTemplate
       def assign_type(first_leaf)
         return first_leaf unless first_leaf.kind_of? String and /^\S/o.match(first_leaf)
         @type, first_leaf_content = first_leaf.split(/\s+/o, 2)
+        @type = '#'.freeze + @type if kind_of? IterationTagNode
         first_leaf_content||""
       end
       private :assign_type
@@ -214,7 +215,7 @@ module AdHocTemplate
     end
 
     def format_iteration_tag(tag_node)
-      sub_records = @record["#"+(tag_node.type||"".freeze)]||[@record]
+      sub_records = @record[tag_node.type]||[@record]
       tag_node = Parser::TagNode.new.concat(tag_node.clone)
 
       sub_records.map do |record|
