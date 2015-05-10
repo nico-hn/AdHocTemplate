@@ -42,25 +42,12 @@ module AdHocTemplate
 
     TOKEN_PAT = PseudoHiki.compile_token_pat(HEAD.keys, TAIL.keys)
 
-    def self.split_into_tokens(str)
-      tokens = []
-
-      while m = TOKEN_PAT.match(str)
-        tokens.push m.pre_match unless m.pre_match.empty?
-        tokens.push m[0]
-        str = m.post_match
-      end
-
-      tokens.push str unless str.empty?
-      tokens
-    end
-
     def self.parse(str)
       new(str).parse.tree
     end
 
     def initialize(str)
-      @tokens = Parser.split_into_tokens(str)
+      @tokens = PseudoHiki.split_into_tokens(str, TOKEN_PAT)
       super()
     end
 
