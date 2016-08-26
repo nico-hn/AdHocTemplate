@@ -241,6 +241,10 @@ expected_config = {
       }
       expect(AdHocTemplate::RecordReader::Reader.read_record(data)).to eq(expected_config)
     end
+
+    it "can accept an empty string as its input" do
+      expect(AdHocTemplate::RecordReader::Reader.read_record('')).to eq({})
+    end
   end
 
   describe AdHocTemplate::Converter do
