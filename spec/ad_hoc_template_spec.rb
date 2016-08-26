@@ -120,6 +120,22 @@ expected_config = {
     end
   end
 
+  describe AdHocTemplate::RecordReader::Reader do
+    it "can read key-value pairs" do
+      data = <<CONFIG
+
+key1: value1
+key2: value2
+key3: value3
+
+
+CONFIG
+
+      lines = data.each_line.to_a
+      expect(AdHocTemplate::RecordReader::Reader.read_record(lines)).to eq({ "key1" => "value1", "key2" => "value2", "key3" => "value3", })
+    end
+  end
+
   describe AdHocTemplate::Converter do
     it "returns the result of conversion." do
       template = "a test string with tags (<%= key1 %> and <%= key2 %>) in it"

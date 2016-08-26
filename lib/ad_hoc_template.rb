@@ -65,8 +65,81 @@ module AdHocTemplate
   module RecordReader
     SEPARATOR = /:\s*/o
     BLOCK_HEAD = /\A\/\/@/o
+    ITERATION_HEAD = /\A\/\/@#/o
     EMPTY_LINE = /\A\r?\n\Z/o
     ITERATION_MARK = /\A#/o
+
+    class Reader
+      def self.read_record(lines)
+        readers = {}
+        stack = []
+        {
+          base: BaseReader,
+          key_value: KeyValueReader
+        }.each do |k, v|
+          readers[k] = v.new(stack, readers)
+        end
+
+        stack.push readers[:base]
+
+        config = {}
+
+        lines.each do |line|
+          stack[-1].setup_stack(line, config)
+          stack[-1].read(line, config)
+        end
+
+        config
+      end
+
+      def initialize(stack, readers)
+        @stack = stack
+        @readers = readers
+      end
+
+      def pop_stack
+        @stack.pop unless @stack.length == 1
+      end
+    end
+
+
+    class BaseReader < Reader
+      def setup_stack(line, config)
+        case line
+        when EMPTY_LINE
+        when ITERATION_HEAD
+          @stack.push @readers[:iteration]
+        when BLOCK_HEAD
+          @stack.push @readers[:block]
+        when SEPARATOR
+          @stack.push @readers[:key_value]
+        end
+      end
+
+      def read(line, config)
+      end
+    end
+
+    class KeyValueReader < Reader
+      def setup_stack(line, config)
+        case line
+        when EMPTY_LINE
+          pop_stack
+        when ITERATION_HEAD
+          pop_stack
+          @stack.push @readers[:iteration]
+        when BLOCK_HEAD
+          pop_stack
+          @stack.push @readers[:block]
+        when SEPARATOR
+        end
+      end
+
+      def read(line, config)
+        key, value = line.split(SEPARATOR, 2)
+        config[key] = value.chomp
+      end
+    end
 
     def self.remove_leading_empty_lines(lines)
       until lines.empty? or /\S/o.match(lines.first)
