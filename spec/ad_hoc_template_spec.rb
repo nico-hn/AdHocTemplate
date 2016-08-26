@@ -134,6 +134,38 @@ CONFIG
       lines = data.each_line.to_a
       expect(AdHocTemplate::RecordReader::Reader.read_record(lines)).to eq({ "key1" => "value1", "key2" => "value2", "key3" => "value3", })
     end
+
+    it "reads configuration data and turns them into a hash object" do
+      data = <<CONFIG
+key1: value1
+key2: value2
+key3: value3
+
+//@block1
+
+the first line of block1
+the second line of block1
+
+the second paragraph in block1
+
+//@block2
+the first line of block2
+the second line of block2
+
+the second paragraph of block2
+CONFIG
+
+expected_config = {
+        "key1" => "value1",
+        "key2" => "value2",
+        "key3" => "value3",
+        "block1" => "the first line of block1\nthe second line of block1\n\nthe second paragraph in block1\n",
+        "block2" => "the first line of block2\nthe second line of block2\n\nthe second paragraph of block2\n"
+      }
+
+      lines = data.each_line.to_a
+      expect(AdHocTemplate::RecordReader::Reader.read_record(lines)).to eq(expected_config)
+    end
   end
 
   describe AdHocTemplate::Converter do

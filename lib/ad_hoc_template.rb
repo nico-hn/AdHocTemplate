@@ -70,6 +70,7 @@ module AdHocTemplate
     ITERATION_MARK = /\A#/o
 
     class ReaderState
+      attr_accessor :current_block_label
       def initialize(config={}, stack=[])
         @stack = stack
         @configs = [config]
@@ -105,7 +106,8 @@ module AdHocTemplate
         readers = {}
         {
           base: BaseReader,
-          key_value: KeyValueReader
+          key_value: KeyValueReader,
+          block: BlockReader,
         }.each do |k, v|
           readers[k] = v.new(stack, readers)
         end
@@ -172,6 +174,46 @@ module AdHocTemplate
       def read(line)
         key, value = line.split(SEPARATOR, 2)
         @stack.current_record[key] = value.chomp
+      end
+    end
+
+    class BlockReader < Reader
+      def setup_stack(line)
+        case line
+        when EMPTY_LINE
+        when ITERATION_HEAD
+          remove_trailing_newlines
+          pop_stack
+          @stack.push @readers[:iteration]
+        when BLOCK_HEAD
+          remove_trailing_newlines
+          pop_stack
+          @stack.push @readers[:block]
+        when SEPARATOR
+        end
+      end
+
+      def read(line)
+        label = @stack.current_block_label
+        case line
+        when BLOCK_HEAD
+          label = line.sub(BLOCK_HEAD, "").chomp
+          @stack.current_record[label] ||= String.new
+          @stack.current_block_label = label
+        when EMPTY_LINE
+          unless @stack.current_record[label].empty?
+            @stack.current_record[label] << line
+          end
+        else
+          @stack.current_record[label] << line
+        end
+      end
+
+      private
+
+      def remove_trailing_newlines
+        label = @stack.current_block_label
+        @stack.current_record[label].sub!(/(#{$/})+\Z/, $/)
       end
     end
 
