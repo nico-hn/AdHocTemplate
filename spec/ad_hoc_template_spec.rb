@@ -32,6 +32,14 @@ describe AdHocTemplate do
                          [[" another tag "]]])
       expect(tree[1]).to be_a_kind_of(AdHocTemplate::Parser::IterationTagNode)
     end
+
+    it "may contain lines that consist only of an iteration tag" do
+      tree = AdHocTemplate::Parser.parse("<%#iterations
+content
+#%>
+")
+      expect(tree).to eq([[["content\n"]]])
+    end
   end
 
   describe AdHocTemplate::RecordReader do
@@ -237,7 +245,6 @@ the value of sub_key2 is value1-2
 the value of sub_key1 is value2-1
 the value of sub_key2 is value2-2
 
-
 the first line of block
 the second line of block
 
@@ -286,9 +293,6 @@ a test string with tags (value1 and value2) in it
 
 the value of key1 is value1
 the value of key2 is value2
-
-
-
 
 the first line of block
 the second line of block
