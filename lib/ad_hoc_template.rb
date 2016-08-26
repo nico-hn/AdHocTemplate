@@ -176,7 +176,6 @@ module AdHocTemplate
     class BaseReader < Reader
       def setup_stack(line)
         case line
-        when EMPTY_LINE
         when ITERATION_HEAD
           @stack.push @readers[:iteration]
         when BLOCK_HEAD
@@ -201,7 +200,6 @@ module AdHocTemplate
         when BLOCK_HEAD
           pop_stack
           @stack.push @readers[:block]
-        when SEPARATOR
         end
       end
 
@@ -214,7 +212,6 @@ module AdHocTemplate
     class BlockReader < Reader
       def setup_stack(line)
         case line
-        when EMPTY_LINE
         when ITERATION_HEAD
           remove_trailing_newlines
           pop_stack
@@ -223,7 +220,6 @@ module AdHocTemplate
           remove_trailing_newlines
           pop_stack
           @stack.push @readers[:block]
-        when SEPARATOR
         end
       end
 
@@ -253,7 +249,6 @@ module AdHocTemplate
     class IterationReader < Reader
       def setup_stack(line)
         case line
-        when EMPTY_LINE
         when ITERATION_HEAD
           @stack.pop_current_record
         when BLOCK_HEAD
