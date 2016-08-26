@@ -135,6 +135,8 @@ module AdHocTemplate
 
         setup_reader(stack)
 
+        lines = lines.each_line.to_a if lines.kind_of? String
+
         lines.each do |line|
           stack.setup_stack(line)
           stack.read(line)
