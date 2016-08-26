@@ -81,6 +81,7 @@ module AdHocTemplate
       def initialize(config={}, stack=[])
         @stack = stack
         @configs = [config]
+        setup_reader
       end
 
       def push(reader)
@@ -120,6 +121,27 @@ module AdHocTemplate
       def parsed_record
         @configs[0]
       end
+
+      def read_record(lines)
+        lines = lines.each_line.to_a if lines.kind_of? String
+        lines.each do |line|
+          setup_stack(line)
+          read(line)
+        end
+
+        if current_reader.kind_of? BlockReader
+          label = current_block_label
+          current_record[label].sub!(/(#{$/})+\Z/, $/)
+        end
+
+        parsed_record
+      end
+
+      private
+
+      def setup_reader
+        Reader.setup_reader(self)
+      end
     end
 
     class Reader
@@ -138,23 +160,7 @@ module AdHocTemplate
       end
 
       def self.read_record(lines)
-        stack = ReaderState.new
-
-        setup_reader(stack)
-
-        lines = lines.each_line.to_a if lines.kind_of? String
-
-        lines.each do |line|
-          stack.setup_stack(line)
-          stack.read(line)
-        end
-
-        if stack.current_reader.kind_of? BlockReader
-          label = stack.current_block_label
-          stack.current_record[label].sub!(/(#{$/})+\Z/, $/)
-        end
-
-        stack.parsed_record
+        ReaderState.new.read_record(lines)
       end
 
       def initialize(stack, readers)
