@@ -68,6 +68,12 @@ module AdHocTemplate
     ITERATION_HEAD = /\A\/\/@#/o
     EMPTY_LINE = /\A\r?\n\Z/o
     ITERATION_MARK = /\A#/o
+    READERS_RE = {
+      key_value: SEPARATOR,
+      iteration: ITERATION_HEAD,
+      block: BLOCK_HEAD,
+      empty_line: EMPTY_LINE,
+    }
 
     class ReaderState
       attr_accessor :current_block_label
@@ -170,19 +176,18 @@ module AdHocTemplate
         label = @stack.current_block_label
         @stack.current_record[label]
       end
+
+      def push_reader_if_match(line, readers)
+        readers.each do |reader|
+          return @stack.push(@readers[reader]) if READERS_RE[reader] === line
+        end
+      end
     end
 
 
     class BaseReader < Reader
       def setup_stack(line)
-        case line
-        when ITERATION_HEAD
-          @stack.push @readers[:iteration]
-        when BLOCK_HEAD
-          @stack.push @readers[:block]
-        when SEPARATOR
-          @stack.push @readers[:key_value]
-        end
+        push_reader_if_match(line, [:iteration, :block, :key_value])
       end
 
       def read(line)
