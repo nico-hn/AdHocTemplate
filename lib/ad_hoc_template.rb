@@ -71,6 +71,7 @@ module AdHocTemplate
 
     class ReaderState
       attr_accessor :current_block_label
+
       def initialize(config={}, stack=[])
         @stack = stack
         @configs = [config]
