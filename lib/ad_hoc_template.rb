@@ -182,6 +182,12 @@ module AdHocTemplate
           return @stack.push(@readers[reader]) if READERS_RE[reader] === line
         end
       end
+
+      def setup_new_block(line, initial_value)
+        label = line.sub(BLOCK_HEAD, "").chomp
+        @stack.current_record[label] ||= initial_value
+        @stack.current_block_label = label
+      end
     end
 
 
@@ -223,9 +229,7 @@ module AdHocTemplate
         label = @stack.current_block_label
         case line
         when BLOCK_HEAD
-          label = line.sub(BLOCK_HEAD, "").chomp
-          @stack.current_record[label] ||= String.new
-          @stack.current_block_label = label
+          setup_new_block(line, String.new)
         when EMPTY_LINE
           unless @stack.current_record[label].empty?
             @stack.current_record[label] << line
@@ -261,10 +265,7 @@ module AdHocTemplate
       def read(line)
         case line
         when ITERATION_HEAD
-          label = line.sub(BLOCK_HEAD, "").chomp
-          sub_records = []
-          @stack.current_record[label] ||= sub_records
-          @stack.current_block_label = label
+          setup_new_block(line, [])
           @stack.push_new_record
         end
       end
