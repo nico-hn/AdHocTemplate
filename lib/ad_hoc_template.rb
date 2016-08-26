@@ -164,10 +164,6 @@ module AdHocTemplate
         readers
       end
 
-      def self.read_record(lines)
-        ReaderState.new.read_record(lines)
-      end
-
       def initialize(stack, readers)
         @stack = stack
         @readers = readers
@@ -266,7 +262,7 @@ module AdHocTemplate
     end
 
     def self.read_record(input)
-      Reader.read_record(input)
+      ReaderState.new.read_record(input)
     end
   end
 
