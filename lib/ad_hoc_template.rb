@@ -88,6 +88,10 @@ module AdHocTemplate
         @stack[-1].setup_stack(line)
       end
 
+      def current_reader
+        @stack[-1]
+      end
+
       def read(line)
         @stack[-1].read(line)
       end
@@ -140,6 +144,11 @@ module AdHocTemplate
         lines.each do |line|
           stack.setup_stack(line)
           stack.read(line)
+        end
+
+        if stack.current_reader.kind_of? BlockReader
+          label = stack.current_block_label
+          stack.current_record[label].sub!(/(#{$/})+\Z/, $/)
         end
 
         stack.parsed_record
@@ -240,6 +249,7 @@ module AdHocTemplate
         when EMPTY_LINE
         when ITERATION_HEAD
         when BLOCK_HEAD
+          @stack.pop_current_record
           pop_stack
           @stack.push @readers[:block]
         when SEPARATOR
