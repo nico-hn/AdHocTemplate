@@ -40,6 +40,11 @@ content
 ")
       expect(tree).to eq([[["content\n"]]])
     end
+
+    it "must return an empty array when template is an empty string" do
+      tree = AdHocTemplate::Parser.parse("")
+      expect(tree).to eq([])
+    end
   end
 
   describe AdHocTemplate::RecordReader do
