@@ -182,15 +182,6 @@ module AdHocTemplate
           return @stack.push(@readers[reader]) if READERS_RE[reader] === line
         end
       end
-
-      def if_match(line, readers)
-        readers.each do |reader|
-          if READERS_RE[reader] === line
-            yield
-            return
-          end
-        end
-      end
     end
 
 
@@ -205,7 +196,14 @@ module AdHocTemplate
 
     class KeyValueReader < Reader
       def setup_stack(line)
-        if_match(line, [:empty_line, :iteration, :block]) { pop_stack }
+        case line
+        when EMPTY_LINE
+          pop_stack
+        when ITERATION_HEAD
+          pop_stack
+        when BLOCK_HEAD
+          pop_stack
+        end
         push_reader_if_match(line, [:iteration, :block])
       end
 
@@ -217,7 +215,11 @@ module AdHocTemplate
 
     class BlockReader < Reader
       def setup_stack(line)
-        if_match(line, [:iteration, :block]) do
+        case line
+        when ITERATION_HEAD
+          remove_trailing_newlines
+          pop_stack
+        when BLOCK_HEAD
           remove_trailing_newlines
           pop_stack
         end
@@ -249,10 +251,11 @@ module AdHocTemplate
 
     class IterationReader < Reader
       def setup_stack(line)
-        if_match(line, [:iteration, :block]) { @stack.pop_current_record }
         case line
         when ITERATION_HEAD
+          @stack.pop_current_record
         when BLOCK_HEAD
+          @stack.pop_current_record
           pop_stack
           @stack.push @readers[:block]
         when SEPARATOR
