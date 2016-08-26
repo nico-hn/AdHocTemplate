@@ -132,6 +132,10 @@ module AdHocTemplate
         parsed_record
       end
 
+      def last_block_value
+        current_record[current_block_label]
+      end
+
       def remove_trailing_empty_lines_from_current_block
         if current_reader.kind_of? BlockReader
           current_record[current_block_label].sub!(/(#{$/})+\Z/, $/)
@@ -177,11 +181,6 @@ module AdHocTemplate
       end
 
       private
-
-      def last_block_value
-        label = @stack.current_block_label
-        @stack.current_record[label]
-      end
 
       def push_reader_if_match(line, readers)
         readers.each do |reader|
@@ -229,7 +228,7 @@ module AdHocTemplate
       end
 
       def read(line)
-        block_value = last_block_value
+        block_value = @stack.last_block_value
         case line
         when BLOCK_HEAD
           setup_new_block(line, String.new)
@@ -252,7 +251,7 @@ module AdHocTemplate
           @stack.push @readers[:block]
         when SEPARATOR
           @stack.pop_current_record
-          last_block_value.push @stack.push_new_record
+          @stack.last_block_value.push @stack.push_new_record
           @stack.push @readers[:key_value]
         end
       end
