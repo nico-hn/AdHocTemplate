@@ -273,88 +273,8 @@ module AdHocTemplate
       end
     end
 
-    def self.remove_leading_empty_lines(lines)
-      until lines.empty? or /\S/o.match(lines.first)
-        lines.shift
-      end
-    end
-
-    def self.strip_blank_lines(block)
-      remove_leading_empty_lines(block)
-      block.pop while not block.empty? and EMPTY_LINE.match(block.last)
-    end
-
-    def self.read_key_value_list(lines, record)
-      while line = lines.shift and not EMPTY_LINE.match(line)
-        key, val = line.chomp.split(SEPARATOR, 2)
-        record[key] = val
-      end
-
-      record
-    end
-
-    def self.read_block(lines, record, block_head)
-      block = []
-
-      while line = lines.shift
-        if m = BLOCK_HEAD.match(line)
-          strip_blank_lines(block)
-          record[block_head] = block.join
-          return m.post_match.chomp
-        end
-
-        block.push(line)
-      end
-
-      strip_blank_lines(block)
-      record[block_head] = block.join
-    end
-
-    def self.read_block_part(lines, record, block_head)
-      until lines.empty? or not block_head
-        block_head = read_block(lines, record, block_head)
-      end
-    end
-
-    def self.read_iteration_block(lines, record, block_head)
-      records = []
-
-      while line = lines.shift
-        if m = BLOCK_HEAD.match(line)
-          record[block_head] = records
-          return m.post_match.chomp
-        elsif EMPTY_LINE.match(line)
-          next
-        else
-          lines.unshift line
-          records.push read_key_value_list(lines, {})
-        end
-      end
-
-      record[block_head] = records
-      nil
-    end
-
-    def self.read_iteration_block_part(lines, record, block_head)
-      while not lines.empty? and block_head and ITERATION_MARK.match(block_head)
-        block_head = read_iteration_block(lines, record, block_head)
-      end
-
-      block_head
-    end
-
     def self.read_record(input)
-      lines = input.each_line.to_a
-      record = read_key_value_list(lines, {})
-      remove_leading_empty_lines(lines)
-
-      unless lines.empty?
-        m = BLOCK_HEAD.match(lines.shift)
-        block_head = read_iteration_block_part(lines, record, m.post_match.chomp)
-        read_block_part(lines, record, block_head) if block_head
-      end
-
-      record
+      Reader.read_record(input)
     end
   end
 

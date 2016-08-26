@@ -35,27 +35,6 @@ describe AdHocTemplate do
   end
 
   describe AdHocTemplate::RecordReader do
-    it "can read several header type configurations at once." do
-      data = <<CONFIGS
-
-key1-1: value1-1
-key1-2: value1-2
-
-key2-1: value2-1
-key2-2: value2-2
-
-key3-1: value3-1
-key3-2: value3-2
-
-CONFIGS
-
-config = {}
-AdHocTemplate::RecordReader.read_iteration_block(data.each_line.to_a, config, "#configs")
-      expect(config).to eq({"#configs"=>[{"key1-1"=>"value1-1", "key1-2"=>"value1-2"},
-                                         {"key2-1"=>"value2-1", "key2-2"=>"value2-2"},
-                                         {"key3-1"=>"value3-1", "key3-2"=>"value3-2"}]})
-    end
-
     it "reads configuration data and turns them into a hash object" do
       data = <<CONFIG
 key1: value1
