@@ -69,6 +69,32 @@ module AdHocTemplate
     EMPTY_LINE = /\A\r?\n\Z/o
     ITERATION_MARK = /\A#/o
 
+    class ReaderState
+      def initialize(stack=[])
+        @stack = stack
+      end
+
+      def push(reader)
+        @stack.push reader
+      end
+
+      def pop
+        @stack.pop unless @stack.length == 1
+      end
+
+      def setup_stack(line, config)
+        @stack[-1].setup_stack(line, config)
+      end
+
+      def read(line, config)
+        @stack[-1].read(line, config)
+      end
+
+      def length
+        @stack.length
+      end
+    end
+
     class Reader
       def self.setup_reader(stack)
         readers = {}
@@ -83,15 +109,15 @@ module AdHocTemplate
       end
 
       def self.read_record(lines)
-        stack = []
+        stack = ReaderState.new
 
         setup_reader(stack)
 
         config = {}
 
         lines.each do |line|
-          stack[-1].setup_stack(line, config)
-          stack[-1].read(line, config)
+          stack.setup_stack(line, config)
+          stack.read(line, config)
         end
 
         config
@@ -103,7 +129,7 @@ module AdHocTemplate
       end
 
       def pop_stack
-        @stack.pop unless @stack.length == 1
+        @stack.pop
       end
     end
 
