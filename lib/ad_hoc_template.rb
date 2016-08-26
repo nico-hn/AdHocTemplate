@@ -70,17 +70,22 @@ module AdHocTemplate
     ITERATION_MARK = /\A#/o
 
     class Reader
-      def self.read_record(lines)
+      def self.setup_reader(stack)
         readers = {}
-        stack = []
         {
           base: BaseReader,
           key_value: KeyValueReader
         }.each do |k, v|
           readers[k] = v.new(stack, readers)
         end
-
         stack.push readers[:base]
+        readers
+      end
+
+      def self.read_record(lines)
+        stack = []
+
+        setup_reader(stack)
 
         config = {}
 
