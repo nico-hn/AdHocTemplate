@@ -128,13 +128,14 @@ module AdHocTemplate
           setup_stack(line)
           read(line)
         end
-
-        if current_reader.kind_of? BlockReader
-          label = current_block_label
-          current_record[label].sub!(/(#{$/})+\Z/, $/)
-        end
-
+        remove_trailing_empty_lines_from_current_block
         parsed_record
+      end
+
+      def remove_trailing_empty_lines_from_current_block
+        if current_reader.kind_of? BlockReader
+          current_record[current_block_label].sub!(/(#{$/})+\Z/, $/)
+        end
       end
 
       private
