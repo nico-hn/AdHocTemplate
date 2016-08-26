@@ -166,6 +166,31 @@ expected_config = {
       lines = data.each_line.to_a
       expect(AdHocTemplate::RecordReader::Reader.read_record(lines)).to eq(expected_config)
     end
+
+    it "can read several header type configurations at once." do
+      data = <<CONFIGS
+//@#configs
+
+key1-1: value1-1
+key1-2: value1-2
+
+key2-1: value2-1
+key2-2: value2-2
+
+key3-1: value3-1
+key3-2: value3-2
+
+CONFIGS
+
+      expected_config = {
+        "#configs" => [
+          {"key1-1" => "value1-1", "key1-2" => "value1-2"},
+          {"key2-1" => "value2-1", "key2-2" => "value2-2"},
+          {"key3-1" => "value3-1", "key3-2" => "value3-2"}
+        ]}
+      lines = data.each_line.to_a
+      expect(AdHocTemplate::RecordReader::Reader.read_record(lines)).to eq(expected_config)
+    end
   end
 
   describe AdHocTemplate::Converter do

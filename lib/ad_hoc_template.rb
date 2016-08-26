@@ -96,8 +96,22 @@ module AdHocTemplate
         @stack.length
       end
 
+      def push_new_record
+        new_record = {}
+        @configs.push new_record
+        new_record
+      end
+
+      def pop_current_record
+        @configs.pop
+      end
+
       def current_record
         @configs[-1]
+      end
+
+      def parsed_record
+        @configs[0]
       end
     end
 
@@ -108,6 +122,7 @@ module AdHocTemplate
           base: BaseReader,
           key_value: KeyValueReader,
           block: BlockReader,
+          iteration: IterationReader,
         }.each do |k, v|
           readers[k] = v.new(stack, readers)
         end
@@ -125,7 +140,7 @@ module AdHocTemplate
           stack.read(line)
         end
 
-        stack.current_record
+        stack.parsed_record
       end
 
       def initialize(stack, readers)
@@ -214,6 +229,34 @@ module AdHocTemplate
       def remove_trailing_newlines
         label = @stack.current_block_label
         @stack.current_record[label].sub!(/(#{$/})+\Z/, $/)
+      end
+    end
+
+    class IterationReader < Reader
+      def setup_stack(line)
+        case line
+        when EMPTY_LINE
+        when ITERATION_HEAD
+        when BLOCK_HEAD
+          pop_stack
+          @stack.push @readers[:block]
+        when SEPARATOR
+          @stack.pop_current_record
+          label = @stack.current_block_label
+          @stack.current_record[label].push @stack.push_new_record
+          @stack.push @readers[:key_value]
+        end
+      end
+
+      def read(line)
+        case line
+        when ITERATION_HEAD
+          label = line.sub(BLOCK_HEAD, "").chomp
+          sub_records = []
+          @stack.current_record[label] ||= sub_records
+          @stack.current_block_label = label
+          @stack.push_new_record
+        end
       end
     end
 
