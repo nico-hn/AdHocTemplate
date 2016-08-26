@@ -222,7 +222,7 @@ module AdHocTemplate
       def setup_stack(line)
         case line
         when ITERATION_HEAD, BLOCK_HEAD
-          remove_trailing_newlines
+          @stack.remove_trailing_empty_lines_from_current_block
           pop_stack
         end
         push_reader_if_match(line, [:iteration, :block])
@@ -238,12 +238,6 @@ module AdHocTemplate
         else
           block_value << line
         end
-      end
-
-      private
-
-      def remove_trailing_newlines
-        last_block_value.sub!(/(#{$/})+\Z/, $/)
       end
     end
 
