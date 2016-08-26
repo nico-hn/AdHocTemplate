@@ -70,8 +70,9 @@ module AdHocTemplate
     ITERATION_MARK = /\A#/o
 
     class ReaderState
-      def initialize(stack=[])
+      def initialize(config={}, stack=[])
         @stack = stack
+        @configs = [config]
       end
 
       def push(reader)
@@ -82,16 +83,20 @@ module AdHocTemplate
         @stack.pop unless @stack.length == 1
       end
 
-      def setup_stack(line, config)
-        @stack[-1].setup_stack(line, config)
+      def setup_stack(line)
+        @stack[-1].setup_stack(line)
       end
 
-      def read(line, config)
-        @stack[-1].read(line, config)
+      def read(line)
+        @stack[-1].read(line)
       end
 
       def length
         @stack.length
+      end
+
+      def current_record
+        @configs[-1]
       end
     end
 
@@ -113,14 +118,12 @@ module AdHocTemplate
 
         setup_reader(stack)
 
-        config = {}
-
         lines.each do |line|
-          stack.setup_stack(line, config)
-          stack.read(line, config)
+          stack.setup_stack(line)
+          stack.read(line)
         end
 
-        config
+        stack.current_record
       end
 
       def initialize(stack, readers)
@@ -135,7 +138,7 @@ module AdHocTemplate
 
 
     class BaseReader < Reader
-      def setup_stack(line, config)
+      def setup_stack(line)
         case line
         when EMPTY_LINE
         when ITERATION_HEAD
@@ -147,12 +150,12 @@ module AdHocTemplate
         end
       end
 
-      def read(line, config)
+      def read(line)
       end
     end
 
     class KeyValueReader < Reader
-      def setup_stack(line, config)
+      def setup_stack(line)
         case line
         when EMPTY_LINE
           pop_stack
@@ -166,9 +169,9 @@ module AdHocTemplate
         end
       end
 
-      def read(line, config)
+      def read(line)
         key, value = line.split(SEPARATOR, 2)
-        config[key] = value.chomp
+        @stack.current_record[key] = value.chomp
       end
     end
 
