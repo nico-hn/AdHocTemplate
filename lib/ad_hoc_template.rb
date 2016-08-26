@@ -162,6 +162,13 @@ module AdHocTemplate
       def pop_stack
         @stack.pop
       end
+
+      private
+
+      def last_block_value
+        label = @stack.current_block_label
+        @stack.current_record[label]
+      end
     end
 
 
@@ -238,8 +245,7 @@ module AdHocTemplate
       private
 
       def remove_trailing_newlines
-        label = @stack.current_block_label
-        @stack.current_record[label].sub!(/(#{$/})+\Z/, $/)
+        last_block_value.sub!(/(#{$/})+\Z/, $/)
       end
     end
 
@@ -255,8 +261,7 @@ module AdHocTemplate
           @stack.push @readers[:block]
         when SEPARATOR
           @stack.pop_current_record
-          label = @stack.current_block_label
-          @stack.current_record[label].push @stack.push_new_record
+          last_block_value.push @stack.push_new_record
           @stack.push @readers[:key_value]
         end
       end
