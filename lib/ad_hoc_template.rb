@@ -103,10 +103,6 @@ module AdHocTemplate
         @stack[-1].read(line)
       end
 
-      def length
-        @stack.length
-      end
-
       def push_new_record
         new_record = {}
         @configs.push new_record
