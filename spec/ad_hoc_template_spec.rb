@@ -189,6 +189,47 @@ CONFIGS
       expect(AdHocTemplate::RecordReader::Reader.read_record(data)).to eq(expected_config)
     end
 
+    it "can read sets of several header type configurations at once." do
+      data = <<CONFIGS
+//@#configs
+
+key1-1: value1-1
+key1-2: value1-2
+
+key2-1: value2-1
+key2-2: value2-2
+
+key3-1: value3-1
+key3-2: value3-2
+
+//@#configs2
+
+key1-1: value1-1
+key1-2: value1-2
+
+key2-1: value2-1
+key2-2: value2-2
+
+key3-1: value3-1
+key3-2: value3-2
+
+CONFIGS
+
+      expected_config = {
+        "#configs" => [
+          {"key1-1" => "value1-1", "key1-2" => "value1-2"},
+          {"key2-1" => "value2-1", "key2-2" => "value2-2"},
+          {"key3-1" => "value3-1", "key3-2" => "value3-2"}
+        ],
+        "#configs2" => [
+          {"key1-1" => "value1-1", "key1-2" => "value1-2"},
+          {"key2-1" => "value2-1", "key2-2" => "value2-2"},
+          {"key3-1" => "value3-1", "key3-2" => "value3-2"}
+        ]
+      }
+      expect(AdHocTemplate::RecordReader::Reader.read_record(data)).to eq(expected_config)
+    end
+
     it "can read configuration data with 3 different kind of sections" do
       data = <<CONFIG
 key1: value1

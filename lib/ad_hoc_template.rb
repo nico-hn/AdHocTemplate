@@ -248,6 +248,7 @@ module AdHocTemplate
         case line
         when EMPTY_LINE
         when ITERATION_HEAD
+          @stack.pop_current_record
         when BLOCK_HEAD
           @stack.pop_current_record
           pop_stack
