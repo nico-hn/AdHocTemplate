@@ -197,11 +197,7 @@ module AdHocTemplate
     class KeyValueReader < Reader
       def setup_stack(line)
         case line
-        when EMPTY_LINE
-          pop_stack
-        when ITERATION_HEAD
-          pop_stack
-        when BLOCK_HEAD
+        when EMPTY_LINE, ITERATION_HEAD, BLOCK_HEAD
           pop_stack
         end
         push_reader_if_match(line, [:iteration, :block])
@@ -216,10 +212,7 @@ module AdHocTemplate
     class BlockReader < Reader
       def setup_stack(line)
         case line
-        when ITERATION_HEAD
-          remove_trailing_newlines
-          pop_stack
-        when BLOCK_HEAD
+        when ITERATION_HEAD, BLOCK_HEAD
           remove_trailing_newlines
           pop_stack
         end
