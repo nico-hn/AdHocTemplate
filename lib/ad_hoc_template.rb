@@ -138,7 +138,7 @@ module AdHocTemplate
 
       def remove_trailing_empty_lines_from_current_block
         if current_reader.kind_of? BlockReader
-          current_record[current_block_label].sub!(/(#{$/})+\Z/, $/)
+          last_block_value.sub!(/(#{$/})+\Z/, $/)
         end
       end
 
