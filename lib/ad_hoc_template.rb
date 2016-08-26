@@ -128,7 +128,7 @@ module AdHocTemplate
           setup_stack(line)
           read(line)
         end
-        remove_trailing_empty_lines_from_current_block
+        remove_trailing_empty_lines_from_last_block!
         parsed_record
       end
 
@@ -136,7 +136,7 @@ module AdHocTemplate
         current_record[current_block_label]
       end
 
-      def remove_trailing_empty_lines_from_current_block
+      def remove_trailing_empty_lines_from_last_block!
         if current_reader.kind_of? BlockReader
           last_block_value.sub!(/(#{$/})+\Z/, $/)
         end
@@ -221,7 +221,7 @@ module AdHocTemplate
       def setup_stack(line)
         case line
         when ITERATION_HEAD, BLOCK_HEAD
-          @stack.remove_trailing_empty_lines_from_current_block
+          @stack.remove_trailing_empty_lines_from_last_block!
           pop_stack
         end
         push_reader_if_match(line, [:iteration, :block])
