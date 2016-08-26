@@ -226,16 +226,14 @@ module AdHocTemplate
       end
 
       def read(line)
-        label = @stack.current_block_label
+        block_value = last_block_value
         case line
         when BLOCK_HEAD
           setup_new_block(line, String.new)
         when EMPTY_LINE
-          unless @stack.current_record[label].empty?
-            @stack.current_record[label] << line
-          end
+          block_value << line unless block_value.empty?
         else
-          @stack.current_record[label] << line
+          block_value << line
         end
       end
 
