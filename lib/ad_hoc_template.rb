@@ -201,11 +201,10 @@ module AdHocTemplate
           pop_stack
         when ITERATION_HEAD
           pop_stack
-          @stack.push @readers[:iteration]
         when BLOCK_HEAD
           pop_stack
-          @stack.push @readers[:block]
         end
+        push_reader_if_match(line, [:iteration, :block])
       end
 
       def read(line)
@@ -220,12 +219,11 @@ module AdHocTemplate
         when ITERATION_HEAD
           remove_trailing_newlines
           pop_stack
-          @stack.push @readers[:iteration]
         when BLOCK_HEAD
           remove_trailing_newlines
           pop_stack
-          @stack.push @readers[:block]
         end
+        push_reader_if_match(line, [:iteration, :block])
       end
 
       def read(line)
