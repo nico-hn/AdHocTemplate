@@ -33,6 +33,38 @@ module AdHocTemplate
     class IterationTagNode < TagNode; end
     class Leaf < Parser::Leaf; end
 
+    class TagType
+      attr_reader :head, :tail, :token_pat
+      @types = {}
+
+      def self.[](tag_name)
+        @types[tag_name]
+      end
+
+      def self.register(tag_name=:default, tag=["<%", "%>"], iteration_tag=["<%#", "#%>"])
+        @types[tag_name] = new(tag, iteration_tag)
+      end
+
+      def initialize(tag, iteration_tag)
+        assign_type(tag, iteration_tag)
+        @token_pat = PseudoHiki.compile_token_pat(@head.keys, @tail.keys)
+      end
+
+      def assign_type(tag, iteration_tag)
+        @head, @tail = {}, {}
+        [
+          [TagNode, tag],
+          [IterationTagNode, iteration_tag]
+        ].each do |node_type, head_tail|
+          head, tail = head_tail
+          @head[head] = node_type
+          @tail[tail] = node_type
+        end
+      end
+
+      register
+    end
+
     HEAD, TAIL = {}, {}
 
     [[TagNode, "<%", "%>"],
@@ -43,20 +75,21 @@ module AdHocTemplate
 
     TOKEN_PAT = PseudoHiki.compile_token_pat(HEAD.keys, TAIL.keys)
 
-    def self.parse(str)
-      new(str).parse.tree
+    def self.parse(str, tag_name=:default)
+      new(str, TagType[tag_name]).parse.tree
     end
 
-    def initialize(str)
+    def initialize(str, tag)
+      @tag = tag
       str = remove_trailing_newline_of_iteration_tag_node_end_tag(str)
-      @tokens = PseudoHiki.split_into_tokens(str, TOKEN_PAT)
+      @tokens = PseudoHiki.split_into_tokens(str, @tag.token_pat)
       super()
     end
 
     def parse
       while token = @tokens.shift
-        next if TAIL[token] == current_node.class and self.pop
-        next if HEAD[token] and self.push HEAD[token].new
+        next if @tag.tail[token] == current_node.class and self.pop
+        next if @tag.head[token] and self.push @tag.head[token].new
         self.push Leaf.create(token)
       end
 
