@@ -166,6 +166,9 @@ module AdHocTemplate
         @stack.pop
       end
 
+      def read(line)
+      end
+
       private
 
       def last_block_value
@@ -190,9 +193,6 @@ module AdHocTemplate
     class BaseReader < Reader
       def setup_stack(line)
         push_reader_if_match(line, [:iteration, :block, :key_value])
-      end
-
-      def read(line)
       end
     end
 
