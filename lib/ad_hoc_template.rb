@@ -26,7 +26,7 @@ module AdHocTemplate
     }
   end
 
-  class Formatter
+  class DataLoader
     def initialize(record, tag_formatter=DefaultTagFormatter.new)
       @record = record
       @tag_formatter = tag_formatter
@@ -51,8 +51,8 @@ module AdHocTemplate
 
       sub_records.map do |record|
         if tag_node.contains_any_value_assigned_tag_node?(record)
-          formatter = AdHocTemplate::Formatter.new(record, @tag_formatter)
-          tag_node.map {|leaf| leaf.accept(formatter) }.join
+          data_loader = AdHocTemplate::DataLoader.new(record, @tag_formatter)
+          tag_node.map {|leaf| leaf.accept(data_loader) }.join
         else
           "".freeze
         end
@@ -72,6 +72,6 @@ module AdHocTemplate
   def self.convert(record_data, template, tag_formatter=DefaultTagFormatter.new)
     tree = Parser.parse(template)
     record = RecordReader.read_record(record_data)
-    Formatter.new(record, tag_formatter).format(tree)
+    DataLoader.new(record, tag_formatter).format(tree)
   end
 end

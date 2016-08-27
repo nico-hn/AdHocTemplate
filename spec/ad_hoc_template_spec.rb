@@ -153,7 +153,7 @@ expected_config = {
     end
   end
 
-  describe AdHocTemplate::Formatter do
+  describe AdHocTemplate::DataLoader do
     it "returns the result of conversion." do
       template = "a test string with tags (<%= key1 %> and <%= key2 %>) in it"
       config_data = <<CONFIG
@@ -163,7 +163,7 @@ CONFIG
 
       tree = AdHocTemplate::Parser.parse(template)
       config = AdHocTemplate::RecordReader.read_record(config_data)
-      expect(AdHocTemplate::Formatter.new(config).format(tree)).to eq("a test string with tags (value1 and value2) in it")
+      expect(AdHocTemplate::DataLoader.new(config).format(tree)).to eq("a test string with tags (value1 and value2) in it")
     end
 
     it "accepts a template with an iteration block and evaluate repeatedly the block" do
@@ -217,7 +217,7 @@ the second paragraph in block
 RESULT
       tree = AdHocTemplate::Parser.parse(template)
       config = AdHocTemplate::RecordReader.read_record(config_data)
-      expect(AdHocTemplate::Formatter.new(config).format(tree)).to eq(expected_result)
+      expect(AdHocTemplate::DataLoader.new(config).format(tree)).to eq(expected_result)
     end
 
     it "may contains iteration blocks without key label." do
@@ -266,7 +266,7 @@ the second paragraph in block
 RESULT
       tree = AdHocTemplate::Parser.parse(template)
       config = AdHocTemplate::RecordReader.read_record(config_data)
-      expect(AdHocTemplate::Formatter.new(config).format(tree)).to eq(expected_result)
+      expect(AdHocTemplate::DataLoader.new(config).format(tree)).to eq(expected_result)
     end
 
     it 'can convert &"<> into character entities' do
