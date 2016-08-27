@@ -26,11 +26,11 @@ module AdHocTemplate
     }
   end
 
-  class Converter
+  class Formatter
     def self.convert(record_data, template, formatter=DefaultTagFormatter.new)
       tree = AdHocTemplate::Parser.parse(template)
       record = AdHocTemplate::RecordReader.read_record(record_data)
-      AdHocTemplate::Converter.new(record, formatter).format(tree)
+      AdHocTemplate::Formatter.new(record, formatter).format(tree)
     end
 
     def initialize(record, formatter=DefaultTagFormatter.new)
@@ -57,7 +57,7 @@ module AdHocTemplate
 
       sub_records.map do |record|
         if tag_node.contains_any_value_assigned_tag_node?(record)
-          converter = AdHocTemplate::Converter.new(record, @formatter)
+          converter = AdHocTemplate::Formatter.new(record, @formatter)
           tag_node.map {|leaf| leaf.accept(converter) }.join
         else
           "".freeze

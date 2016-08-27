@@ -58,7 +58,7 @@ module AdHocTemplate
     end
 
     def convert
-      AdHocTemplate::Converter.convert(@record_data, @template_data, @formatter)
+      AdHocTemplate::Formatter.convert(@record_data, @template_data, @formatter)
     end
 
     def open_output
