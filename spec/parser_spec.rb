@@ -73,6 +73,14 @@ content
         expect(tree[1]).to be_a_kind_of(AdHocTemplate::Parser::IterationTagNode)
       end
 
+      it "may contain lines that consist only of an iteration tag" do
+        tree = AdHocTemplate::Parser.parse("[[#iterations
+content
+#]]
+", :square_brackets)
+        expect(tree).to eq([[["content\n"]]])
+      end
+
       it "must return an empty array when template is an empty string" do
         tree = AdHocTemplate::Parser.parse("")
         expect(tree).to eq([])
