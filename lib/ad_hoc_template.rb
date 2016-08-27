@@ -77,6 +77,6 @@ module AdHocTemplate
                    tag_formatter=DefaultTagFormatter.new)
     tree = Parser.parse(template, tag_type)
     record = RecordReader.read_record(record_data)
-    DataLoader.new(record, tag_formatter).format(tree)
+    DataLoader.format(tree, record, tag_formatter)
   end
 end
