@@ -66,6 +66,7 @@ module AdHocTemplate
 
       register
       register(:square_brackets, ["[[", "]]"], ["[[#", "#]]"])
+      register(:curly_brackets, ["{{", "}}"], ["{{#", "#}}"])
     end
 
     def self.parse(str, tag_name=:default)
