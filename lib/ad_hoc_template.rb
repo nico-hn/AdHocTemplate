@@ -27,10 +27,6 @@ module AdHocTemplate
   end
 
   class Formatter
-    def self.convert(record_data, template, tag_formatter=DefaultTagFormatter.new)
-      AdHocTemplate.convert(record_data, template, tag_formatter=DefaultTagFormatter.new)
-    end
-
     def initialize(record, tag_formatter=DefaultTagFormatter.new)
       @record = record
       @tag_formatter = tag_formatter

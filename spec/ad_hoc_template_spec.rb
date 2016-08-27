@@ -270,7 +270,7 @@ RESULT
     end
 
     it 'can convert &"<> into character entities' do
-      result = AdHocTemplate::Formatter.convert('characters: &, ", < and >',
+      result = AdHocTemplate.convert('characters: &, ", < and >',
                                        'a string with characters (<%h characters %>) that should be represented as character entities.')
       expect(result).to eq('a string with characters (&amp;, &quot;, &lt; and &gt;) that should be represented as character entities.')
     end
