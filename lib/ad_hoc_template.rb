@@ -69,8 +69,9 @@ module AdHocTemplate
     end
   end
 
-  def self.convert(record_data, template, tag_formatter=DefaultTagFormatter.new)
-    tree = Parser.parse(template)
+  def self.convert(record_data, template, tag_type=:default,
+                   tag_formatter=DefaultTagFormatter.new)
+    tree = Parser.parse(template, tag_type)
     record = RecordReader.read_record(record_data)
     DataLoader.new(record, tag_formatter).format(tree)
   end
