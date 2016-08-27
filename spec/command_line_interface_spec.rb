@@ -46,6 +46,20 @@ describe AdHocTemplate do
       expect(command_line_interface.output_filename).to eq(File.join(pwd, output_filename))
     end
 
+    it "can specify tag type for template" do
+      command_line_interface = AdHocTemplate::CommandLineInterface.new
+      set_argv("--tag-type=curly_brackets")
+      command_line_interface.parse_command_line_options
+      expect(command_line_interface.tag_type).to eq(:curly_brackets)
+    end
+
+    it "choose the default tag type when the given type is unkown" do
+      command_line_interface = AdHocTemplate::CommandLineInterface.new
+      set_argv("--tag-type=unkown_tag_type")
+      command_line_interface.parse_command_line_options
+      expect(command_line_interface.tag_type).to eq(:default)
+    end
+
     it "reads input data from command line" do
       template_filename = "template.txt"
       record_filename = "record.txt"

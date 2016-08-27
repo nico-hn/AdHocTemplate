@@ -5,11 +5,18 @@ require 'optparse'
 
 module AdHocTemplate
   class CommandLineInterface
-    attr_accessor :output_filename, :template_data, :record_data
+    attr_accessor :output_filename, :template_data, :record_data, :tag_type
+
+    TAG_RE_TO_TYPE = {
+      /\Ad(efault)?/i => :default,
+      /\Ac(urly_brackets)?/i => :curly_brackets,
+      /\As(quare_brackets)?/i => :square_brackets,
+    }
 
     def initialize
       @formatter = AdHocTemplate::DefaultTagFormatter.new
       @output_filename = nil
+      @tag_type = :default
     end
 
     def set_encoding(given_opt)
@@ -28,6 +35,11 @@ module AdHocTemplate
         opt.on("-o [output_file]", "--output [=output_file]",
                "Save the result into the specified file.") do |output_file|
           @output_filename = File.expand_path(output_file)
+        end
+
+        opt.on("-t [tag_type]", "--tag-type [=tag_type]",
+               "Choose a template tag type: default, curly_brackets or square_brackets") do |given_type|
+          choose_tag_type(given_type)
         end
 
        opt.parse!
@@ -65,6 +77,18 @@ module AdHocTemplate
       open_output do |out|
         out.print convert
       end
+    end
+
+    private
+
+    def choose_tag_type(given_type)
+      TAG_RE_TO_TYPE.each do |re, tag_type|
+        if re =~ given_type
+          @tag_type = tag_type
+          return
+        end
+      end
+      STDERR.puts "The given type is not found. The default tag is chosen."
     end
   end
 end
