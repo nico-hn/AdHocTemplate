@@ -27,6 +27,10 @@ module AdHocTemplate
   end
 
   class DataLoader
+    def self.format(template, record, tag_formatter=DefaultTagFormatter.new)
+      new(record, tag_formatter).format(template)
+    end
+
     def initialize(record, tag_formatter=DefaultTagFormatter.new)
       @record = record
       @tag_formatter = tag_formatter
