@@ -65,16 +65,6 @@ module AdHocTemplate
       register
     end
 
-    HEAD, TAIL = {}, {}
-
-    [[TagNode, "<%", "%>"],
-     [IterationTagNode, "<%#", "#%>"]].each do |type, head, tail|
-      HEAD[head] = type
-      TAIL[tail] = type
-    end
-
-    TOKEN_PAT = PseudoHiki.compile_token_pat(HEAD.keys, TAIL.keys)
-
     def self.parse(str, tag_name=:default)
       new(str, TagType[tag_name]).parse.tree
     end
