@@ -82,7 +82,7 @@ content
       end
 
       it "must return an empty array when template is an empty string" do
-        tree = AdHocTemplate::Parser.parse("")
+        tree = AdHocTemplate::Parser.parse("", :square_brackets)
         expect(tree).to eq([])
       end
     end
