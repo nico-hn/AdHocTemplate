@@ -28,9 +28,7 @@ module AdHocTemplate
 
   class Formatter
     def self.convert(record_data, template, tag_formatter=DefaultTagFormatter.new)
-      tree = AdHocTemplate::Parser.parse(template)
-      record = AdHocTemplate::RecordReader.read_record(record_data)
-      AdHocTemplate::Formatter.new(record, tag_formatter).format(tree)
+      AdHocTemplate.convert(record_data, template, tag_formatter=DefaultTagFormatter.new)
     end
 
     def initialize(record, tag_formatter=DefaultTagFormatter.new)
@@ -73,5 +71,11 @@ module AdHocTemplate
     def format(tree)
       tree.accept(self).join
     end
+  end
+
+  def self.convert(record_data, template, tag_formatter=DefaultTagFormatter.new)
+    tree = Parser.parse(template)
+    record = RecordReader.read_record(record_data)
+    Formatter.new(record, tag_formatter).format(tree)
   end
 end
