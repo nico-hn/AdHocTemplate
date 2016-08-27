@@ -55,8 +55,8 @@ module AdHocTemplate
 
       sub_records.map do |record|
         if tag_node.contains_any_value_assigned_tag_node?(record)
-          converter = AdHocTemplate::Formatter.new(record, @tag_formatter)
-          tag_node.map {|leaf| leaf.accept(converter) }.join
+          formatter = AdHocTemplate::Formatter.new(record, @tag_formatter)
+          tag_node.map {|leaf| leaf.accept(formatter) }.join
         else
           "".freeze
         end
