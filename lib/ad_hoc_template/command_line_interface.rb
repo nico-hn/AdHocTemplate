@@ -14,7 +14,7 @@ module AdHocTemplate
     }
 
     def initialize
-      @formatter = AdHocTemplate::DefaultTagFormatter.new
+      @tag_formatter = AdHocTemplate::DefaultTagFormatter.new
       @output_filename = nil
       @tag_type = :default
     end
@@ -58,7 +58,7 @@ module AdHocTemplate
     end
 
     def convert
-      AdHocTemplate::Formatter.convert(@record_data, @template_data, @formatter)
+      AdHocTemplate::Formatter.convert(@record_data, @template_data, @tag_formatter)
     end
 
     def open_output

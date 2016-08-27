@@ -27,15 +27,15 @@ module AdHocTemplate
   end
 
   class Formatter
-    def self.convert(record_data, template, formatter=DefaultTagFormatter.new)
+    def self.convert(record_data, template, tag_formatter=DefaultTagFormatter.new)
       tree = AdHocTemplate::Parser.parse(template)
       record = AdHocTemplate::RecordReader.read_record(record_data)
-      AdHocTemplate::Formatter.new(record, formatter).format(tree)
+      AdHocTemplate::Formatter.new(record, tag_formatter).format(tree)
     end
 
-    def initialize(record, formatter=DefaultTagFormatter.new)
+    def initialize(record, tag_formatter=DefaultTagFormatter.new)
       @record = record
-      @formatter = formatter
+      @tag_formatter = tag_formatter
     end
 
     def visit(tree)
@@ -57,7 +57,7 @@ module AdHocTemplate
 
       sub_records.map do |record|
         if tag_node.contains_any_value_assigned_tag_node?(record)
-          converter = AdHocTemplate::Formatter.new(record, @formatter)
+          converter = AdHocTemplate::Formatter.new(record, @tag_formatter)
           tag_node.map {|leaf| leaf.accept(converter) }.join
         else
           "".freeze
@@ -67,7 +67,7 @@ module AdHocTemplate
 
     def format_tag(tag_node)
       leafs = tag_node.map {|leaf| leaf.accept(self) }
-      @formatter.format(tag_node.type, leafs.join.strip, @record)
+      @tag_formatter.format(tag_node.type, leafs.join.strip, @record)
     end
 
     def format(tree)
