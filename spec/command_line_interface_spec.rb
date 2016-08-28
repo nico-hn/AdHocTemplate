@@ -247,6 +247,15 @@ the value of sub_key2 is value3-2
 the value of sub_key2 is value3-3
 
 RESULT
+
+        @template_without_iteration_block = <<TEMPLATE
+<%#iteration_block
+the value of sub_key1 is <%= key1 %>
+the value of sub_key2 is <%= key2 %>
+the value of sub_key2 is <%= key3 %>
+
+#%>
+TEMPLATE
       end
 
       it "can read csv data with an iteration label" do
@@ -270,6 +279,21 @@ TEMPLATE
         command_line_interface = AdHocTemplate::CommandLineInterface.new
         command_line_interface.parse_command_line_options
         expect(command_line_interface.data_format).to eq({ csv: "iteration_block" })
+        command_line_interface.execute
+      end
+
+      it "can read csv data without an iteration label" do
+        template_filename = "template.txt"
+        record_filename = "record.csv"
+
+        allow(File).to receive(:read).with(File.expand_path(template_filename)).and_return(@template_without_iteration_block)
+        allow(File).to receive(:read).with(File.expand_path(record_filename)).and_return(@record_in_csv_format)
+        allow(STDOUT).to receive(:print).with(@expected_result)
+
+        set_argv("--data-format=csv #{template_filename} #{record_filename}")
+        command_line_interface = AdHocTemplate::CommandLineInterface.new
+        command_line_interface.parse_command_line_options
+        expect(command_line_interface.data_format).to eq(:csv)
         command_line_interface.execute
       end
     end

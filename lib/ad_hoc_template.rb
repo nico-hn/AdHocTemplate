@@ -28,7 +28,17 @@ module AdHocTemplate
 
   class DataLoader
     def self.format(template, record, tag_formatter=DefaultTagFormatter.new)
+      if record.kind_of? Array
+        return format_multi_records(template, record, tag_formatter)
+      end
       new(record, tag_formatter).format(template)
+    end
+
+    def self.format_multi_records(template, records,
+                                  tag_formatter=DefaultTagFormatter.new)
+      records.map do |record|
+        new(record, tag_formatter).format(template)
+      end.join
     end
 
     def initialize(record, tag_formatter=DefaultTagFormatter.new)
