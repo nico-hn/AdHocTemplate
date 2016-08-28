@@ -33,7 +33,7 @@ module AdHocTemplate
     end
 
     def parse_command_line_options
-      OptionParser.new do |opt|
+      OptionParser.new("USAGE: #{File.basename($0)} [OPTION]... TEMPLATE_FILE DATA_FILE") do |opt|
         opt.on("-E [ex[:in]]", "--encoding [=ex[:in]]",
                "Specify the default external and internal character encodings (same as the option of MRI") do |given_opt|
           self.set_encoding(given_opt)
