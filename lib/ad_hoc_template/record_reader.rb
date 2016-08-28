@@ -208,8 +208,13 @@ module AdHocTemplate
       end
     end
 
-    def self.read_record(input)
-      ReaderState.new.read_record(input)
+    def self.read_record(input, source_format=:default)
+      case source_format
+      when :default
+        ReaderState.new.read_record(input)
+      when :yaml
+        YamlReader.read_record(input)
+      end
     end
   end
 end

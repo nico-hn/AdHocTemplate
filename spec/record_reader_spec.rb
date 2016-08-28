@@ -198,5 +198,12 @@ YAML
 
       expect(yaml).to eq(config)
     end
+
+    it '.read_record is called from RecordReader.read_record if the format of source data is specified' do
+      yaml_reader = AdHocTemplate::RecordReader::YamlReader.read_record(@yaml_source)
+      record_reader = AdHocTemplate::RecordReader.read_record(@yaml_source, :yaml)
+
+      expect(yaml_reader).to eq(record_reader)
+    end
   end
 end
