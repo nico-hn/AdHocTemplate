@@ -103,13 +103,10 @@ module AdHocTemplate
     end
 
     def choose_data_format(data_format)
-      FORMAT_RE_TO_FORMAT.each do |re, format|
-        if re =~ data_format
-          @data_format = format == :csv ? make_csv_option(data_format) : format
-          return
-        end
+      if_any_regex_match(FORMAT_RE_TO_FORMAT, data_format,
+                         "The given format is not found. The default format is chosen.") do |re, format|
+        @data_format = format == :csv ? make_csv_option(data_format) : format
       end
-      STDERR.puts "The given format is not found. The default format is chosen."
     end
 
     def make_csv_option(data_format)
