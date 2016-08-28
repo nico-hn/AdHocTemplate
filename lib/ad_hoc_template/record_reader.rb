@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
 require 'yaml'
+require 'json'
 
 module AdHocTemplate
   module RecordReader
@@ -12,6 +13,13 @@ module AdHocTemplate
       def self.to_yaml(config_data)
         data = RecordReader.read_record(config_data)
         YAML.dump(data)
+      end
+    end
+
+    module JSONReader
+      def self.to_json(config_data)
+        data = RecordReader.read_record(config_data)
+        JSON.dump(data)
       end
     end
 
