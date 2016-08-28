@@ -252,7 +252,7 @@ module AdHocTemplate
       end
     end
 
-    def self.read_record(input, source_format=:default)
+    def self.read_record(input, source_format=:default, csv_label=nil)
       case source_format
       when :default
         ReaderState.new.read_record(input)
@@ -260,6 +260,8 @@ module AdHocTemplate
         YAMLReader.read_record(input)
       when :json
         JSONReader.read_record(input)
+      when :csv
+        CSVReader.read_record(input, csv_label)
       end
     end
   end

@@ -333,5 +333,17 @@ CSV
 
       expect(json).to eq(config)
     end
+
+    it '.read_record is called from RecordReader.read_record if the format of source data is specified' do
+      csv_reader = AdHocTemplate::RecordReader::CSVReader.read_record(@csv_source, "subconfigs")
+      record_reader = AdHocTemplate::RecordReader.read_record(@csv_source, :csv, "subconfigs")
+
+      csv_reader_without_label = AdHocTemplate::RecordReader::CSVReader.read_record(@csv_source)
+      record_reader_without_label = AdHocTemplate::RecordReader.read_record(@csv_source, :csv)
+
+
+      expect(csv_reader).to eq(record_reader)
+      expect(csv_reader_without_label).to eq(record_reader_without_label)
+    end
   end
 end
