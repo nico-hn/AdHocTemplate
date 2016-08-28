@@ -151,7 +151,7 @@ expected_config = {
     end
   end
 
-  describe AdHocTemplate::RecordReader::YamlReader do
+  describe AdHocTemplate::RecordReader::YAMLReader do
     before do
       @config_source = <<CONFIG
 key1: value1
@@ -211,20 +211,20 @@ YAML
 
     it 'reads yaml data and turns it into a Ruby object' do
       config = AdHocTemplate::RecordReader.read_record(@config_source)
-      yaml = AdHocTemplate::RecordReader::YamlReader.read_record(@yaml_source)
+      yaml = AdHocTemplate::RecordReader::YAMLReader.read_record(@yaml_source)
 
       expect(yaml).to eq(config)
     end
 
     it '.read_record is called from RecordReader.read_record if the format of source data is specified' do
-      yaml_reader = AdHocTemplate::RecordReader::YamlReader.read_record(@yaml_source)
+      yaml_reader = AdHocTemplate::RecordReader::YAMLReader.read_record(@yaml_source)
       record_reader = AdHocTemplate::RecordReader.read_record(@yaml_source, :yaml)
 
       expect(yaml_reader).to eq(record_reader)
     end
 
     it '.to_yaml converts the format of data from default to yaml' do
-      yaml = AdHocTemplate::RecordReader::YamlReader.to_yaml(@config_source)
+      yaml = AdHocTemplate::RecordReader::YAMLReader.to_yaml(@config_source)
 
       expect(yaml).to eq(@yaml_dump)
     end

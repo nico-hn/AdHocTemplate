@@ -4,7 +4,7 @@ require 'yaml'
 
 module AdHocTemplate
   module RecordReader
-    module YamlReader
+    module YAMLReader
       def self.read_record(yaml_data)
         YAML.load(yaml_data)
       end
@@ -218,7 +218,7 @@ module AdHocTemplate
       when :default
         ReaderState.new.read_record(input)
       when :yaml
-        YamlReader.read_record(input)
+        YAMLReader.read_record(input)
       end
     end
   end
