@@ -17,6 +17,10 @@ module AdHocTemplate
     end
 
     module JSONReader
+      def self.read_record(json_data)
+        JSON.parse(json_data)
+      end
+
       def self.to_json(config_data)
         data = RecordReader.read_record(config_data)
         JSON.dump(data)

@@ -270,13 +270,20 @@ CONFIG
 	    "key2-2":"value2-2"
 	}
     ],
-    "block":"the first line of block\nthe second line of block\n\nthe second paragraph in block\n"
+    "block":"the first line of block\\nthe second line of block\\n\\nthe second paragraph in block\\n"
 }
 JSON
 
       @json_dump = <<JSON
 {"key1":"value1","key2":"value2","key3":"value3","#subconfigs":[{"key1-1":"value1-1","key1-2":"value1-2"},{"key2-1":"value2-1","key2-2":"value2-2"}],"block":"the first line of block\\nthe second line of block\\n\\nthe second paragraph in block\\n"}
 JSON
+    end
+
+    it 'reads JSON data and turns it into a Ruby object' do
+      config = AdHocTemplate::RecordReader.read_record(@config_source)
+      json = AdHocTemplate::RecordReader::JSONReader.read_record(@json_source)
+
+      expect(json).to eq(config)
     end
 
     it '.to_yaml converts the format of data from default to yaml' do
