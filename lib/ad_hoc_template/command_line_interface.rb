@@ -96,13 +96,10 @@ module AdHocTemplate
     private
 
     def choose_tag_type(given_type)
-      TAG_RE_TO_TYPE.each do |re, tag_type|
-        if re =~ given_type
-          @tag_type = tag_type
-          return
-        end
+      if_any_regex_match(TAG_RE_TO_TYPE, given_type,
+                         "The given type is not found. The default tag is chosen.") do |re, tag_type|
+        @tag_type = tag_type
       end
-      STDERR.puts "The given type is not found. The default tag is chosen."
     end
 
     def choose_data_format(data_format)
@@ -118,6 +115,16 @@ module AdHocTemplate
     def make_csv_option(data_format)
       iteration_label = data_format.sub(/\Acsv:?/, "")
       iteration_label.empty? ? :csv : { csv: iteration_label }
+    end
+
+    def if_any_regex_match(regex_table, target, failure_message)
+      regex_table.each do |re, paired_value|
+        if re =~ target
+          yield re, paired_value
+          return
+        end
+        STDERR.puts failure_message
+      end
     end
   end
 end
