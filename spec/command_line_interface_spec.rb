@@ -60,6 +60,20 @@ describe AdHocTemplate do
       expect(command_line_interface.tag_type).to eq(:default)
     end
 
+    it "can specify data format" do
+      command_line_interface = AdHocTemplate::CommandLineInterface.new
+      set_argv("--data-format=yaml")
+      command_line_interface.parse_command_line_options
+      expect(command_line_interface.data_format).to eq(:yaml)
+    end
+
+    it "choose the default data format when the given format is unkown" do
+      command_line_interface = AdHocTemplate::CommandLineInterface.new
+      set_argv("--data-format=unknown")
+      command_line_interface.parse_command_line_options
+      expect(command_line_interface.data_format).to eq(:default)
+    end
+
     it "reads input data from command line" do
       template_filename = "template.txt"
       record_filename = "record.txt"

@@ -5,7 +5,7 @@ require 'optparse'
 
 module AdHocTemplate
   class CommandLineInterface
-    attr_accessor :output_filename, :template_data, :record_data, :tag_type
+    attr_accessor :output_filename, :template_data, :record_data, :tag_type, :data_format
 
     TAG_RE_TO_TYPE = {
       /\Ad(efault)?/i => :default,
@@ -13,10 +13,17 @@ module AdHocTemplate
       /\As(quare_brackets)?/i => :square_brackets,
     }
 
+    FORMAT_RE_TO_FORMAT = {
+      /\Ad(efault)?/i => :default,
+      /\Ay(a?ml)?/i => :yaml,
+      /\Aj(son)?/i => :json,
+    }
+
     def initialize
       @tag_formatter = AdHocTemplate::DefaultTagFormatter.new
       @output_filename = nil
       @tag_type = :default
+      @data_format = :default
     end
 
     def set_encoding(given_opt)
@@ -40,6 +47,11 @@ module AdHocTemplate
         opt.on("-t [tag_type]", "--tag-type [=tag_type]",
                "Choose a template tag type: default, curly_brackets or square_brackets") do |given_type|
           choose_tag_type(given_type)
+        end
+
+        opt.on("-d [data_format]", "--data-format [=data_format]",
+               "Specify the format of input data") do |data_format|
+          choose_data_format(data_format)
         end
 
        opt.parse!
@@ -90,6 +102,17 @@ module AdHocTemplate
         end
       end
       STDERR.puts "The given type is not found. The default tag is chosen."
+    end
+
+    def choose_data_format(data_format)
+      FORMAT_RE_TO_FORMAT.each do |re, format|
+        if re =~ data_format
+          @data_format = format
+          return
+        end
+      end
+      STDERR.puts "The given format is not found. The default format is chosen."
+
     end
   end
 end
