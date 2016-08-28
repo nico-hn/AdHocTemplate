@@ -17,6 +17,7 @@ module AdHocTemplate
       /\Ad(efault)?/i => :default,
       /\Ay(a?ml)?/i => :yaml,
       /\Aj(son)?/i => :json,
+      /\Ac(sv)?/i => :csv
     }
 
     def initialize
@@ -107,12 +108,17 @@ module AdHocTemplate
     def choose_data_format(data_format)
       FORMAT_RE_TO_FORMAT.each do |re, format|
         if re =~ data_format
-          @data_format = format
+          @data_format = format == :csv ? make_csv_option(data_format) : format
           return
         end
       end
       STDERR.puts "The given format is not found. The default format is chosen."
 
+    end
+
+    def make_csv_option(data_format)
+      iteration_label = data_format.sub(/\Acsv:?/, "")
+      iteration_label.empty? ? :csv : { csv: iteration_label }
     end
   end
 end
