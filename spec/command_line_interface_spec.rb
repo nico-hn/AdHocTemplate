@@ -296,6 +296,33 @@ TEMPLATE
         expect(command_line_interface.data_format).to eq(:csv)
         command_line_interface.execute
       end
+
+      it "can read csv data of only one record" do
+        record_in_csv_format = <<CSV
+key1,key2,key3
+value1-1,value1-2,value1-3
+CSV
+
+        expected_result = <<RESULT
+the value of sub_key1 is value1-1
+the value of sub_key2 is value1-2
+the value of sub_key2 is value1-3
+
+RESULT
+
+        template_filename = "template.txt"
+        record_filename = "record.csv"
+
+        allow(File).to receive(:read).with(File.expand_path(template_filename)).and_return(@template_without_iteration_block)
+        allow(File).to receive(:read).with(File.expand_path(record_filename)).and_return(record_in_csv_format)
+        allow(STDOUT).to receive(:print).with(expected_result)
+
+        set_argv("--data-format=csv #{template_filename} #{record_filename}")
+        command_line_interface = AdHocTemplate::CommandLineInterface.new
+        command_line_interface.parse_command_line_options
+        expect(command_line_interface.data_format).to eq(:csv)
+        command_line_interface.execute
+      end
     end
   end
 end
