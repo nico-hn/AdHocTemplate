@@ -1,7 +1,15 @@
 #!/usr/bin/env ruby
 
+require 'yaml'
+
 module AdHocTemplate
   module RecordReader
+    module YamlReader
+      def self.read_record(yaml_data)
+        YAML.load(yaml_data)
+      end
+    end
+
     SEPARATOR = /:\s*/o
     BLOCK_HEAD = /\A\/\/@/o
     ITERATION_HEAD = /\A\/\/@#/o
