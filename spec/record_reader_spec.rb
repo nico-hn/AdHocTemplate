@@ -336,7 +336,7 @@ CSV
 
     it '.read_record is called from RecordReader.read_record if the format of source data is specified' do
       csv_reader = AdHocTemplate::RecordReader::CSVReader.read_record(@csv_source, "subconfigs")
-      record_reader = AdHocTemplate::RecordReader.read_record(@csv_source, :csv, "subconfigs")
+      record_reader = AdHocTemplate::RecordReader.read_record(@csv_source, csv: "subconfigs")
 
       csv_reader_without_label = AdHocTemplate::RecordReader::CSVReader.read_record(@csv_source)
       record_reader_without_label = AdHocTemplate::RecordReader.read_record(@csv_source, :csv)

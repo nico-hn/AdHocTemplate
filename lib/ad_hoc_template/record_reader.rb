@@ -252,7 +252,12 @@ module AdHocTemplate
       end
     end
 
-    def self.read_record(input, source_format=:default, csv_label=nil)
+    def self.read_record(input, source_format=:default)
+      if source_format.kind_of? Hash and source_format[:csv]
+        csv_label = source_format[:csv]
+        source_format = :csv
+      end
+
       case source_format
       when :default
         ReaderState.new.read_record(input)
