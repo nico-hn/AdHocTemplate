@@ -152,8 +152,8 @@ expected_config = {
   end
 
   describe AdHocTemplate::RecordReader::YamlReader do
-    it 'reads yaml data and turns it into a Ruby object' do
-      config_data = <<CONFIG
+    before do
+      @config_source = <<CONFIG
 key1: value1
 key2: value2
 key3: value3
@@ -175,7 +175,7 @@ the second paragraph in block
 
 CONFIG
 
-      yaml_data =<<YAML
+      @yaml_source = <<YAML
 key1: value1
 key2: value2
 key3: value3
@@ -190,9 +190,11 @@ block: |
   
   the second paragraph in block
 YAML
+    end
 
-      config = AdHocTemplate::RecordReader.read_record(config_data)
-      yaml = AdHocTemplate::RecordReader::YamlReader.read_record(yaml_data)
+    it 'reads yaml data and turns it into a Ruby object' do
+      config = AdHocTemplate::RecordReader.read_record(@config_source)
+      yaml = AdHocTemplate::RecordReader::YamlReader.read_record(@yaml_source)
 
       expect(yaml).to eq(config)
     end
