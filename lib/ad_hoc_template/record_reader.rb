@@ -2,6 +2,7 @@
 
 require 'yaml'
 require 'json'
+require 'csv'
 
 module AdHocTemplate
   module RecordReader
@@ -24,6 +25,28 @@ module AdHocTemplate
       def self.to_json(config_data)
         data = RecordReader.read_record(config_data)
         JSON.dump(data)
+      end
+    end
+
+    module CSVReader
+      def self.read_record(csv_data, label=nil)
+        data = CSV.new(csv_data).to_a
+        records = []
+        header = data.shift
+        data.each do |row|
+          record = {}
+          records.push record
+          header.zip(row).each do |key, value|
+            record[key] = value
+          end
+        end
+        if label
+          { '#' + label => records }
+        elsif records.length == 1
+          records[0]
+        else
+          records
+        end
       end
     end
 

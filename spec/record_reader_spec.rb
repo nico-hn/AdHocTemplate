@@ -299,4 +299,39 @@ JSON
       expect(json).to eq(@json_dump.chomp)
     end
   end
+
+  describe AdHocTemplate::RecordReader::CSVReader do
+      before do
+        @config_source = <<CONFIG
+//@#subconfigs
+
+key1: value1-1
+key2: value1-2
+key3: value1-3
+
+key1: value2-1
+key2: value2-2
+key3: value2-3
+
+key1: value3-1
+key2: value3-2
+key3: value3-3
+
+CONFIG
+
+        @csv_source = <<CSV
+key1,key2,key3
+value1-1,value1-2,value1-3
+value2-1,value2-2,value2-3
+value3-1,value3-2,value3-3
+CSV
+    end
+
+    it 'reads CSV data and turns it into a Ruby object' do
+      config = AdHocTemplate::RecordReader.read_record(@config_source)
+      json = AdHocTemplate::RecordReader::CSVReader.read_record(@csv_source, "subconfigs")
+
+      expect(json).to eq(config)
+    end
+  end
 end
