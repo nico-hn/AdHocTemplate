@@ -137,8 +137,8 @@ module AdHocTemplate
           yield re, paired_value
           return
         end
-        STDERR.puts failure_message if failure_message
       end
+      STDERR.puts failure_message if failure_message
       nil
     end
   end
