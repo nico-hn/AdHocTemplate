@@ -114,14 +114,15 @@ module AdHocTemplate
       iteration_label.empty? ? :csv : { csv: iteration_label }
     end
 
-    def if_any_regex_match(regex_table, target, failure_message)
+    def if_any_regex_match(regex_table, target, failure_message=nil)
       regex_table.each do |re, paired_value|
         if re =~ target
           yield re, paired_value
           return
         end
-        STDERR.puts failure_message
+        STDERR.puts failure_message if failure_message
       end
+      nil
     end
   end
 end
