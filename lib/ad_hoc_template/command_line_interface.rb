@@ -113,7 +113,6 @@ module AdHocTemplate
         end
       end
       STDERR.puts "The given format is not found. The default format is chosen."
-
     end
 
     def make_csv_option(data_format)
