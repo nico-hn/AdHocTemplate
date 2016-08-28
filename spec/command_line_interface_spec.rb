@@ -220,9 +220,9 @@ YAML
       set_argv("--data-format=yaml #{template_filename} #{record_filename}")
       command_line_interface = AdHocTemplate::CommandLineInterface.new
       command_line_interface.parse_command_line_options
-      command_line_interface.parse_command_line_options
       expect(command_line_interface.data_format).to eq(:yaml)
       command_line_interface.execute
     end
+
   end
 end
