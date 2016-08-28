@@ -190,6 +190,23 @@ block: |
   
   the second paragraph in block
 YAML
+
+      @yaml_dump = <<YAML
+---
+key1: value1
+key2: value2
+key3: value3
+"#subconfigs":
+- key1-1: value1-1
+  key1-2: value1-2
+- key2-1: value2-1
+  key2-2: value2-2
+block: |
+  the first line of block
+  the second line of block
+
+  the second paragraph in block
+YAML
     end
 
     it 'reads yaml data and turns it into a Ruby object' do
@@ -204,6 +221,12 @@ YAML
       record_reader = AdHocTemplate::RecordReader.read_record(@yaml_source, :yaml)
 
       expect(yaml_reader).to eq(record_reader)
+    end
+
+    it '.to_yaml converts the format of data from default to yaml' do
+      yaml = AdHocTemplate::RecordReader::YamlReader.to_yaml(@config_source)
+
+      expect(yaml).to eq(@yaml_dump)
     end
   end
 end

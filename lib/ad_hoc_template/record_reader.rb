@@ -8,6 +8,11 @@ module AdHocTemplate
       def self.read_record(yaml_data)
         YAML.load(yaml_data)
       end
+
+      def self.to_yaml(config_data)
+        data = RecordReader.read_record(config_data)
+        YAML.dump(data)
+      end
     end
 
     SEPARATOR = /:\s*/o
