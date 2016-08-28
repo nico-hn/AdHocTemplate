@@ -324,5 +324,17 @@ RESULT
         command_line_interface.execute
       end
     end
+
+    describe "by file extentions" do
+      it "can guess the format of data" do
+        template_filename = "template.txt"
+        record_filename = "record.yaml"
+
+        set_argv("#{template_filename} #{record_filename}")
+        command_line_interface = AdHocTemplate::CommandLineInterface.new
+        command_line_interface.parse_command_line_options
+        expect(command_line_interface.data_format).to eq(:yaml)
+      end
+    end
   end
 end

@@ -20,11 +20,17 @@ module AdHocTemplate
       /\Ac(sv)?/i => :csv
     }
 
+    FILE_EXTENTIONS = {
+      /\.ya?ml\Z/i => :yaml,
+      /\.json\Z/i => :json,
+      /\.csv\Z/i => :csv,
+    }
+
     def initialize
       @tag_formatter = AdHocTemplate::DefaultTagFormatter.new
       @output_filename = nil
       @tag_type = :default
-      @data_format = :default
+      @data_format = nil
     end
 
     def set_encoding(given_opt)
@@ -56,6 +62,11 @@ module AdHocTemplate
         end
 
        opt.parse!
+      end
+
+      unless @data_format
+        guessed_format = ARGV.length < 2 ? :default : guess_file_format(ARGV[1])
+        @data_format =  guessed_format || :default
       end
     end
 
@@ -112,6 +123,12 @@ module AdHocTemplate
     def make_csv_option(data_format)
       iteration_label = data_format.sub(/\Acsv:?/, "")
       iteration_label.empty? ? :csv : { csv: iteration_label }
+    end
+
+    def guess_file_format(filename)
+      if_any_regex_match(FILE_EXTENTIONS, filename) do |ext_re, format|
+        return format
+      end
     end
 
     def if_any_regex_match(regex_table, target, failure_message=nil)
