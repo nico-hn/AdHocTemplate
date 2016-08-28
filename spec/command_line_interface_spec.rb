@@ -178,5 +178,37 @@ TEMPLATE
       command_line_interface = AdHocTemplate::CommandLineInterface.new
       command_line_interface.execute
     end
+
+    it "can change the data format" do
+record_in_yaml_format = <<YAML
+key1: value1
+key2: value2
+key3: value3
+"#iteration_block":
+- sub_key1: value1-1
+  sub_key2: value1-2
+- sub_key1: value2-1
+  sub_key2: value2-2
+block: |
+  the first line of block
+  the second line of block
+
+  the second paragraph in block
+YAML
+
+      template_filename = "template.txt"
+      record_filename = "record.txt"
+
+      allow(File).to receive(:read).with(File.expand_path(template_filename)).and_return(@template_in_default_format)
+      allow(File).to receive(:read).with(File.expand_path(record_filename)).and_return(record_in_yaml_format)
+      allow(STDOUT).to receive(:print).with(@expected_result)
+
+      set_argv("--data-format=yaml #{template_filename} #{record_filename}")
+      command_line_interface = AdHocTemplate::CommandLineInterface.new
+      command_line_interface.parse_command_line_options
+      command_line_interface.parse_command_line_options
+      expect(command_line_interface.data_format).to eq(:yaml)
+      command_line_interface.execute
+    end
   end
 end

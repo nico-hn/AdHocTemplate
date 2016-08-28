@@ -70,8 +70,8 @@ module AdHocTemplate
     end
 
     def convert
-      AdHocTemplate.convert(@record_data, @template_data,
-                            @tag_type, @tag_formatter)
+      AdHocTemplate.convert(@record_data, @template_data, @tag_type,
+                            @data_format, @tag_formatter)
     end
 
     def open_output
