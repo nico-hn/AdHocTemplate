@@ -31,15 +31,8 @@ module AdHocTemplate
     module CSVReader
       def self.read_record(csv_data, label=nil)
         data = CSV.new(csv_data).to_a
-        records = []
         header = data.shift
-        data.each do |row|
-          record = {}
-          records.push record
-          header.zip(row).each do |key, value|
-            record[key] = value
-          end
-        end
+        records = data.map {|row| convert_to_hash(header, row) }
         if label
           { '#' + label => records }
         elsif records.length == 1
@@ -48,6 +41,17 @@ module AdHocTemplate
           records
         end
       end
+
+      def self.convert_to_hash(header, row_array)
+        {}.tap do |record|
+          header.zip(row_array).each do |key, value|
+            record[key] = value
+          end
+        end
+        # if RUBY_VERSION >= 2.1.0: header.zip(row_array).to_h
+      end
+
+      private_class_method :convert_to_hash
     end
 
     SEPARATOR = /:\s*/o
