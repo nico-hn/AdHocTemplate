@@ -231,6 +231,8 @@ module AdHocTemplate
         ReaderState.new.read_record(input)
       when :yaml
         YAMLReader.read_record(input)
+      when :json
+        JSONReader.read_record(input)
       end
     end
   end

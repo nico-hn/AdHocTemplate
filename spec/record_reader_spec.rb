@@ -286,6 +286,13 @@ JSON
       expect(json).to eq(config)
     end
 
+    it '.read_record is called from RecordReader.read_record if the format of source data is specified' do
+      json_reader = AdHocTemplate::RecordReader::JSONReader.read_record(@json_source)
+      record_reader = AdHocTemplate::RecordReader.read_record(@json_source, :json)
+
+      expect(json_reader).to eq(record_reader)
+    end
+
     it '.to_yaml converts the format of data from default to yaml' do
       json = AdHocTemplate::RecordReader::JSONReader.to_json(@config_source)
 
