@@ -50,7 +50,7 @@ module AdHocTemplate
         end
 
         opt.on("-d [data_format]", "--data-format [=data_format]",
-               "Specify the format of input data") do |data_format|
+               "Specify the format of input data: default, yaml or json") do |data_format|
           choose_data_format(data_format)
         end
 
