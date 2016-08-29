@@ -125,20 +125,6 @@ RESULT
       expect(command_line_interface.data_format).to eq(:default)
     end
 
-    it "allows to specify a label when you choose CSV as data format" do
-      command_line_interface = AdHocTemplate::CommandLineInterface.new
-      set_argv("--data-format=csv:sub_records")
-      command_line_interface.parse_command_line_options
-      expect(command_line_interface.data_format).to eq({ csv: "sub_records" })
-    end
-
-    it "allows to specify as data format CSV as other formats" do
-      command_line_interface = AdHocTemplate::CommandLineInterface.new
-      set_argv("--data-format=csv")
-      command_line_interface.parse_command_line_options
-      expect(command_line_interface.data_format).to eq(:csv)
-    end
-
     it "reads input data from command line" do
       template_filename = "template.txt"
       record_filename = "record.txt"
@@ -256,6 +242,20 @@ the value of sub_key2 is <%= key3 %>
 
 #%>
 TEMPLATE
+      end
+
+      it "allows to specify a label when you choose CSV as data format" do
+        command_line_interface = AdHocTemplate::CommandLineInterface.new
+        set_argv("--data-format=csv:sub_records")
+        command_line_interface.parse_command_line_options
+        expect(command_line_interface.data_format).to eq({ csv: "sub_records" })
+      end
+
+      it "allows to specify as data format CSV as other formats" do
+        command_line_interface = AdHocTemplate::CommandLineInterface.new
+        set_argv("--data-format=csv")
+        command_line_interface.parse_command_line_options
+        expect(command_line_interface.data_format).to eq(:csv)
       end
 
       it "can read csv data with an iteration label" do
