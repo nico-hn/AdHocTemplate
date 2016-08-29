@@ -15,11 +15,15 @@ module AdHocTemplate
 
       def assign_type(first_leaf)
         return first_leaf unless first_leaf.kind_of? String and /^\S/o.match(first_leaf)
-        @type, first_leaf_content = first_leaf.split(/\s+/o, 2)
+        @type, first_leaf_content = split_by_newline_or_spaces(first_leaf)
         @type = '#'.freeze + @type if kind_of? IterationTagNode
         first_leaf_content||""
       end
-      private :assign_type
+
+      def split_by_newline_or_spaces(first_leaf)
+        first_leaf.split(/\s+/o, 2)
+      end
+      private :assign_type, :split_by_newline_or_spaces
 
       def contains_any_value_assigned_tag_node?(record)
         self.select {|n| n.kind_of?(TagNode) }.each do |node|
