@@ -75,6 +75,7 @@ module AdHocTemplate
       register(:square_brackets, ["[[", "]]"], ["[[#", "#]]"])
       register(:curly_brackets, ["{{", "}}"], ["{{#", "#}}"])
       register(:xml_like1, ["<!--%", "%-->"], ["<iterate>", "</iterate>"])
+      register(:xml_like2, ["<fill>", "</fill>"], ["<iterate>", "</iterate>"])
     end
 
     def self.parse(str, tag_name=:default)
