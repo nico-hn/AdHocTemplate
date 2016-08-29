@@ -11,6 +11,7 @@ module AdHocTemplate
       /\Ad(efault)?/i => :default,
       /\Ac(urly_brackets)?/i => :curly_brackets,
       /\As(quare_brackets)?/i => :square_brackets,
+      /\Axml_like1/i => :xml_like1,
     }
 
     FORMAT_RE_TO_FORMAT = {
