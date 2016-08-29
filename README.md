@@ -63,7 +63,7 @@ the second paragraph in block
 2. Execute the following at the command line:
 
 ```
-ad_hoc_template template.txt sample_data.txt
+$ ad_hoc_template template.txt sample_data.txt
 ```
 
 Then you will get the following result:
