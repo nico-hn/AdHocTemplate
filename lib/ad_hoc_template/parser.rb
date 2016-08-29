@@ -21,7 +21,8 @@ module AdHocTemplate
       end
 
       def split_by_newline_or_spaces(first_leaf)
-        first_leaf.split(/\s+/o, 2)
+        sep = /\A\S*\r?\n/ =~ first_leaf ? /\r?\n/ : /\s+/
+        first_leaf.split(sep, 2)
       end
       private :assign_type, :split_by_newline_or_spaces
 

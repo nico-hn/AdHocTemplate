@@ -127,5 +127,10 @@ content
         expect(tree).to eq([])
       end
     end
+
+    it("spaces at the head of a line should be preserved when the line is just after a start tag of IterationTagNode") do
+      tree = AdHocTemplate::Parser.parse("<%#iteration\n  the second line\nthe third line")
+      expect(tree).to eq([[["  the second line\nthe third line"]]])
+    end
   end
 end
