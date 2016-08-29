@@ -325,6 +325,121 @@ RESULT
       end
     end
 
+    describe "--data-format=tsv" do
+      before do
+        @record_in_tsv_format = <<TSV
+key1	key2	key3
+value1-1	value1-2	value1-3
+value2-1	value2-2	value2-3
+value3-1	value3-2	value3-3
+TSV
+
+        @expected_result = <<RESULT
+the value of sub_key1 is value1-1
+the value of sub_key2 is value1-2
+the value of sub_key2 is value1-3
+
+the value of sub_key1 is value2-1
+the value of sub_key2 is value2-2
+the value of sub_key2 is value2-3
+
+the value of sub_key1 is value3-1
+the value of sub_key2 is value3-2
+the value of sub_key2 is value3-3
+
+RESULT
+
+        @template_without_iteration_block = <<TEMPLATE
+<%#iteration_block
+the value of sub_key1 is <%= key1 %>
+the value of sub_key2 is <%= key2 %>
+the value of sub_key2 is <%= key3 %>
+
+#%>
+TEMPLATE
+      end
+
+      it "allows to specify a label when you choose TSV as data format" do
+        command_line_interface = AdHocTemplate::CommandLineInterface.new
+        set_argv("--data-format=tsv:sub_records")
+        command_line_interface.parse_command_line_options
+        expect(command_line_interface.data_format).to eq({ tsv: "sub_records" })
+      end
+
+      it "allows to specify as data format TSV as other formats" do
+        command_line_interface = AdHocTemplate::CommandLineInterface.new
+        set_argv("--data-format=tsv")
+        command_line_interface.parse_command_line_options
+        expect(command_line_interface.data_format).to eq(:tsv)
+      end
+
+      it "can read tsv data with an iteration label" do
+        template = <<TEMPLATE
+<%#iteration_block
+the value of sub_key1 is <%= key1 %>
+the value of sub_key2 is <%= key2 %>
+the value of sub_key2 is <%= key3 %>
+
+#%>
+TEMPLATE
+
+        template_filename = "template.txt"
+        record_filename = "record.tsv"
+
+        allow(File).to receive(:read).with(File.expand_path(template_filename)).and_return(template)
+        allow(File).to receive(:read).with(File.expand_path(record_filename)).and_return(@record_in_tsv_format)
+        allow(STDOUT).to receive(:print).with(@expected_result)
+
+        set_argv("--data-format=tsv:iteration_block #{template_filename} #{record_filename}")
+        command_line_interface = AdHocTemplate::CommandLineInterface.new
+        command_line_interface.parse_command_line_options
+        expect(command_line_interface.data_format).to eq({ tsv: "iteration_block" })
+        command_line_interface.execute
+      end
+
+      it "can read tsv data without an iteration label" do
+        template_filename = "template.txt"
+        record_filename = "record.tsv"
+
+        allow(File).to receive(:read).with(File.expand_path(template_filename)).and_return(@template_without_iteration_block)
+        allow(File).to receive(:read).with(File.expand_path(record_filename)).and_return(@record_in_tsv_format)
+        allow(STDOUT).to receive(:print).with(@expected_result)
+
+        set_argv("--data-format=tsv #{template_filename} #{record_filename}")
+        command_line_interface = AdHocTemplate::CommandLineInterface.new
+        command_line_interface.parse_command_line_options
+        expect(command_line_interface.data_format).to eq(:tsv)
+        command_line_interface.execute
+      end
+
+      it "can read tsv data of only one record" do
+        record_in_tsv_format = <<TSV
+key1	key2	key3
+value1-1	value1-2	value1-3
+TSV
+
+        expected_result = <<RESULT
+the value of sub_key1 is value1-1
+the value of sub_key2 is value1-2
+the value of sub_key2 is value1-3
+
+RESULT
+
+        template_filename = "template.txt"
+        record_filename = "record.tsv"
+
+        allow(File).to receive(:read).with(File.expand_path(template_filename)).and_return(@template_without_iteration_block)
+        allow(File).to receive(:read).with(File.expand_path(record_filename)).and_return(record_in_tsv_format)
+        allow(STDOUT).to receive(:print).with(expected_result)
+
+        set_argv("--data-format=tsv #{template_filename} #{record_filename}")
+        command_line_interface = AdHocTemplate::CommandLineInterface.new
+        command_line_interface.parse_command_line_options
+        expect(command_line_interface.data_format).to eq(:tsv)
+        command_line_interface.execute
+      end
+    end
+
     describe "by file extentions" do
       it "can guess the format of data" do
         template_filename = "template.txt"

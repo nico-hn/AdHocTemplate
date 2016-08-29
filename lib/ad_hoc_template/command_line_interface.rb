@@ -17,13 +17,15 @@ module AdHocTemplate
       /\Ad(efault)?/i => :default,
       /\Ay(a?ml)?/i => :yaml,
       /\Aj(son)?/i => :json,
-      /\Ac(sv)?/i => :csv
+      /\Ac(sv)?/i => :csv,
+      /\At(sv)?/i => :tsv,
     }
 
     FILE_EXTENTIONS = {
       /\.ya?ml\Z/i => :yaml,
       /\.json\Z/i => :json,
       /\.csv\Z/i => :csv,
+      /\.tsv\Z/i => :tsv,
     }
 
     def initialize
@@ -116,13 +118,13 @@ module AdHocTemplate
     def choose_data_format(data_format)
       if_any_regex_match(FORMAT_RE_TO_FORMAT, data_format,
                          "The given format is not found. The default format is chosen.") do |re, format|
-        @data_format = format == :csv ? make_csv_option(data_format) : format
+        @data_format = [:csv, :tsv].include?(format) ? make_csv_option(data_format, format) : format
       end
     end
 
-    def make_csv_option(data_format)
-      iteration_label = data_format.sub(/\Acsv:?/, "")
-      iteration_label.empty? ? :csv : { csv: iteration_label }
+    def make_csv_option(data_format, format)
+      iteration_label = data_format.sub(/\A(csv|tsv):?/, "")
+      iteration_label.empty? ? format : { format => iteration_label }
     end
 
     def guess_file_format(filename)
