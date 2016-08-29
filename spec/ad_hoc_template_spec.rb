@@ -176,6 +176,48 @@ RESULT
       tag_formatter = AdHocTemplate::DefaultTagFormatter.new
       expect(AdHocTemplate::DataLoader.format(tree, config, tag_formatter)).to eq(expected_result)
     end
+
+    it("should not add a newline at the head of IterationTagNode when the type of the node is not specified") do
+      template = <<TEMPLATE
+a test string with tags
+<%#iteration_block
+the value of sub_key1 is <%= sub_key1 %>
+<%#
+  the value of sub_key2 is <%= sub_key2 %>
+#%>
+
+#%>
+<%= block %>
+TEMPLATE
+
+      config_data = <<CONFIG
+//@#iteration_block
+
+sub_key1: value1-1
+sub_key2: value1-2
+
+sub_key1: value2-1
+
+//@block
+
+the first line of block
+CONFIG
+
+expected_result = <<RESULT
+a test string with tags
+the value of sub_key1 is value1-1
+  the value of sub_key2 is value1-2
+
+the value of sub_key1 is value2-1
+
+the first line of block
+
+RESULT
+      tree = AdHocTemplate::Parser.parse(template)
+      config = AdHocTemplate::RecordReader.read_record(config_data)
+      tag_formatter = AdHocTemplate::DefaultTagFormatter.new
+      expect(AdHocTemplate::DataLoader.format(tree, config, tag_formatter)).to eq(expected_result)
+    end
   end
 
   it 'can convert &"<> into character entities' do

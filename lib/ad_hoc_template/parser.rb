@@ -14,7 +14,9 @@ module AdHocTemplate
       end
 
       def assign_type(first_leaf)
-        return first_leaf unless first_leaf.kind_of? String and /^\S/o.match(first_leaf)
+        if not first_leaf.kind_of? String or /\A\s/ =~ first_leaf
+          return first_leaf.sub(/\A\r?\n/, "")
+        end
         @type, first_leaf_content = split_by_newline_or_spaces(first_leaf)
         @type = '#'.freeze + @type if kind_of? IterationTagNode
         first_leaf_content||""

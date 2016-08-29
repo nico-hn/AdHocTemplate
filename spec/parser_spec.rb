@@ -132,5 +132,10 @@ content
       tree = AdHocTemplate::Parser.parse("<%#iteration\n  the second line\nthe third line")
       expect(tree).to eq([[["  the second line\nthe third line"]]])
     end
+
+    it("should not add a newline at the head of IterationTagNode when the type of the node is not specified") do
+      tree = AdHocTemplate::Parser.parse("a test string with tags\n<%#iteration_block\nthe value of sub_key1 is <%= sub_key1 %>.\n<%#\n  the value of sub_key2 is <%= sub_key2 %>.\n#%>\n#%>")
+      expect(tree).to eq([["a test string with tags\n"], [["the value of sub_key1 is "], [["sub_key1 "]], [".\n"], [["  the value of sub_key2 is "], [["sub_key2 "]], [".\n"]]]])
+    end
   end
 end
