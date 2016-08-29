@@ -259,6 +259,11 @@ module AdHocTemplate
         source_format = :csv
       end
 
+      if source_format.kind_of? Hash and source_format[:tsv]
+        csv_label = source_format[:tsv]
+        source_format = :tsv
+      end
+
       case source_format
       when :default
         ReaderState.new.read_record(input)
@@ -268,6 +273,8 @@ module AdHocTemplate
         JSONReader.read_record(input)
       when :csv
         CSVReader.read_record(input, csv_label)
+      when :tsv
+        CSVReader.read_record(input, csv_label, :tab)
       end
     end
   end

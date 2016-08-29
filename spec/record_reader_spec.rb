@@ -360,6 +360,18 @@ TSV
 
         expect(tsv).to eq(config)
       end
+
+      it '.read_record is called from RecordReader.read_record if the format of source data is specified' do
+        csv_reader = AdHocTemplate::RecordReader::CSVReader.read_record(@csv_source, "subconfigs", :tab)
+        record_reader = AdHocTemplate::RecordReader.read_record(@csv_source, tsv: "subconfigs")
+
+        csv_reader_without_label = AdHocTemplate::RecordReader::CSVReader.read_record(@csv_source, nil, :tab)
+        record_reader_without_label = AdHocTemplate::RecordReader.read_record(@csv_source, :tsv)
+
+
+        expect(csv_reader).to eq(record_reader)
+        expect(csv_reader_without_label).to eq(record_reader_without_label)
+      end
     end
   end
 end
