@@ -29,8 +29,9 @@ module AdHocTemplate
     end
 
     module CSVReader
-      def self.read_record(csv_data, label=nil)
-        data = CSV.new(csv_data).to_a
+      def self.read_record(csv_data, label=nil, f_sep=nil)
+        f_sep = f_sep == :tab ? "\t" : CSV::DEFAULT_OPTIONS[:col_sep]
+        data = CSV.new(csv_data, col_sep: f_sep).to_a
         header = data.shift
         records = data.map {|row| convert_to_hash(header, row) }
         if label

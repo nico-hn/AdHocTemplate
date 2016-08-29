@@ -325,6 +325,13 @@ value1-1,value1-2,value1-3
 value2-1,value2-2,value2-3
 value3-1,value3-2,value3-3
 CSV
+
+      @tsv_source =<<TSV
+key1	key2	key3
+value1-1	value1-2	value1-3
+value2-1	value2-2	value2-3
+value3-1	value3-2	value3-3
+TSV
     end
 
     it 'reads CSV data and turns it into a Ruby object' do
@@ -344,6 +351,15 @@ CSV
 
       expect(csv_reader).to eq(record_reader)
       expect(csv_reader_without_label).to eq(record_reader_without_label)
+    end
+
+    describe "TSV" do
+      it 'reads TSV data and turns it into a Ruby object' do
+        config = AdHocTemplate::RecordReader.read_record(@config_source)
+        tsv = AdHocTemplate::RecordReader::CSVReader.read_record(@tsv_source, "subconfigs", :tab)
+
+        expect(tsv).to eq(config)
+      end
     end
   end
 end
