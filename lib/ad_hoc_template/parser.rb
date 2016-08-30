@@ -42,7 +42,7 @@ module AdHocTemplate
 
     class TagType
       attr_reader :head, :tail, :token_pat
-      attr_reader :iteration_end_tag
+      attr_reader :iteration_end
       @types = {}
 
       def self.[](tag_name)
@@ -59,7 +59,7 @@ module AdHocTemplate
       end
 
       def assign_type(tag, iteration_tag)
-        _, @iteration_end_tag = iteration_tag
+        _, @iteration_end = iteration_tag
         @head, @tail = {}, {}
         [
           [TagNode, tag],
@@ -84,7 +84,7 @@ module AdHocTemplate
 
     def initialize(str, tag)
       @tag = tag
-      str = remove_trailing_newline_of_iteration_end_tag(str, @tag.iteration_end_tag)
+      str = remove_trailing_newline_of_iteration_end_tag(str, @tag.iteration_end)
       @tokens = PseudoHiki.split_into_tokens(str, @tag.token_pat)
       super()
     end
