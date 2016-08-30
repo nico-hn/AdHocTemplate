@@ -79,7 +79,16 @@ module AdHocTemplate
     end
 
     def self.parse(str, tag_name=:default)
+      if [:xml_like1, :xml_like2].include? tag_name
+        str = remove_indent_before_iteration_tags(str, TagType[tag_name])
+      end
       new(str, TagType[tag_name]).parse.tree
+    end
+
+    def self.remove_indent_before_iteration_tags(str, type_tag)
+      [type_tag.iteration_start, type_tag.iteration_end].inject(str) do |s, tag|
+        s.gsub(/^([ \t]+#{Regexp.escape(tag)}\r?\n)/) { $1.lstrip }
+      end
     end
 
     def initialize(str, tag)

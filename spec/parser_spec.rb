@@ -44,6 +44,32 @@ content
         tree = AdHocTemplate::Parser.parse("")
         expect(tree).to eq([])
       end
+
+
+      it "does not remove indents from the lines which contain only iteration tag" do
+        template_without_indent = <<TEMPLATE_WITHOUT_INDENT
+A template with an iteration tag
+
+<%#
+    This part will be repeated with <!--% variable %-->
+#%>
+
+TEMPLATE_WITHOUT_INDENT
+
+        template_with_indent = <<TEMPLATE
+A template with an iteration tag
+
+  <%#
+    This part will be repeated with <!--% variable %-->
+  #%>
+
+TEMPLATE
+
+        without_indent = AdHocTemplate::Parser.parse(template_without_indent)
+        with_indent = AdHocTemplate::Parser.parse(template_with_indent)
+
+        expect(with_indent).not_to eq(without_indent)
+      end
     end
 
     describe "with the square brackets tag type" do
@@ -186,6 +212,31 @@ content
       it("should not add a newline at the head of IterationTagNode when the type of the node is not specified") do
         tree = AdHocTemplate::Parser.parse("a test string with tags\n<iterate>iteration_block\nthe value of sub_key1 is <!--%= sub_key1 %-->.\n<iterate>\n  the value of sub_key2 is <!--%= sub_key2 %-->.\n</iterate>\n</iterate>", :xml_like1)
         expect(tree).to eq([["a test string with tags\n"], [["the value of sub_key1 is "], [["sub_key1 "]], [".\n"], [["  the value of sub_key2 is "], [["sub_key2 "]], [".\n"]]]])
+      end
+
+      it "removes indents from the lines which contain only iteration tag" do
+        template_without_indent = <<TEMPLATE_WITHOUT_INDENT
+A template with an iteration tag
+
+<iterate>
+    This part will be repeated with <!--% variable %-->
+</iterate>
+
+TEMPLATE_WITHOUT_INDENT
+
+        template_with_indent = <<TEMPLATE
+A template with an iteration tag
+
+  <iterate>
+    This part will be repeated with <!--% variable %-->
+  </iterate>
+
+TEMPLATE
+
+        without_indent = AdHocTemplate::Parser.parse(template_without_indent, :xml_like1)
+        with_indent = AdHocTemplate::Parser.parse(template_with_indent, :xml_like1)
+
+        expect(with_indent).to eq(without_indent)
       end
     end
 
