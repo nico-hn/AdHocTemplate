@@ -42,7 +42,7 @@ module AdHocTemplate
 
     class TagType
       attr_reader :head, :tail, :token_pat
-      attr_reader :iteration_end
+      attr_reader :iteration_start, :iteration_end
       @types = {}
 
       def self.[](tag_name)
@@ -59,7 +59,7 @@ module AdHocTemplate
       end
 
       def assign_type(tag, iteration_tag)
-        _, @iteration_end = iteration_tag
+        @iteration_start, @iteration_end = iteration_tag
         @head, @tail = {}, {}
         [
           [TagNode, tag],
