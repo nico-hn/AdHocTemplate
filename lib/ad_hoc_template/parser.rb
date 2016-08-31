@@ -41,7 +41,7 @@ module AdHocTemplate
     class Leaf < Parser::Leaf; end
 
     class TagType
-      attr_reader :head, :tail, :token_pat
+      attr_reader :head, :tail, :token_pat, :remove_iteration_indent
       attr_reader :iteration_start, :iteration_end
       @types = {}
 
@@ -49,13 +49,15 @@ module AdHocTemplate
         @types[tag_name]
       end
 
-      def self.register(tag_name=:default, tag=["<%", "%>"], iteration_tag=["<%#", "#%>"])
-        @types[tag_name] = new(tag, iteration_tag)
+      def self.register(tag_name=:default, tag=["<%", "%>"], iteration_tag=["<%#", "#%>"],
+                        remove_iteration_indent=false)
+        @types[tag_name] = new(tag, iteration_tag, remove_iteration_indent)
       end
 
-      def initialize(tag, iteration_tag)
+      def initialize(tag, iteration_tag, remove_iteration_indent)
         assign_type(tag, iteration_tag)
         @token_pat = PseudoHiki.compile_token_pat(@head.keys, @tail.keys)
+        @remove_iteration_indent = remove_iteration_indent
       end
 
       def assign_type(tag, iteration_tag)
@@ -74,12 +76,12 @@ module AdHocTemplate
       register
       register(:square_brackets, ["[[", "]]"], ["[[#", "#]]"])
       register(:curly_brackets, ["{{", "}}"], ["{{#", "#}}"])
-      register(:xml_like1, ["<!--%", "%-->"], ["<iterate>", "</iterate>"])
-      register(:xml_like2, ["<fill>", "</fill>"], ["<iterate>", "</iterate>"])
+      register(:xml_like1, ["<!--%", "%-->"], ["<iterate>", "</iterate>"], true)
+      register(:xml_like2, ["<fill>", "</fill>"], ["<iterate>", "</iterate>"], true)
     end
 
     def self.parse(str, tag_name=:default)
-      if [:xml_like1, :xml_like2].include? tag_name
+      if TagType[tag_name].remove_iteration_indent
         str = remove_indent_before_iteration_tags(str, TagType[tag_name])
       end
       new(str, TagType[tag_name]).parse.tree
