@@ -87,8 +87,11 @@ module AdHocTemplate
       new(str, TagType[tag_name]).parse.tree
     end
 
-    def self.remove_indent_before_iteration_tags(str, type_tag)
-      [type_tag.iteration_start, type_tag.iteration_end].inject(str) do |s, tag|
+    def self.remove_indent_before_iteration_tags(template_source, tag_type)
+      [
+        tag_type.iteration_start,
+        tag_type.iteration_end
+      ].inject(template_source) do |s, tag|
         s.gsub(/^([ \t]+#{Regexp.escape(tag)}\r?\n)/) { $1.lstrip }
       end
     end
