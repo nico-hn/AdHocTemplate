@@ -200,7 +200,7 @@ The value of key1 is <%= key1 %>
 TEMPLATE
       end
 
-      it ("should not ignore the content of an iteration block when some data are provided") do
+      it "should not ignore the content of an iteration block when some data are provided" do
         config_data = <<CONFIG
 //@#iteration_block
 
@@ -226,7 +226,7 @@ RESULT
         expect(AdHocTemplate::DataLoader.format(tree, config, tag_formatter)).to eq(expected_result)
       end
 
-      it ("should ignore the content of an iteration block if no thing is provided") do
+      it "should ignore the content of an iteration block if no thing is provided" do
         config_data = <<CONFIG
 //@#iteration_block
 
