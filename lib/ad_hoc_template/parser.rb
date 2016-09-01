@@ -30,8 +30,13 @@ module AdHocTemplate
 
       def contains_any_value_assigned_tag_node?(record)
         self.select {|n| n.kind_of?(TagNode) }.each do |node|
-          val = record[node.join.strip]
-          return true if val and not val.empty?
+          if node.kind_of? IterationTagNode
+            sub_records = record[node.type]
+            return true unless sub_records.nil? or sub_records.empty?
+          else
+            val = record[node.join.strip]
+            return true if val and not val.empty?
+          end
         end
         false
       end

@@ -183,6 +183,49 @@ RESULT
       tag_formatter = AdHocTemplate::DefaultTagFormatter.new
       expect(AdHocTemplate::DataLoader.format(tree, config, tag_formatter)).to eq(expected_result)
     end
+
+    describe "iteration block" do
+      before do
+        @template =<<TEMPLATE
+The first line in the main part
+
+<%#
+The first line in the iteration part
+
+<%#iteration_block
+The value of key1 is <%= key1 %>
+#%>
+
+#%>
+TEMPLATE
+      end
+
+      it ("should not ignore the content of an iteration block when some data are provided") do
+        config_data = <<CONFIG
+//@#iteration_block
+
+key1: value1
+
+key1: value1
+CONFIG
+
+        expected_result =<<RESULT
+The first line in the main part
+
+The first line in the iteration part
+
+The value of key1 is value1
+The value of key1 is value1
+
+RESULT
+
+        tree = AdHocTemplate::Parser.parse(@template)
+        config = AdHocTemplate::RecordReader.read_record(config_data)
+        tag_formatter = AdHocTemplate::DefaultTagFormatter.new
+
+        expect(AdHocTemplate::DataLoader.format(tree, config, tag_formatter)).to eq(expected_result)
+      end
+    end
   end
 
   it 'can convert &"<> into character entities' do
