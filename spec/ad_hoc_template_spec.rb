@@ -225,6 +225,24 @@ RESULT
 
         expect(AdHocTemplate::DataLoader.format(tree, config, tag_formatter)).to eq(expected_result)
       end
+
+      it ("should ignore the content of an iteration block if no thing is provided") do
+        config_data = <<CONFIG
+//@#iteration_block
+
+CONFIG
+
+        expected_result =<<RESULT
+The first line in the main part
+
+RESULT
+
+        tree = AdHocTemplate::Parser.parse(@template)
+        config = AdHocTemplate::RecordReader.read_record(config_data)
+        tag_formatter = AdHocTemplate::DefaultTagFormatter.new
+
+        expect(AdHocTemplate::DataLoader.format(tree, config, tag_formatter)).to eq(expected_result)
+      end
     end
   end
 
