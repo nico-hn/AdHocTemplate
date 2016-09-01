@@ -113,7 +113,7 @@ the second paragraph in block
 
 CONFIG
 
-expected_result = <<RESULT
+      expected_result = <<RESULT
 a test string with tags (value1 and value2) in it
 
 the value of key1 is value1
@@ -168,7 +168,7 @@ sub_key1: value2-1
 the first line of block
 CONFIG
 
-expected_result = <<RESULT
+      expected_result = <<RESULT
 a test string with tags
 the value of sub_key1 is value1-1
   the value of sub_key2 is value1-2
