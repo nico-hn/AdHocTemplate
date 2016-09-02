@@ -297,6 +297,31 @@ RESULT
 
         expect(AdHocTemplate::DataLoader.format(tree, config, tag_formatter)).to eq(expected_result)
       end
+
+      it "should ignore nested iteration blocks unless data are provided" do
+        config_data = <<CONFIG
+key: 
+optional1: 
+
+//@#iteration_block
+
+key1: 
+
+key1: 
+key2: 
+CONFIG
+
+        expected_result =<<RESULT
+The first line in the main part
+
+RESULT
+
+        tree = AdHocTemplate::Parser.parse(@template_with_nested_iteration_tag)
+        config = AdHocTemplate::RecordReader.read_record(config_data)
+        tag_formatter = AdHocTemplate::DefaultTagFormatter.new
+
+        expect(AdHocTemplate::DataLoader.format(tree, config, tag_formatter)).to eq(expected_result)
+      end
     end
   end
 
