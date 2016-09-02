@@ -103,6 +103,8 @@ module AdHocTemplate
       register(:xml_comment_like, ["<!--%", "%-->"], ["<!--%iterate%-->", "<!--%/iterate%-->"], true)
     end
 
+    class UserDefinedTagTypeConfigError < StandardError; end
+
     def self.parse(str, tag_name=:default)
       if TagType[tag_name].remove_iteration_indent
         str = remove_indent_before_iteration_tags(str, TagType[tag_name])
@@ -117,6 +119,20 @@ module AdHocTemplate
       ].inject(template_source) do |s, tag|
         s.gsub(/^([ \t]+#{Regexp.escape(tag)}\r?\n)/) { $1.lstrip }
       end
+    end
+
+    def self.register_user_defined_tag_type(config_source)
+      config = YAML.load(config_source)
+      tag_name = config["tag_name"]
+      tag = config["tag"]
+      iteration_tag = config["iteration_tag"]
+      remove_indent = config["remove_indent"] || false
+      %w(tag_name tag iteration_tag).each do |item|
+        unless config[item]
+          raise UserDefinedTagTypeConfigError, "\"#{item}\" should be defined."
+        end
+      end
+      TagType.register(tag_name.to_sym, tag, iteration_tag, remove_indent)
     end
 
     def initialize(str, tag)

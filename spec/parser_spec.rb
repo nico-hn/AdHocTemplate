@@ -366,5 +366,34 @@ TEMPLATE
         expect(with_indent).to eq(without_indent)
       end
     end
+
+    describe ".register_user_defined_tag_type" do
+      it "allow to defined a tag type in YAML format" do
+        tag_type_config = <<CONFIG
+tag_name: xml_like3
+tag: ["<!--%", "%-->"]
+iteration_tag: ["<repeat>", "</repeat>"]
+remove_indent: true
+CONFIG
+        AdHocTemplate::Parser.register_user_defined_tag_type(tag_type_config)
+        defined_tag_type = AdHocTemplate::Parser::TagType[:xml_like3]
+        expect(defined_tag_type.iteration_start).to eq('<repeat>')
+        expect(defined_tag_type.iteration_end).to eq('</repeat>')
+        expect(defined_tag_type.remove_iteration_indent).to eq(true)
+      end
+
+      it "raises an error if a given definition does not contain sufficient information" do
+        tag_type_config = <<CONFIG
+tag_name: 
+tag: ["<!--%", "%-->"]
+iteration_tag: ["<repeat>", "</repeat>"]
+remove_indent: true
+CONFIG
+        expect {
+          AdHocTemplate::Parser.register_user_defined_tag_type(tag_type_config)
+        }.to raise_error(AdHocTemplate::Parser::UserDefinedTagTypeConfigError,
+                         '"tag_name" should be defined.')
+      end
+    end
   end
 end
