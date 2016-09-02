@@ -218,6 +218,20 @@ The value of optional key2 is <%= key2 %>
 
 #%>
 TEMPLATE
+
+        @expected_result_for_nested_iteration_tag_when_data_provided =<<RESULT
+The first line in the main part
+
+The first line in the iteration part
+
+Key value: value
+Optinal values:  optinal value1 and [optional2] are in the record.
+
+The value of key1 is value1
+The value of key1 is value1
+The value of optional key2 is value2
+
+RESULT
       end
 
       describe "with data in default format" do
@@ -230,7 +244,7 @@ key1: value1
 key1: value1
 CONFIG
 
-          expected_result =<<RESULT
+        expected_result =<<RESULT # when_data_provided
 The first line in the main part
 
 The first line in the iteration part
@@ -278,19 +292,7 @@ key1: value1
 key2: value2
 CONFIG
 
-          expected_result =<<RESULT
-The first line in the main part
-
-The first line in the iteration part
-
-Key value: value
-Optinal values:  optinal value1 and [optional2] are in the record.
-
-The value of key1 is value1
-The value of key1 is value1
-The value of optional key2 is value2
-
-RESULT
+          expected_result = @expected_result_for_nested_iteration_tag_when_data_provided
 
           tree = AdHocTemplate::Parser.parse(@template_with_nested_iteration_tag)
           config = AdHocTemplate::RecordReader.read_record(config_data)
@@ -333,7 +335,7 @@ RESULT
   - key1: value1
 CONFIG
 
-          expected_result =<<RESULT
+        expected_result =<<RESULT # when_data_provided
 The first line in the main part
 
 The first line in the iteration part
@@ -378,19 +380,7 @@ optional1: optinal value1
     key2: value2
 CONFIG
 
-          expected_result =<<RESULT
-The first line in the main part
-
-The first line in the iteration part
-
-Key value: value
-Optinal values:  optinal value1 and [optional2] are in the record.
-
-The value of key1 is value1
-The value of key1 is value1
-The value of optional key2 is value2
-
-RESULT
+          expected_result = @expected_result_for_nested_iteration_tag_when_data_provided
 
           tree = AdHocTemplate::Parser.parse(@template_with_nested_iteration_tag)
           config = AdHocTemplate::RecordReader.read_record(config_data, :yaml)
