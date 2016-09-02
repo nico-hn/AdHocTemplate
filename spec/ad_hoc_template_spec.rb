@@ -219,6 +219,16 @@ The value of optional key2 is <%= key2 %>
 #%>
 TEMPLATE
 
+        @expected_result_when_data_provided =<<RESULT
+The first line in the main part
+
+The first line in the iteration part
+
+The value of key1 is value1
+The value of key1 is value1
+
+RESULT
+
         @expected_result_for_nested_iteration_tag_when_data_provided =<<RESULT
 The first line in the main part
 
@@ -244,15 +254,7 @@ key1: value1
 key1: value1
 CONFIG
 
-        expected_result =<<RESULT # when_data_provided
-The first line in the main part
-
-The first line in the iteration part
-
-The value of key1 is value1
-The value of key1 is value1
-
-RESULT
+          expected_result = @expected_result_when_data_provided
 
           tree = AdHocTemplate::Parser.parse(@template)
           config = AdHocTemplate::RecordReader.read_record(config_data)
@@ -335,15 +337,7 @@ RESULT
   - key1: value1
 CONFIG
 
-        expected_result =<<RESULT # when_data_provided
-The first line in the main part
-
-The first line in the iteration part
-
-The value of key1 is value1
-The value of key1 is value1
-
-RESULT
+          expected_result = @expected_result_when_data_provided
 
           tree = AdHocTemplate::Parser.parse(@template)
           config = AdHocTemplate::RecordReader.read_record(config_data, :yaml)
