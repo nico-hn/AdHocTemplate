@@ -210,6 +210,40 @@ YAML
       command_line_interface.execute
     end
 
+    it "can register a user-defined tag type" do
+      template_filename = "template.txt"
+      record_filename = "record.txt"
+      tag_config_yaml = "tag_config.yaml"
+
+      template = <<TEMPLATE
+a test string with tags (<!--%= key1 %--> and <!--%= key2 %-->) in it
+
+<repeat>iteration_block
+the value of sub_key1 is <!--%= sub_key1 %-->
+the value of sub_key2 is <!--%= sub_key2 %-->
+
+</repeat>
+<!--%= block %-->
+TEMPLATE
+
+      tag_config =<<CONFIG
+tag_name: xml_like3
+tag: ["<!--%", "%-->"]
+iteration_tag: ["<repeat>", "</repeat>"]
+remove_indent: true
+CONFIG
+
+      allow(File).to receive(:read).with(File.expand_path(template_filename)).and_return(template)
+      allow(File).to receive(:read).with(File.expand_path(record_filename)).and_return(@record_in_default_format)
+      allow(File).to receive(:read).with(File.expand_path(tag_config_yaml)).and_return(tag_config)
+      allow(STDOUT).to receive(:print).with(@expected_result)
+
+      set_argv("--user-defined-tag=tag_config.yaml #{template_filename} #{record_filename}")
+      command_line_interface = AdHocTemplate::CommandLineInterface.new
+      command_line_interface.parse_command_line_options
+      command_line_interface.execute
+    end
+
     describe "--data-format=csv" do
       before do
         @record_in_csv_format = <<CSV

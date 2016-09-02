@@ -65,6 +65,11 @@ module AdHocTemplate
           choose_data_format(data_format)
         end
 
+        opt.on("-u [tag_config.yaml]","--user-defined-tag [=tag_config.yaml]",
+               "Configure a user-defined tag. The configuration file is in YAML format.") do |tag_config_yaml|
+          register_user_defined_tag_type(tag_config_yaml)
+        end
+
        opt.parse!
       end
 
@@ -122,6 +127,11 @@ module AdHocTemplate
                          "The given format is not found. The default format is chosen.") do |re, format|
         @data_format = [:csv, :tsv].include?(format) ? make_csv_option(data_format, format) : format
       end
+    end
+
+    def register_user_defined_tag_type(tag_config_yaml)
+      config = File.read(File.expand_path(tag_config_yaml))
+      @tag_type = Parser.register_user_defined_tag_type(config)
     end
 
     def make_csv_option(data_format, format)

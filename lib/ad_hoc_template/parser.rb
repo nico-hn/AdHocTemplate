@@ -133,6 +133,7 @@ module AdHocTemplate
         end
       end
       TagType.register(tag_name.to_sym, tag, iteration_tag, remove_indent)
+      tag_name.to_sym # returns the registered tag name.
     end
 
     def initialize(str, tag)
