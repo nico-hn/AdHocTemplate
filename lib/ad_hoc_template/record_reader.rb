@@ -266,8 +266,6 @@ module AdHocTemplate
     end
 
     def self.read_record(input, source_format=:default)
-      source_format, csv_label = parse_source_format(source_format)
-
       case source_format
       when :default
         ReaderState.new.read_record(input)
@@ -275,10 +273,8 @@ module AdHocTemplate
         YAMLReader.read_record(input)
       when :json
         JSONReader.read_record(input)
-      when :csv
-        CSVReader.read_record(input, csv_label)
-      when :tsv
-        CSVReader.read_record(input, tsv: csv_label)
+      when :csv, :tsv, Hash
+        CSVReader.read_record(input, source_format)
       end
     end
 
