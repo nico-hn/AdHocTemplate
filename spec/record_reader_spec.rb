@@ -356,16 +356,16 @@ TSV
     describe "TSV" do
       it 'reads TSV data and turns it into a Ruby object' do
         config = AdHocTemplate::RecordReader.read_record(@config_source)
-        tsv = AdHocTemplate::RecordReader::CSVReader.read_record(@tsv_source, "subconfigs", :tsv)
+        tsv = AdHocTemplate::RecordReader::CSVReader.read_record(@tsv_source, tsv: "subconfigs")
 
         expect(tsv).to eq(config)
       end
 
       it '.read_record is called from RecordReader.read_record if the format of source data is specified' do
-        csv_reader = AdHocTemplate::RecordReader::CSVReader.read_record(@csv_source, "subconfigs", :tsv)
+        csv_reader = AdHocTemplate::RecordReader::CSVReader.read_record(@csv_source, tsv: "subconfigs")
         record_reader = AdHocTemplate::RecordReader.read_record(@csv_source, tsv: "subconfigs")
 
-        csv_reader_without_label = AdHocTemplate::RecordReader::CSVReader.read_record(@csv_source, nil, :tsv)
+        csv_reader_without_label = AdHocTemplate::RecordReader::CSVReader.read_record(@csv_source, :tsv)
         record_reader_without_label = AdHocTemplate::RecordReader.read_record(@csv_source, :tsv)
 
 

@@ -29,8 +29,8 @@ module AdHocTemplate
     end
 
     module CSVReader
-      def self.read_record(csv_data, label=nil, format=:csv)
-        label, sep  = parse_config(format => label)
+      def self.read_record(csv_data, config={ csv: nil })
+        label, sep  = parse_config(config)
         header, *data = CSV.new(csv_data, col_sep: sep).to_a
         records = data.map {|row| convert_to_hash(header, row) }
         if label
@@ -278,7 +278,7 @@ module AdHocTemplate
       when :csv
         CSVReader.read_record(input, csv_label)
       when :tsv
-        CSVReader.read_record(input, csv_label, :tsv)
+        CSVReader.read_record(input, tsv: csv_label)
       end
     end
 
