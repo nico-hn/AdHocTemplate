@@ -29,8 +29,8 @@ module AdHocTemplate
     end
 
     module CSVReader
-      def self.read_record(csv_data, label=nil, f_sep=nil)
-        sep = f_sep == :tab ? "\t" : CSV::DEFAULT_OPTIONS[:col_sep]
+      def self.read_record(csv_data, label=nil, format=:csv)
+        sep = format == :tsv ? "\t" : CSV::DEFAULT_OPTIONS[:col_sep]
         header, *data = CSV.new(csv_data, col_sep: sep).to_a
         records = data.map {|row| convert_to_hash(header, row) }
         if label
@@ -265,7 +265,7 @@ module AdHocTemplate
       when :csv
         CSVReader.read_record(input, csv_label)
       when :tsv
-        CSVReader.read_record(input, csv_label, :tab)
+        CSVReader.read_record(input, csv_label, :tsv)
       end
     end
 
