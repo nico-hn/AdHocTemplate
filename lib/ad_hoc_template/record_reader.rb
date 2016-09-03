@@ -277,17 +277,5 @@ module AdHocTemplate
         CSVReader.read_record(input, source_format)
       end
     end
-
-    def self.parse_source_format(source_format)
-      return source_format, nil unless source_format.kind_of? Hash
-
-      [:csv, :tsv].each do |format|
-        if csv_label = source_format[format]
-          return format, csv_label
-        end
-      end
-    end
-
-    private_class_method :parse_source_format
   end
 end
