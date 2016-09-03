@@ -108,9 +108,7 @@ module AdHocTemplate
     def execute
       parse_command_line_options
       read_input_files
-      open_output do |out|
-        out.print convert
-      end
+      open_output {|out| out.print convert }
     end
 
     private
