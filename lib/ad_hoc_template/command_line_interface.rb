@@ -70,7 +70,7 @@ module AdHocTemplate
           register_user_defined_tag_type(tag_config_yaml)
         end
 
-       opt.parse!
+        opt.parse!
       end
 
       unless @data_format
