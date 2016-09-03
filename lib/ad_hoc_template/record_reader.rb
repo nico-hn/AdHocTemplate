@@ -58,7 +58,7 @@ module AdHocTemplate
     SEPARATOR = /:\s*/o
     BLOCK_HEAD = /\A\/\/@/o
     ITERATION_HEAD = /\A\/\/@#/o
-    EMPTY_LINE = /\A\r?\n\Z/o
+    EMPTY_LINE = /\A(?:\r?\n|\r)\Z/o
     ITERATION_MARK = /\A#/o
     READERS_RE = {
       key_value: SEPARATOR,

@@ -15,7 +15,7 @@ module AdHocTemplate
 
       def assign_type(first_leaf)
         if not first_leaf.kind_of? String or /\A\s/ =~ first_leaf
-          return first_leaf.sub(/\A\r?\n/, "")
+          return first_leaf.sub(/\A(?:\r?\n|\r)/, "")
         end
         @type, first_leaf_content = split_by_newline_or_spaces(first_leaf)
         @type = '#'.freeze + @type if kind_of? IterationTagNode
@@ -23,7 +23,7 @@ module AdHocTemplate
       end
 
       def split_by_newline_or_spaces(first_leaf)
-        sep = /\A\S*\r?\n/ =~ first_leaf ? /\r?\n/ : /\s+/
+        sep = /\A\S*(?:\r?\n|\r)/ =~ first_leaf ? /(?:\r?\n|\r)/ : /\s+/
         first_leaf.split(sep, 2)
       end
       private :assign_type, :split_by_newline_or_spaces
@@ -117,7 +117,7 @@ module AdHocTemplate
         tag_type.iteration_start,
         tag_type.iteration_end
       ].inject(template_source) do |s, tag|
-        s.gsub(/^([ \t]+#{Regexp.escape(tag)}\r?\n)/) { $1.lstrip }
+        s.gsub(/^([ \t]+#{Regexp.escape(tag)}(?:\r?\n|\r))/) { $1.lstrip }
       end
     end
 
@@ -154,7 +154,7 @@ module AdHocTemplate
     private
 
     def remove_trailing_newline_of_iteration_end_tag(str, iteration_end_tag)
-      str.gsub(/#{Regexp.escape(iteration_end_tag)}\r?\n/, iteration_end_tag)
+      str.gsub(/#{Regexp.escape(iteration_end_tag)}(?:\r?\n|\r)/, iteration_end_tag)
     end
   end
 end
