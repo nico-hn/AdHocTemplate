@@ -30,7 +30,7 @@ module AdHocTemplate
 
     module CSVReader
       def self.read_record(csv_data, label=nil, format=:csv)
-        sep = format == :tsv ? "\t" : CSV::DEFAULT_OPTIONS[:col_sep]
+        label, sep  = parse_config(format => label)
         header, *data = CSV.new(csv_data, col_sep: sep).to_a
         records = data.map {|row| convert_to_hash(header, row) }
         if label
@@ -49,6 +49,19 @@ module AdHocTemplate
           end
         end
         # if RUBY_VERSION >= 2.1.0: header.zip(row_array).to_h
+      end
+
+      def self.parse_config(config)
+        case config
+        when Symbol
+          format, label = config, nil
+        when String
+          format, label = :csv, config
+        when Hash
+          format, label = config.to_a[0]
+        end
+        field_sep = format == :tsv ? "\t" : CSV::DEFAULT_OPTIONS[:col_sep]
+        return label, field_sep
       end
 
       private_class_method :convert_to_hash
