@@ -253,10 +253,7 @@ module AdHocTemplate
     end
 
     def self.read_record(input, source_format=:default)
-      csv_label = nil
-      if source_format.kind_of? Hash
-        source_format, csv_label = parse_source_format(source_format)
-      end
+      source_format, csv_label = parse_source_format(source_format)
 
       case source_format
       when :default
@@ -273,6 +270,8 @@ module AdHocTemplate
     end
 
     def self.parse_source_format(source_format)
+      return source_format, nil unless source_format.kind_of? Hash
+
       [:csv, :tsv].each do |format|
         if csv_label = source_format[format]
           return format, csv_label
