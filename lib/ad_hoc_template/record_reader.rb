@@ -64,7 +64,7 @@ module AdHocTemplate
         return label, field_sep
       end
 
-      private_class_method :convert_to_hash
+      private_class_method :convert_to_hash, :parse_config
     end
 
     SEPARATOR = /:\s*/o
