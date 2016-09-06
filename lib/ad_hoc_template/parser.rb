@@ -113,12 +113,12 @@ module AdHocTemplate
     end
 
     def self.remove_indent_before_iteration_tags(template_source, tag_type)
-      [
+      start_tag, end_tag = [
         tag_type.iteration_start,
         tag_type.iteration_end
-      ].inject(template_source) do |s, tag|
-        s.gsub(/^([ \t]+#{Regexp.escape(tag)}(?:\r?\n|\r))/) { $1.lstrip }
-      end
+      ].map {|tag| Regexp.escape(tag) }
+      template_source.gsub(/^([ \t]+#{start_tag}\S*(?:\r?\n|\r))/) {|s| s.lstrip }
+        .gsub(/^([ \t]+#{end_tag}(?:\r?\n|\r))/) {|s| s.lstrip }
     end
 
     def self.register_user_defined_tag_type(config_source)

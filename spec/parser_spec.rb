@@ -365,6 +365,31 @@ TEMPLATE
 
         expect(with_indent).to eq(without_indent)
       end
+
+      it "removes indents from the lines which contain only a labeled iteration tag" do
+        template_without_indent = <<TEMPLATE_WITHOUT_INDENT
+A template with an iteration tag
+
+<!--%iterate%-->label
+    This part will be repeated with <!--% variable %-->
+<!--%/iterate%-->
+
+TEMPLATE_WITHOUT_INDENT
+
+        template_with_indent = <<TEMPLATE
+A template with an iteration tag
+
+  <!--%iterate%-->label
+    This part will be repeated with <!--% variable %-->
+  <!--%/iterate%-->
+
+TEMPLATE
+
+        without_indent = AdHocTemplate::Parser.parse(template_without_indent, :xml_comment_like)
+        with_indent = AdHocTemplate::Parser.parse(template_with_indent, :xml_comment_like)
+
+        expect(with_indent).to eq(without_indent)
+      end
     end
 
     describe ".register_user_defined_tag_type" do
