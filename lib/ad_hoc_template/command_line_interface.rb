@@ -47,11 +47,7 @@ module AdHocTemplate
       OptionParser.new_with_yaml do |opt|
         opt.banner = "USAGE: #{File.basename($0)} [OPTION]... TEMPLATE_FILE DATA_FILE"
         opt.version = AdHocTemplate::VERSION
-
-        opt.on("-E [ex[:in]]", "--encoding [=ex[:in]]",
-               "Specify the default external and internal character encodings (same as the option of MRI") do |given_opt|
-          self.set_encoding(given_opt)
-        end
+        opt.inherit_ruby_options('E')
 
         opt.on("-o [output_file]", "--output [=output_file]",
                "Save the result into the specified file.") do |output_file|
