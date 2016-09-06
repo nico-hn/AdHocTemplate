@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 require 'ad_hoc_template'
-require 'optparse'
+require 'optparse_plus'
 
 module AdHocTemplate
   class CommandLineInterface
@@ -44,7 +44,8 @@ module AdHocTemplate
     end
 
     def parse_command_line_options
-      OptionParser.new("USAGE: #{File.basename($0)} [OPTION]... TEMPLATE_FILE DATA_FILE") do |opt|
+      OptionParser.new_with_yaml do |opt|
+        opt.banner = "USAGE: #{File.basename($0)} [OPTION]... TEMPLATE_FILE DATA_FILE"
         opt.version = AdHocTemplate::VERSION
 
         opt.on("-E [ex[:in]]", "--encoding [=ex[:in]]",
@@ -157,3 +158,21 @@ module AdHocTemplate
     end
   end
 end
+
+__END__
+output_file:
+  short: "-o [output_file]"
+  long: "--output [=output_file]"
+  description: "Save the result into the specified file."
+tag_type:
+  short: "-t [tag_type]"
+  long: "--tag-type [=tag_type]"
+  description: "Choose a template tag type: default, curly_brackets or square_brackets"
+data_format:
+  short: "-d [data_format]"
+  long: "--data-format [=data_format]"
+  description: "Specify the format of input data: default, yaml, json, csv or tsv"
+tag_config:
+  short: "-u [tag_config.yaml]"
+  long: "--user-defined-tag [=tag_config.yaml]"
+  description: "Configure a user-defined tag. The configuration file is in YAML format."
