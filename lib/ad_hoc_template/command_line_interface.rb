@@ -47,27 +47,12 @@ module AdHocTemplate
       OptionParser.new_with_yaml do |opt|
         opt.banner = "USAGE: #{File.basename($0)} [OPTION]... TEMPLATE_FILE DATA_FILE"
         opt.version = AdHocTemplate::VERSION
-        opt.inherit_ruby_options('E')
 
-        opt.on("-o [output_file]", "--output [=output_file]",
-               "Save the result into the specified file.") do |output_file|
-          @output_filename = File.expand_path(output_file)
-        end
-
-        opt.on("-t [tag_type]", "--tag-type [=tag_type]",
-               "Choose a template tag type: default, curly_brackets or square_brackets") do |given_type|
-          choose_tag_type(given_type)
-        end
-
-        opt.on("-d [data_format]", "--data-format [=data_format]",
-               "Specify the format of input data: default, yaml, json, csv or tsv") do |data_format|
-          choose_data_format(data_format)
-        end
-
-        opt.on("-u [tag_config.yaml]","--user-defined-tag [=tag_config.yaml]",
-               "Configure a user-defined tag. The configuration file is in YAML format.") do |tag_config_yaml|
-          register_user_defined_tag_type(tag_config_yaml)
-        end
+        opt.inherit_ruby_options('E') # -E, --encoding
+        opt.on(:output_file) {|output_file| @output_filename = File.expand_path(output_file) }
+        opt.on(:tag_type) {|given_type| choose_tag_type(given_type) }
+        opt.on(:data_format) {|data_format| choose_data_format(data_format) }
+        opt.on(:tag_config) {|tag_config_yaml| register_user_defined_tag_type(tag_config_yaml) }
 
         opt.parse!
       end
