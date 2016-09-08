@@ -2,6 +2,15 @@
 
 module AdHocTemplate
   class DefaultTagFormatter
+    FUNCTION_TABLE = {
+      "=" => :default,
+      "h" => :html_encode
+    }
+
+    def self.assign_format(format_label, &func)
+      FUNCTION_TABLE[format_label] = func
+    end
+
     def find_function(format_label)
       FUNCTION_TABLE[format_label]||:default
     end
@@ -23,10 +32,5 @@ module AdHocTemplate
     def html_encode(var, record)
       HtmlElement.escape(record[var]||var)
     end
-
-    FUNCTION_TABLE = {
-      "=" => :default,
-      "h" => :html_encode
-    }
   end
 end
