@@ -25,7 +25,7 @@ key1: value1
 key2: value2
 key3: value3
 
-//@#iteration_block
+///@#iteration_block
 
 sub_key1: value1-1
 sub_key2: value1-2
@@ -33,7 +33,7 @@ sub_key2: value1-2
 sub_key1: value2-1
 sub_key2: value2-2
 
-//@block
+///@block
 
 the first line of block
 the second line of block
@@ -104,7 +104,7 @@ key2: value2
 key3: value3
 key-without-value: 
 
-//@block
+///@block
 
 the first line of block
 the second line of block
@@ -156,14 +156,14 @@ the value of sub_key1 is <%= sub_key1 %>
 TEMPLATE
 
       config_data = <<CONFIG
-//@#iteration_block
+///@#iteration_block
 
 sub_key1: value1-1
 sub_key2: value1-2
 
 sub_key1: value2-1
 
-//@block
+///@block
 
 the first line of block
 CONFIG
@@ -247,7 +247,7 @@ RESULT
       describe "with data in default format" do
         it "should not ignore the content of an iteration block when some data are provided" do
           config_data = <<CONFIG
-//@#iteration_block
+///@#iteration_block
 
 key1: value1
 
@@ -265,7 +265,7 @@ CONFIG
 
         it "should ignore the content of an iteration block if no thing is provided" do
           config_data = <<CONFIG
-//@#iteration_block
+///@#iteration_block
 
 CONFIG
 
@@ -286,7 +286,7 @@ RESULT
 key: value
 optional1: optinal value1
 
-//@#iteration_block
+///@#iteration_block
 
 key1: value1
 
@@ -308,7 +308,7 @@ CONFIG
 key: 
 optional1: 
 
-//@#iteration_block
+///@#iteration_block
 
 key1: 
 

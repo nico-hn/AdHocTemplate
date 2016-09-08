@@ -24,7 +24,7 @@ CONFIG
 
     it "can read several header type configurations at once." do
       data = <<CONFIGS
-//@#configs
+///@#configs
 
 key1-1: value1-1
 key1-2: value1-2
@@ -48,7 +48,7 @@ CONFIGS
 
     it "can read sets of several header type configurations at once." do
       data = <<CONFIGS
-//@#configs
+///@#configs
 
 key1-1: value1-1
 key1-2: value1-2
@@ -59,7 +59,7 @@ key2-2: value2-2
 key3-1: value3-1
 key3-2: value3-2
 
-//@#configs2
+///@#configs2
 
 key1-1: value1-1
 key1-2: value1-2
@@ -93,14 +93,14 @@ key1: value1
 key2: value2
 key3: value3
 
-//@block1
+///@block1
 
 the first line of block1
 the second line of block1
 
 the second paragraph in block1
 
-//@block2
+///@block2
 the first line of block2
 the second line of block2
 
@@ -123,7 +123,7 @@ key1: value1
 key2: value2
 key3: value3
 
-//@#subconfigs
+///@#subconfigs
 
 key1-1: value1-1
 key1-2: value1-2
@@ -131,7 +131,7 @@ key1-2: value1-2
 key2-1: value2-1
 key2-2: value2-2
 
-//@block
+///@block
 
 the first line of block
 the second line of block
@@ -158,7 +158,7 @@ key1: value1
 key2: value2
 key3: value3
 
-//@#subconfigs
+///@#subconfigs
 
 key1-1: value1-1
 key1-2: value1-2
@@ -166,7 +166,7 @@ key1-2: value1-2
 key2-1: value2-1
 key2-2: value2-2
 
-//@block
+///@block
 
 the first line of block
 the second line of block
@@ -237,7 +237,7 @@ key1: value1
 key2: value2
 key3: value3
 
-//@#subconfigs
+///@#subconfigs
 
 key1-1: value1-1
 key1-2: value1-2
@@ -245,7 +245,7 @@ key1-2: value1-2
 key2-1: value2-1
 key2-2: value2-2
 
-//@block
+///@block
 
 the first line of block
 the second line of block
@@ -303,7 +303,7 @@ JSON
   describe AdHocTemplate::RecordReader::CSVReader do
       before do
         @config_source = <<CONFIG
-//@#subconfigs
+///@#subconfigs
 
 key1: value1-1
 key2: value1-2

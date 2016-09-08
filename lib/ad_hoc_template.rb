@@ -1,31 +1,10 @@
 require "ad_hoc_template/version"
 require "ad_hoc_template/parser"
 require "ad_hoc_template/record_reader"
+require "ad_hoc_template/default_tag_formatter"
+require "ad_hoc_template/pseudohiki_formatter"
 
 module AdHocTemplate
-  class DefaultTagFormatter
-    def find_function(tag_type)
-      FUNCTION_TABLE[tag_type]||:default
-    end
-
-    def format(tag_type, var, record)
-      self.send(find_function(tag_type), var, record)
-    end
-
-    def default(var, record)
-      record[var]||"[#{var}]"
-    end
-
-    def html_encode(var, record)
-      HtmlElement.escape(record[var]||var)
-    end
-
-    FUNCTION_TABLE = {
-      "=" => :default,
-      "h" => :html_encode
-    }
-  end
-
   class DataLoader
     def self.format(template, record, tag_formatter=DefaultTagFormatter.new)
       if record.kind_of? Array
