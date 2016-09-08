@@ -7,7 +7,13 @@ module AdHocTemplate
     end
 
     def format(format_label, var, record)
-      self.send(find_function(format_label), var, record)
+      func = find_function(format_label)
+      case func
+      when Symbol, String
+        self.send(func, var, record)
+      else
+        func.call(var, record)
+      end
     end
 
     def default(var, record)

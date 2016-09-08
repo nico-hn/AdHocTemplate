@@ -23,6 +23,16 @@ describe AdHocTemplate do
       default = formatter.format('h', 'var1', @record)
       expect(default).to eq('&lt;value1&gt;')
     end
+
+    it 'proc objects may be assigned in DefaultTagFormatter::FUNCTION_TABLE' do
+      proc_label = 'proc_label'
+      function_table = AdHocTemplate::DefaultTagFormatter::FUNCTION_TABLE
+      function_table[proc_label] = proc {|var, record| "test for proc assignment: #{record[var]}" }
+      formatter = AdHocTemplate::DefaultTagFormatter.new
+      proc_assigned = formatter.format(proc_label, 'var1', @record)
+      function_table.delete(proc_label)
+      expect(proc_assigned).to eq('test for proc assignment: <value1>')
+    end
   end
 end
 
