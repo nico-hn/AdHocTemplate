@@ -37,12 +37,6 @@ module AdHocTemplate
       @data_format = nil
     end
 
-    def set_encoding(given_opt)
-      external, internal = given_opt.split(/:/o, 2)
-      Encoding.default_external = external if external and not external.empty?
-      Encoding.default_internal = internal if internal and not internal.empty?
-    end
-
     def parse_command_line_options
       OptionParser.new_with_yaml do |opt|
         opt.banner = "USAGE: #{File.basename($0)} [OPTION]... TEMPLATE_FILE DATA_FILE"
