@@ -2,12 +2,12 @@
 
 module AdHocTemplate
   class DefaultTagFormatter
-    def find_function(tag_type)
-      FUNCTION_TABLE[tag_type]||:default
+    def find_function(format_label)
+      FUNCTION_TABLE[format_label]||:default
     end
 
-    def format(tag_type, var, record)
-      self.send(find_function(tag_type), var, record)
+    def format(format_label, var, record)
+      self.send(find_function(format_label), var, record)
     end
 
     def default(var, record)
