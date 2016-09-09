@@ -33,7 +33,7 @@ module AdHocTemplate
     end
 
     module DefaultFormat
-      def self.labels_in_default_format(labels)
+      def self.dump(labels)
         iterations, keys = labels.partition {|e| e[1] }.map {|e| e.map(&:first) }
 
         key_value_part = format_key_names(keys)
@@ -62,7 +62,7 @@ module AdHocTemplate
       when :json
         JSON.dump(labels)
       else
-        DefaultFormat.labels_in_default_format(labels)
+        DefaultFormat.dump(labels)
       end
     end
 
