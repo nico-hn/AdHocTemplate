@@ -25,5 +25,11 @@ module AdHocTemplate
         end
       end
     end
+
+    def self.extract_labels(parsed_template)
+      label_checker = LabelChecker.new
+      parsed_template.accept(label_checker)
+      labels = label_checker.labels
+    end
   end
 end

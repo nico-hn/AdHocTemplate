@@ -46,5 +46,12 @@ TEMPLATE
       labels = label_checker.labels
       expect(labels).to eq(@expected_labels_as_ruby_objects)
     end
+
+    it '.extract_labels collects tag labels from a parsed template' do
+      tree = AdHocTemplate::Parser.parse(@template)
+      labels = AdHocTemplate::EntryFormatGenerator.extract_labels(tree)
+
+      expect(labels).to eq(@expected_labels_as_ruby_objects)
+    end
   end
 end
