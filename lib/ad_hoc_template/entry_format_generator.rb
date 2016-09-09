@@ -11,16 +11,22 @@ module AdHocTemplate
       def visit(tree)
         case tree
         when Parser::IterationTagNode
-          if iteration_label = tree.type
-            sub_checker = self.class.new
-            @labels[iteration_label] = [sub_checker.labels]
-            tree.each { |node| node.accept(sub_checker) }
-          else
-            tree.each {|node| node.accept(self) }
-          end
+          visit_iteration_tag_node(tree)
         when Parser::TagNode
           @labels[tree.join.strip] = nil
         when Parser::Node
+          tree.each {|node| node.accept(self) }
+        end
+      end
+
+      private
+
+      def visit_iteration_tag_node(tree)
+        if iteration_label = tree.type
+          sub_checker = self.class.new
+          @labels[iteration_label] = [sub_checker.labels]
+          tree.each { |node| node.accept(sub_checker) }
+        else
           tree.each {|node| node.accept(self) }
         end
       end
