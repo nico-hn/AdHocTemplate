@@ -6,6 +6,7 @@ require 'optparse_plus'
 module AdHocTemplate
   class CommandLineInterface
     attr_accessor :output_filename, :template_data, :record_data, :tag_type, :data_format
+    attr_writer :output_empty_entry
 
     TAG_RE_TO_TYPE = {
       /\Ad(efault)?/i => :default,
@@ -48,6 +49,7 @@ module AdHocTemplate
         opt.on(:tag_type) {|given_type| choose_tag_type(given_type) }
         opt.on(:data_format) {|data_format| choose_data_format(data_format) }
         opt.on(:tag_config) {|tag_config_yaml| register_user_defined_tag_type(tag_config_yaml) }
+        opt.on(:entry_format) {|entry_format| @output_empty_entry = true }
 
         opt.parse!
       end
@@ -74,6 +76,11 @@ module AdHocTemplate
                             @data_format, @tag_formatter)
     end
 
+    def generate_entry_format
+      tree = Parser.parse(@template_data, @tag_type)
+      EntryFormatGenerator.extract_labels(tree, @data_format)
+    end
+
     def open_output
       if @output_filename
         open(@output_filename, "wb") do |out|
@@ -87,7 +94,8 @@ module AdHocTemplate
     def execute
       parse_command_line_options
       read_input_files
-      open_output {|out| out.print convert }
+      output = @output_empty_entry ? generate_entry_format : convert
+      open_output {|out| out.print output }
     end
 
     private
@@ -152,3 +160,7 @@ tag_config:
   short: "-u [tag_config.yaml]"
   long: "--user-defined-tag [=tag_config.yaml]"
   description: "Configure a user-defined tag. The configuration file is in YAML format."
+entry_format:
+  short: "-e"
+  long: "--entry-format"
+  description: "Extract tag labels from a template and generate an empty data entry format"
