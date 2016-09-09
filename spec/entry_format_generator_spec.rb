@@ -48,10 +48,22 @@ TEMPLATE
     end
 
     it '.extract_labels collects tag labels from a parsed template' do
+      expected_labels_in_default_format = <<YAML
+key: 
+optional1: 
+optional2: 
+block: 
+
+///@#iteration_block
+
+key1: 
+key2: 
+YAML
+
       tree = AdHocTemplate::Parser.parse(@template)
       labels = AdHocTemplate::EntryFormatGenerator.extract_labels(tree)
 
-      expect(labels).to eq(@expected_labels_as_ruby_objects)
+      expect(labels).to eq(expected_labels_in_default_format)
     end
 
     it '.extract_labels accepts :yaml as its second argument' do

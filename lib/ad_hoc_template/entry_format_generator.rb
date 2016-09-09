@@ -41,7 +41,7 @@ module AdHocTemplate
       when :json
         JSON.dump(labels)
       else
-        labels
+        labels_in_default_format(labels)
       end
     end
 
@@ -49,6 +49,28 @@ module AdHocTemplate
       label_checker = LabelChecker.new
       parsed_template.accept(label_checker)
       label_checker.labels
+    end
+
+    def self.labels_in_default_format(labels)
+      keys = []
+      iterations = []
+      labels.each do |key, val|
+        if val.kind_of? Array
+          iterations.push key
+        else
+          keys.push key
+        end
+      end
+
+      key_value_part = keys.map {|key| "#{key}: " }.join($/)
+
+      iteration_part = iterations.map do |iteration_label|
+        header = "///@#{iteration_label}#{$/}#{$/}"
+        key_values = labels[iteration_label][0].keys.map {|key| "#{key}: " }.join($/)
+        header + key_values + $/
+      end.join($/*2)
+
+      [key_value_part, iteration_part].join($/*2)
     end
 
     private_class_method :extract_labels_as_ruby_objects
