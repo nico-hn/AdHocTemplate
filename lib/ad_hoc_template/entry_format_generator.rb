@@ -65,9 +65,8 @@ module AdHocTemplate
       key_value_part = format_key_names(keys)
 
       iteration_part = iterations.map do |iteration_label|
-        header = "///@#{iteration_label}#{$/}#{$/}"
-        key_values = format_key_names(labels[iteration_label][0].keys)
-        header + key_values
+        kv_part = format_key_names(labels[iteration_label][0].keys)
+        "///@#{iteration_label}#{$/*2}#{kv_part}"
       end.join($/)
 
       [key_value_part, iteration_part].join($/)
