@@ -52,15 +52,7 @@ module AdHocTemplate
     end
 
     def self.labels_in_default_format(labels)
-      keys = []
-      iterations = []
-      labels.each do |key, val|
-        if val.kind_of? Array
-          iterations.push key
-        else
-          keys.push key
-        end
-      end
+      iterations, keys = labels.partition {|e| e[1] }.map {|e| e.map(&:first) }
 
       key_value_part = format_key_names(keys)
 
