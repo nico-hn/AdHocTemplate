@@ -53,5 +53,23 @@ TEMPLATE
 
       expect(labels).to eq(@expected_labels_as_ruby_objects)
     end
+
+    it '.extract_labels accepts :yaml as its second argument' do
+      expected_labels_in_yaml = <<YAML
+---
+key: 
+optional1: 
+optional2: 
+"#iteration_block":
+- key1: 
+  key2: 
+block: 
+YAML
+
+      tree = AdHocTemplate::Parser.parse(@template)
+      labels = AdHocTemplate::EntryFormatGenerator.extract_labels(tree, :yaml)
+
+      expect(labels).to eq(expected_labels_in_yaml)
+    end
   end
 end

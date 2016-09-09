@@ -26,10 +26,16 @@ module AdHocTemplate
       end
     end
 
-    def self.extract_labels(parsed_template)
+    def self.extract_labels(parsed_template, data_format=nil)
       label_checker = LabelChecker.new
       parsed_template.accept(label_checker)
       labels = label_checker.labels
+      case data_format
+      when :yaml
+        YAML.dump(labels)
+      else
+        labels
+      end
     end
   end
 end
