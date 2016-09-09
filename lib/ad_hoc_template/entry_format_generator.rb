@@ -27,9 +27,8 @@ module AdHocTemplate
     end
 
     def self.extract_labels(parsed_template, data_format=nil)
-      label_checker = LabelChecker.new
-      parsed_template.accept(label_checker)
-      labels = label_checker.labels
+      labels = extract_labels_as_ruby_objects(parsed_template)
+
       case data_format
       when :yaml
         YAML.dump(labels)
@@ -39,5 +38,13 @@ module AdHocTemplate
         labels
       end
     end
+
+    def self.extract_labels_as_ruby_objects(parsed_template)
+      label_checker = LabelChecker.new
+      parsed_template.accept(label_checker)
+      label_checker.labels
+    end
+
+    private_class_method :extract_labels_as_ruby_objects
   end
 end
