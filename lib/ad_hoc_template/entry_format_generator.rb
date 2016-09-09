@@ -62,17 +62,22 @@ module AdHocTemplate
         end
       end
 
-      key_value_part = keys.map {|key| "#{key}: " }.join($/)
+      key_value_part = format_key_names(keys)
 
       iteration_part = iterations.map do |iteration_label|
         header = "///@#{iteration_label}#{$/}#{$/}"
-        key_values = labels[iteration_label][0].keys.map {|key| "#{key}: " }.join($/)
-        header + key_values + $/
-      end.join($/*2)
+        key_values = format_key_names(labels[iteration_label][0].keys)
+        header + key_values
+      end.join($/)
 
-      [key_value_part, iteration_part].join($/*2)
+      [key_value_part, iteration_part].join($/)
+    end
+
+    def self.format_key_names(key_names)
+      key_names.map {|key| "#{key}: #{$/}" }.join
     end
 
     private_class_method :extract_labels_as_ruby_objects
+    private_class_method :format_key_names
   end
 end
