@@ -464,5 +464,57 @@ RESULT
         expect(command_line_interface.data_format).to eq(:yaml)
       end
     end
+
+    describe "--entry-format" do
+      before do
+      @template = <<TEMPLATE
+The first line in the main part
+
+<%#
+The first line in the iteration part
+
+Key value: <%= key %>
+Optinal values: <%# <%= optional1 %> and <%= optional2 %> are in the record.
+#%>
+
+<%#iteration_block
+The value of key1 is <%= key1 %>
+<%#
+The value of optional key2 is <%= key2 %>
+#%>
+#%>
+
+#%>
+
+<%= block %>
+TEMPLATE
+      end
+
+      it 'can output an empty entry format in YAML' do
+        expected_format_in_yaml = <<YAML
+---
+key: 
+optional1: 
+optional2: 
+"#iteration_block":
+- key1: 
+  key2: 
+block: 
+YAML
+
+        template_filename = "template.txt"
+
+        allow(File).to receive(:read).with(File.expand_path(template_filename)).and_return(@template)
+        allow(STDOUT).to receive(:print).with(expected_format_in_yaml)
+        allow(ARGF).to receive(:read).with(no_args)
+
+        set_argv("-d y --entry-format #{template_filename}")
+        command_line_interface = AdHocTemplate::CommandLineInterface.new
+        command_line_interface.parse_command_line_options
+        expect(command_line_interface.data_format).to eq(:yaml)
+
+        command_line_interface.execute
+      end
+    end
   end
 end
