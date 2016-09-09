@@ -69,6 +69,6 @@ module AdHocTemplate
     end
 
     private_class_method :extract_labels_as_ruby_objects
-    private_class_method :format_key_names
+    private_class_method :format_key_names, :labels_in_default_format
   end
 end
