@@ -71,5 +71,25 @@ YAML
 
       expect(labels).to eq(expected_labels_in_yaml)
     end
+
+    it '.extract_labels accepts :json as its second argument' do
+      expected_labels_in_json = <<JSON
+{
+  "key":null,
+  "optional1":null,
+  "optional2":null,
+  "#iteration_block":[{
+    "key1":null,
+    "key2":null
+  }],
+  "block":null
+}
+JSON
+
+      tree = AdHocTemplate::Parser.parse(@template)
+      labels = AdHocTemplate::EntryFormatGenerator.extract_labels(tree, :json)
+
+      expect(JSON.parse(labels)).to eq(JSON.parse(expected_labels_in_json))
+    end
   end
 end

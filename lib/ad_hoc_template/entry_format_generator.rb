@@ -33,6 +33,8 @@ module AdHocTemplate
       case data_format
       when :yaml
         YAML.dump(labels)
+      when :json
+        JSON.dump(labels)
       else
         labels
       end
