@@ -3,6 +3,7 @@ require "ad_hoc_template/parser"
 require "ad_hoc_template/record_reader"
 require "ad_hoc_template/default_tag_formatter"
 require "ad_hoc_template/pseudohiki_formatter"
+require "ad_hoc_template/entry_format_generator"
 
 module AdHocTemplate
   class DataLoader
