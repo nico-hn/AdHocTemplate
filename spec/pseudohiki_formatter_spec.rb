@@ -62,7 +62,7 @@ the second paragraph in block
 
 RESULT
 
-      result = AdHocTemplate.convert(config_data, template)
+      result = AdHocTemplate.render(config_data, template)
       expect(result).to eq(expected_result)
     end
   end

@@ -71,8 +71,8 @@ module AdHocTemplate
       @record_data = record ? File.read(record) : ARGF.read
     end
 
-    def convert
-      AdHocTemplate.convert(@record_data, @template_data, @tag_type,
+    def render
+      AdHocTemplate.render(@record_data, @template_data, @tag_type,
                             @data_format, @tag_formatter)
     end
 
@@ -94,7 +94,7 @@ module AdHocTemplate
     def execute
       parse_command_line_options
       read_input_files
-      output = @output_empty_entry ? generate_entry_format : convert
+      output = @output_empty_entry ? generate_entry_format : render
       open_output {|out| out.print output }
     end
 
