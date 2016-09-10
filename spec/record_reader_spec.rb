@@ -305,6 +305,13 @@ JSON
 
       expect(json).to eq(@json_dump.chomp)
     end
+
+    it '.dump accepts parsed data too' do
+      parsed_data = AdHocTemplate::RecordReader.read_record(@config_source)
+      json = AdHocTemplate::RecordReader::JSONReader.dump(parsed_data)
+
+      expect(json).to eq(@json_dump.chomp)
+    end
   end
 
   describe AdHocTemplate::RecordReader::CSVReader do
