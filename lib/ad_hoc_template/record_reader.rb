@@ -313,14 +313,10 @@ module AdHocTemplate
 
     def self.read_record(input, source_format=:default)
       case source_format
-      when :default
-        DefaultFormReader.read_record(input)
-      when :yaml
-        YAMLReader.read_record(input)
-      when :json
-        JSONReader.read_record(input)
       when :csv, :tsv, Hash
         CSVReader.read_record(input, source_format)
+      else
+        FORMAT_NAME_TO_READER[source_format].read_record(input)
       end
     end
   end
