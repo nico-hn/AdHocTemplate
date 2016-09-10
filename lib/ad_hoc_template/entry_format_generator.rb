@@ -58,9 +58,9 @@ module AdHocTemplate
 
       case data_format
       when :yaml
-        YAML.dump(labels)
+        RecordReader::YAMLReader.dump(labels)
       when :json
-        JSON.dump(labels)
+        RecordReader::JSONReader.dump(labels)
       else
         DefaultFormat.dump(labels)
       end
