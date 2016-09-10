@@ -282,7 +282,22 @@ CONFIG
 JSON
 
       @json_dump = <<JSON
-{"key1":"value1","key2":"value2","key3":"value3","#subconfigs":[{"key1-1":"value1-1","key1-2":"value1-2"},{"key2-1":"value2-1","key2-2":"value2-2"}],"block":"the first line of block\\nthe second line of block\\n\\nthe second paragraph in block\\n"}
+{
+  "key1": "value1",
+  "key2": "value2",
+  "key3": "value3",
+  "#subconfigs": [
+    {
+      "key1-1": "value1-1",
+      "key1-2": "value1-2"
+    },
+    {
+      "key2-1": "value2-1",
+      "key2-2": "value2-2"
+    }
+  ],
+  "block": "the first line of block\\nthe second line of block\\n\\nthe second paragraph in block\\n"
+}
 JSON
     end
 

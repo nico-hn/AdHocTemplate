@@ -32,7 +32,7 @@ module AdHocTemplate
                else
                  config_data
                end
-        JSON.dump(data)
+        JSON.pretty_generate(data)
       end
     end
 
