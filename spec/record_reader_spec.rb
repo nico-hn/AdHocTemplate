@@ -293,7 +293,7 @@ JSON
       expect(json_reader).to eq(record_reader)
     end
 
-    it '.to_yaml converts the format of data from default to yaml' do
+    it '.to_json converts the format of data from default to json' do
       json = AdHocTemplate::RecordReader::JSONReader.to_json(@config_source)
 
       expect(json).to eq(@json_dump.chomp)
