@@ -32,17 +32,10 @@ module AdHocTemplate
       end
     end
 
-    def self.extract_labels(parsed_template, data_format=nil)
+    def self.extract_labels(parsed_template, target_format=nil)
       labels = extract_labels_as_ruby_objects(parsed_template)
 
-      case data_format
-      when :yaml
-        RecordReader::YAMLReader.dump(labels)
-      when :json
-        RecordReader::JSONReader.dump(labels)
-      else
-        RecordReader::DefaultFormReader.dump(labels)
-      end
+      RecordReader.dump(labels, target_format)
     end
 
     def self.extract_labels_as_ruby_objects(parsed_template)

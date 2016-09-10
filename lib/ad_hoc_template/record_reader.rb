@@ -298,6 +298,19 @@ module AdHocTemplate
       private_class_method :format_key_names
     end
 
+    FORMAT_NAME_TO_READER = {
+      yaml: YAMLReader,
+      json: JSONReader,
+      csv: CSVReader,
+      default: DefaultFormReader,
+    }
+
+    FORMAT_NAME_TO_READER.default = DefaultFormReader
+
+    def self.dump(data_source, target_format=:default)
+      FORMAT_NAME_TO_READER[target_format].dump(data_source)
+    end
+
     def self.read_record(input, source_format=:default)
       case source_format
       when :default
