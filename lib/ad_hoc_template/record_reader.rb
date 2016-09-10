@@ -319,5 +319,13 @@ module AdHocTemplate
         FORMAT_NAME_TO_READER[source_format].read_record(input)
       end
     end
+
+    def self.parse_if_necessary(source)
+      if source.kind_of? String
+        RecordReader.read_record(source)
+      else
+        source
+      end
+    end
   end
 end
