@@ -228,6 +228,13 @@ YAML
 
       expect(yaml).to eq(@yaml_dump)
     end
+
+    it '.dump accepts parsed data too' do
+      parsed_data = AdHocTemplate::RecordReader.read_record(@config_source)
+      yaml = AdHocTemplate::RecordReader::YAMLReader.dump(parsed_data)
+
+      expect(yaml).to eq(@yaml_dump)
+    end
   end
 
   describe AdHocTemplate::RecordReader::JSONReader do

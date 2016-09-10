@@ -12,7 +12,11 @@ module AdHocTemplate
       end
 
       def self.dump(config_data)
-        data = RecordReader.read_record(config_data)
+        data = if config_data.kind_of? String
+                 RecordReader.read_record(config_data)
+               else
+                 config_data
+               end
         YAML.dump(data)
       end
     end
