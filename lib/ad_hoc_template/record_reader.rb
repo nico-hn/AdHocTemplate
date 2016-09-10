@@ -273,6 +273,25 @@ module AdHocTemplate
           end
         end
       end
+
+      def self.dump(labels)
+        iterations, keys = labels.partition {|e| e[1] }.map {|e| e.map(&:first) }
+
+        key_value_part = format_key_names(keys)
+
+        iteration_part = iterations.map do |iteration_label|
+          kv_part = format_key_names(labels[iteration_label][0].keys)
+          "///@#{iteration_label}#{$/*2}#{kv_part}"
+        end.join($/)
+
+        [key_value_part, iteration_part].join($/)
+      end
+
+      def self.format_key_names(key_names)
+        key_names.map {|key| "#{key}: #{$/}" }.join
+      end
+
+      private_class_method :format_key_names
     end
 
     def self.read_record(input, source_format=:default)

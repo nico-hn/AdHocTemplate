@@ -32,27 +32,6 @@ module AdHocTemplate
       end
     end
 
-    module DefaultFormat
-      def self.dump(labels)
-        iterations, keys = labels.partition {|e| e[1] }.map {|e| e.map(&:first) }
-
-        key_value_part = format_key_names(keys)
-
-        iteration_part = iterations.map do |iteration_label|
-          kv_part = format_key_names(labels[iteration_label][0].keys)
-          "///@#{iteration_label}#{$/*2}#{kv_part}"
-        end.join($/)
-
-        [key_value_part, iteration_part].join($/)
-      end
-
-      def self.format_key_names(key_names)
-        key_names.map {|key| "#{key}: #{$/}" }.join
-      end
-
-      private_class_method :format_key_names
-    end
-
     def self.extract_labels(parsed_template, data_format=nil)
       labels = extract_labels_as_ruby_objects(parsed_template)
 
@@ -62,7 +41,7 @@ module AdHocTemplate
       when :json
         RecordReader::JSONReader.dump(labels)
       else
-        DefaultFormat.dump(labels)
+        RecordReader::DefaultFormReader.dump(labels)
       end
     end
 
