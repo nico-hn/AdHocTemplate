@@ -11,7 +11,7 @@ module AdHocTemplate
         YAML.load(yaml_data)
       end
 
-      def self.to_yaml(config_data)
+      def self.dump(config_data)
         data = RecordReader.read_record(config_data)
         YAML.dump(data)
       end

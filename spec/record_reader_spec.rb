@@ -223,8 +223,8 @@ YAML
       expect(yaml_reader).to eq(record_reader)
     end
 
-    it '.to_yaml converts the format of data from default to yaml' do
-      yaml = AdHocTemplate::RecordReader::YAMLReader.to_yaml(@config_source)
+    it '.dump converts the format of data from default to yaml' do
+      yaml = AdHocTemplate::RecordReader::YAMLReader.dump(@config_source)
 
       expect(yaml).to eq(@yaml_dump)
     end
