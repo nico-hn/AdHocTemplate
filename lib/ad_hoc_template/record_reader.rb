@@ -22,7 +22,7 @@ module AdHocTemplate
         JSON.parse(json_data)
       end
 
-      def self.to_json(config_data)
+      def self.dump(config_data)
         data = RecordReader.read_record(config_data)
         JSON.dump(data)
       end
