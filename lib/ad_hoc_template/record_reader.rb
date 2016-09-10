@@ -274,6 +274,10 @@ module AdHocTemplate
         end
       end
 
+      def self.read_record(input)
+        ReaderState.new.read_record(input)
+      end
+
       def self.dump(labels)
         iterations, keys = labels.partition {|e| e[1] }.map {|e| e.map(&:first) }
 
@@ -297,7 +301,7 @@ module AdHocTemplate
     def self.read_record(input, source_format=:default)
       case source_format
       when :default
-        DefaultFormReader::ReaderState.new.read_record(input)
+        DefaultFormReader.read_record(input)
       when :yaml
         YAMLReader.read_record(input)
       when :json
