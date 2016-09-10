@@ -75,6 +75,7 @@ module AdHocTemplate
       private_class_method :convert_to_hash, :parse_config
     end
 
+    module DefaultFormReader
     SEPARATOR = /:\s*/o
     BLOCK_HEAD = /\A\/\/\/@/o
     ITERATION_HEAD = /\A\/\/\/@#/o
@@ -272,11 +273,12 @@ module AdHocTemplate
         end
       end
     end
+    end
 
     def self.read_record(input, source_format=:default)
       case source_format
       when :default
-        ReaderState.new.read_record(input)
+        DefaultFormReader::ReaderState.new.read_record(input)
       when :yaml
         YAMLReader.read_record(input)
       when :json
