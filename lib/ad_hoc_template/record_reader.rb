@@ -48,8 +48,8 @@ module AdHocTemplate
         data = RecordReader.parse_if_necessary(config_data)
         raise NotSupportedError unless csv_compatible_format?(data)
 
-        if data.values.any? {|v| v.kind_of? Array }
-          records = hashes_to_csv(data.values[0])
+        if kv_pairs = find_sub_records(data)
+          records = hashes_to_csv(kv_pairs)
         else
           records = data.to_a.transpose
         end
@@ -92,8 +92,13 @@ module AdHocTemplate
         records.unshift headers
       end
 
+      def self.find_sub_records(data)
+        data.values.find {|v| v.kind_of? Array }
+      end
+
       private_class_method :convert_to_hash, :parse_config
       private_class_method :csv_compatible_format?, :hashes_to_csv
+      private_class_method :find_sub_records
     end
 
     module DefaultFormReader
