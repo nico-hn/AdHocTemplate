@@ -48,9 +48,16 @@ module AdHocTemplate
         data = RecordReader.parse_if_necessary(config_data)
         raise NotSupportedError unless csv_compatible_format?(data)
 
-        CSV.generate do |csv|
-          data.to_a.transpose.each {|line| csv << line }
-          csv
+        if data.values.any? {|v| v.kind_of? Array }
+          records = hashes_to_csv(data.values[0])
+          CSV.generate do |csv|
+            records.each {|record| csv << record }
+          end
+        else
+          CSV.generate do |csv|
+            data.to_a.transpose.each {|line| csv << line }
+            csv
+          end
         end
       end
 
@@ -81,8 +88,14 @@ module AdHocTemplate
         iteration_blocks_count == 0 or (iteration_blocks_count == 1 && data.size == 1)
       end
 
+      def self.hashes_to_csv(data)
+        headers = data.max_by {|h| h.keys.size }.keys
+        records = data.map {|record| headers.map {|header| record[header] } }
+        records.unshift headers
+      end
+
       private_class_method :convert_to_hash, :parse_config
-      private_class_method :csv_compatible_format?
+      private_class_method :csv_compatible_format?, :hashes_to_csv
     end
 
     module DefaultFormReader

@@ -400,6 +400,13 @@ CSV
       expect(csv).to eq(expected_csv)
     end
 
+    it '.dump can convert data in default format to CSV when the data consist of just one iteration block' do
+      parsed_data = AdHocTemplate::RecordReader.read_record(@config_source)
+      csv = AdHocTemplate::RecordReader::CSVReader.dump(parsed_data)
+
+      expect(csv).to eq(@csv_source)
+    end
+
     it '.dump raises an exception when the structure of given data is too complex' do
       parsed_data = AdHocTemplate::RecordReader.read_record(@csv_incompatible_config_source)
       error_type = AdHocTemplate::RecordReader::CSVReader::NotSupportedError
