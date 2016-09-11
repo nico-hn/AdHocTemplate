@@ -348,6 +348,25 @@ key3: value3-3
 
 CONFIG
 
+        @csv_incompatible_config_source = <<CONFIG
+key: value
+
+///@#subconfigs
+
+key1: value1-1
+key2: value1-2
+key3: value1-3
+
+key1: value2-1
+key2: value2-2
+key3: value2-3
+
+key1: value3-1
+key2: value3-2
+key3: value3-3
+
+CONFIG
+
       @config_source_without_iteration = <<CONFIG
 key1: value1
 key2: value2
@@ -381,8 +400,8 @@ CSV
       expect(csv).to eq(expected_csv)
     end
 
-    it '.dump raises an exception' do
-      parsed_data = AdHocTemplate::RecordReader.read_record(@config_source)
+    it '.dump raises an exception when the structure of given data is too complex' do
+      parsed_data = AdHocTemplate::RecordReader.read_record(@csv_incompatible_config_source)
       error_type = AdHocTemplate::RecordReader::CSVReader::NotSupportedError
 
       expect do

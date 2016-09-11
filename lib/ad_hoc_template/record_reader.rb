@@ -77,7 +77,8 @@ module AdHocTemplate
       end
 
       def self.csv_compatible_format?(data)
-        not data.values.any? {|v| v.kind_of? Array }
+        iteration_blocks_count = data.values.select {|v| v.kind_of? Array }.size
+        iteration_blocks_count == 0 or (iteration_blocks_count == 1 && data.size == 1)
       end
 
       private_class_method :convert_to_hash, :parse_config
