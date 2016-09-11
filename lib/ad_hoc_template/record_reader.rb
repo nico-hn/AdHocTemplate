@@ -29,6 +29,11 @@ module AdHocTemplate
     end
 
     module CSVReader
+      COL_SEP = {
+        csv: CSV::DEFAULT_OPTIONS[:col_sep],
+        tsv: "\t"
+      }
+
       class NotSupportedError < StandardError; end
 
       def self.read_record(csv_data, config={ csv: nil })
@@ -75,8 +80,8 @@ module AdHocTemplate
         when Hash
           format, label = config.to_a[0]
         end
-        field_sep = format == :tsv ? "\t" : CSV::DEFAULT_OPTIONS[:col_sep]
-        return label, field_sep
+        col_sep = COL_SEP[format||:csv]
+        return label, col_sep
       end
 
       def self.csv_compatible_format?(data)
