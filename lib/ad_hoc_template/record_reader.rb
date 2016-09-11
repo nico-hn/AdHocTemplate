@@ -50,14 +50,12 @@ module AdHocTemplate
 
         if data.values.any? {|v| v.kind_of? Array }
           records = hashes_to_csv(data.values[0])
-          CSV.generate do |csv|
-            records.each {|record| csv << record }
-          end
         else
-          CSV.generate do |csv|
-            data.to_a.transpose.each {|line| csv << line }
-            csv
-          end
+          records = data.to_a.transpose
+        end
+
+        CSV.generate do |csv|
+          records.each {|record| csv << record }
         end
       end
 
