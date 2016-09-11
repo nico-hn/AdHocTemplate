@@ -45,7 +45,15 @@ module AdHocTemplate
       end
 
       def self.dump(config_data)
-        raise NotSupportedError
+        data = RecordReader.parse_if_necessary(config_data)
+        if data.values.any? {|v| v.kind_of? Array }
+          raise NotSupportedError
+        end
+
+        CSV.generate do |csv|
+          data.to_a.transpose.each {|line| csv << line }
+          csv
+        end
       end
 
       def self.convert_to_hash(header, row_array)

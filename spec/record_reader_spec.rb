@@ -348,6 +348,13 @@ key3: value3-3
 
 CONFIG
 
+      @config_source_without_iteration = <<CONFIG
+key1: value1
+key2: value2
+key3: value3
+CONFIG
+
+
         @csv_source = <<CSV
 key1,key2,key3
 value1-1,value1-2,value1-3
@@ -361,6 +368,17 @@ value1-1	value1-2	value1-3
 value2-1	value2-2	value2-3
 value3-1	value3-2	value3-3
 TSV
+    end
+
+    it '.dump can convert data in default format to CSV when the data have just one record' do
+      expected_csv = <<CSV
+key1,key2,key3
+value1,value2,value3
+CSV
+      parsed_data = AdHocTemplate::RecordReader.read_record(@config_source_without_iteration)
+      csv = AdHocTemplate::RecordReader::CSVReader.dump(parsed_data)
+
+      expect(csv).to eq(expected_csv)
     end
 
     it '.dump raises an exception' do
