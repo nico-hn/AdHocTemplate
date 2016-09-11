@@ -29,6 +29,8 @@ module AdHocTemplate
     end
 
     module CSVReader
+      class NotSupportedError < StandardError; end
+
       def self.read_record(csv_data, config={ csv: nil })
         label, sep  = parse_config(config)
         header, *data = CSV.new(csv_data, col_sep: sep).to_a
@@ -40,6 +42,10 @@ module AdHocTemplate
         else
           records
         end
+      end
+
+      def self.dump(config_data)
+        raise NotSupportedError
       end
 
       def self.convert_to_hash(header, row_array)

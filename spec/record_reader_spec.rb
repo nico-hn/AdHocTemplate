@@ -363,6 +363,15 @@ value3-1	value3-2	value3-3
 TSV
     end
 
+    it '.dump raises an exception' do
+      parsed_data = AdHocTemplate::RecordReader.read_record(@config_source)
+      error_type = AdHocTemplate::RecordReader::CSVReader::NotSupportedError
+
+      expect do
+        AdHocTemplate::RecordReader::CSVReader.dump(parsed_data)
+      end.to raise_error(error_type)
+    end
+
     it 'reads CSV data and turns it into a Ruby object' do
       config = AdHocTemplate::RecordReader.read_record(@config_source)
       csv = AdHocTemplate::RecordReader::CSVReader.read_record(@csv_source, "subconfigs")
