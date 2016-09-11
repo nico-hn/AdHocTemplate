@@ -46,9 +46,7 @@ module AdHocTemplate
 
       def self.dump(config_data)
         data = RecordReader.parse_if_necessary(config_data)
-        if data.values.any? {|v| v.kind_of? Array }
-          raise NotSupportedError
-        end
+        raise NotSupportedError unless csv_compatible_format?(data)
 
         CSV.generate do |csv|
           data.to_a.transpose.each {|line| csv << line }
@@ -78,7 +76,12 @@ module AdHocTemplate
         return label, field_sep
       end
 
+      def self.csv_compatible_format?(data)
+        not data.values.any? {|v| v.kind_of? Array }
+      end
+
       private_class_method :convert_to_hash, :parse_config
+      private_class_method :csv_compatible_format?
     end
 
     module DefaultFormReader
