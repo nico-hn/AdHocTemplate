@@ -407,6 +407,34 @@ CSV
       expect(csv).to eq(@csv_source)
     end
 
+    it '.dump may return CSV data that contain empty fields' do
+        config_source = <<CONFIG
+///@#subconfigs
+
+key1: value1-1
+key3: value1-3
+
+key1: value2-1
+key2: value2-2
+key3: value2-3
+
+key3: value3-3
+
+CONFIG
+
+      expected_csv = <<CSV
+key1,key2,key3
+value1-1,,value1-3
+value2-1,value2-2,value2-3
+,,value3-3
+CSV
+
+      parsed_data = AdHocTemplate::RecordReader.read_record(config_source)
+      csv = AdHocTemplate::RecordReader::CSVReader.dump(parsed_data)
+
+      expect(csv).to eq(expected_csv)
+    end
+
     it '.dump raises an exception when the structure of given data is too complex' do
       parsed_data = AdHocTemplate::RecordReader.read_record(@csv_incompatible_config_source)
       error_type = AdHocTemplate::RecordReader::CSVReader::NotSupportedError
