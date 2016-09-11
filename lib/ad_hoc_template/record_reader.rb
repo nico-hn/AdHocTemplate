@@ -49,7 +49,7 @@ module AdHocTemplate
         raise NotSupportedError unless csv_compatible_format?(data)
 
         if kv_pairs = find_sub_records(data)
-          records = hashes_to_csv(kv_pairs)
+          records = hashes_to_arrays(kv_pairs)
         else
           records = data.to_a.transpose
         end
@@ -86,7 +86,7 @@ module AdHocTemplate
         iteration_blocks_count == 0 or (iteration_blocks_count == 1 && data.size == 1)
       end
 
-      def self.hashes_to_csv(data)
+      def self.hashes_to_arrays(data)
         headers = data.max_by {|h| h.keys.size }.keys
         records = data.map {|record| headers.map {|header| record[header] } }
         records.unshift headers
@@ -97,7 +97,7 @@ module AdHocTemplate
       end
 
       private_class_method :convert_to_hash, :parse_config
-      private_class_method :csv_compatible_format?, :hashes_to_csv
+      private_class_method :csv_compatible_format?, :hashes_to_arrays
       private_class_method :find_sub_records
     end
 
