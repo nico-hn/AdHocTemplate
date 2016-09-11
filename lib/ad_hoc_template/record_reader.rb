@@ -54,9 +54,7 @@ module AdHocTemplate
           records = data.to_a.transpose
         end
 
-        CSV.generate do |csv|
-          records.each {|record| csv << record }
-        end
+        array_to_csv(records)
       end
 
       def self.convert_to_hash(header, row_array)
@@ -96,9 +94,20 @@ module AdHocTemplate
         data.values.find {|v| v.kind_of? Array }
       end
 
+      def self.array_to_csv(records)
+        # I do not adopt "records.map {|rec| rec.to_csv }.join",
+        # because I'm not sure if it is sufficient for certain data or not.
+        # For example, a field value may contain carriage returns or line feeds,
+        # and in that case, improper handling of the end of record would be damaging.
+
+        CSV.generate do |csv|
+          records.each {|record| csv << record }
+        end
+      end
+
       private_class_method :convert_to_hash, :parse_config
       private_class_method :csv_compatible_format?, :hashes_to_arrays
-      private_class_method :find_sub_records
+      private_class_method :find_sub_records, :array_to_csv
     end
 
     module DefaultFormReader
