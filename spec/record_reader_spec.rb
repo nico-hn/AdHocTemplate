@@ -567,6 +567,20 @@ YAML
         expect(key_value_keys).to eq(%w(key1 key2 key3))
         expect(block_keys).to eq (%w(block))
       end
+
+      it '.format_key_value_pairs returns a YAML like key-value pairs' do
+        expected_result = <<RESULT
+key1: value1
+key2: value2
+key3: value3
+RESULT
+
+        parsed_data = AdHocTemplate::RecordReader::YAMLReader.read_record(@yaml_source)
+        iteration_keys, key_value_keys, block_keys = AdHocTemplate::RecordReader::DefaultFormReader.send :categorize_keys, parsed_data
+        format_result = AdHocTemplate::RecordReader::DefaultFormReader.send :format_key_value_pairs, key_value_keys, parsed_data
+
+        expect(format_result).to eq(expected_result)
+      end
     end
   end
 end
