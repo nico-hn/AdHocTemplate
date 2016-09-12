@@ -557,5 +557,16 @@ YAML
 
       expect(dump_data).to eq(expected_data)
     end
+
+    describe 'private methods' do
+      it '.categorize_keys devide keys into 3 groups' do
+        parsed_data = AdHocTemplate::RecordReader::YAMLReader.read_record(@yaml_source)
+        iteration_keys, key_value_keys, block_keys = AdHocTemplate::RecordReader::DefaultFormReader.send :categorize_keys, parsed_data
+
+        expect(iteration_keys).to eq(%w(#subconfigs))
+        expect(key_value_keys).to eq(%w(key1 key2 key3))
+        expect(block_keys).to eq (%w(block))
+      end
+    end
   end
 end

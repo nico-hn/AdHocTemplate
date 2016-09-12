@@ -362,7 +362,20 @@ module AdHocTemplate
         end.join($/)
       end
 
+      def self.categorize_keys(labels)
+        iteration_part, rest = labels.partition do |e|
+          e[1].kind_of? Array
+        end.map {|e| e.map(&:first) }
+
+        block_part, key_value_part = rest.partition do |e|
+          /(?:\r?\n|\r)/ =~ labels[e]
+        end
+
+        return iteration_part, key_value_part, block_part
+      end
+
       private_class_method :format_key_names
+      private_class_method :categorize_keys
     end
 
     FORMAT_NAME_TO_READER = {
