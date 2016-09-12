@@ -335,15 +335,7 @@ module AdHocTemplate
         iteration_keys, kv_keys, block_keys = categorize_keys(labels)
 
         key_value_part = format_key_value_pairs(kv_keys, labels)
-
-        iteration_part = iteration_keys.map do |iteration_label|
-          iteration_block = ["///@#{iteration_label}#{$/}"]
-          labels[iteration_label].each do |sub_record|
-             iteration_block.push format_key_value_pairs(sub_record.keys, sub_record)
-          end
-          iteration_block.join($/)
-        end.join($/)
-
+        iteration_part = format_iteration_block(iteration_keys, labels)
         block_part = format_key_value_block(block_keys, labels)
 
         [key_value_part, iteration_part, block_part].join($/).sub(/(#{$/}+)\Z/, $/)
