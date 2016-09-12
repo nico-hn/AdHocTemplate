@@ -386,6 +386,28 @@ TEMPLATE
         expect(command_line_interface.data_format).to eq(:tsv)
       end
 
+      it "should propery parse given option values" do
+        command_line_interface = AdHocTemplate::CommandLineInterface.new
+        set_argv("--data-format=t")
+        command_line_interface.parse_command_line_options
+        expect(command_line_interface.data_format).to eq(:tsv)
+
+        command_line_interface = AdHocTemplate::CommandLineInterface.new
+        set_argv("--data-format=t:")
+        command_line_interface.parse_command_line_options
+        expect(command_line_interface.data_format).to eq(:tsv)
+
+        command_line_interface = AdHocTemplate::CommandLineInterface.new
+        set_argv("--data-format=t:label")
+        command_line_interface.parse_command_line_options
+        expect(command_line_interface.data_format).to eq({ tsv: "label" })
+
+        command_line_interface = AdHocTemplate::CommandLineInterface.new
+        set_argv("--data-format=:label")
+        command_line_interface.parse_command_line_options
+        expect(command_line_interface.data_format).to eq(:default)
+      end
+
       it "can read tsv data with an iteration label" do
         template = <<TEMPLATE
 <%#iteration_block

@@ -108,9 +108,10 @@ module AdHocTemplate
     end
 
     def choose_data_format(data_format)
-      if_any_regex_match(FORMAT_RE_TO_FORMAT, data_format,
+      format_part, label_part = data_format.split(/:/, 2)
+      if_any_regex_match(FORMAT_RE_TO_FORMAT, format_part,
                          "The given format is not found. The default format is chosen.") do |re, format|
-        @data_format = [:csv, :tsv].include?(format) ? make_csv_option(data_format, format) : format
+        @data_format = [:csv, :tsv].include?(format) ? make_csv_option(label_part, format) : format
       end
     end
 
@@ -119,9 +120,9 @@ module AdHocTemplate
       @tag_type = Parser.register_user_defined_tag_type(config)
     end
 
-    def make_csv_option(data_format, format)
-      iteration_label = data_format.sub(/\A(csv|tsv):?/, "")
-      iteration_label.empty? ? format : { format => iteration_label }
+    def make_csv_option(iteration_label, format)
+      return format if iteration_label.nil? or iteration_label.empty?
+      { format => iteration_label }
     end
 
     def guess_file_format(filename)
