@@ -115,6 +115,19 @@ module AdHocTemplate
       private_class_method :find_sub_records, :array_to_csv
     end
 
+    module TSVReader
+      COL_SEP = CSVReader::COL_SEP
+
+      def self.read_record(tsv_data, config={ tsv: nil })
+        config = { tsv: config } if config.kind_of? String
+        CSVReader.read_record(tsv_data, config)
+      end
+
+      def self.dump(config_data, col_sep=COL_SEP[:tsv])
+        CSVReader.dump(config_data, col_sep)
+      end
+    end
+
     module DefaultFormReader
       SEPARATOR = /:\s*/o
       BLOCK_HEAD = /\A\/\/\/@/o

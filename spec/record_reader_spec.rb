@@ -452,6 +452,15 @@ CSV
       expect(tsv).to eq(@tsv_source)
     end
 
+    it 'TSV.dump is an alias of CSV.dump except for its default col_sep value' do
+      col_sep = AdHocTemplate::RecordReader::CSVReader::COL_SEP[:tsv]
+      parsed_data = AdHocTemplate::RecordReader.read_record(@config_source)
+      tsv_by_csv_reader = AdHocTemplate::RecordReader::CSVReader.dump(parsed_data, col_sep)
+      tsv = AdHocTemplate::RecordReader::TSVReader.dump(parsed_data)
+
+      expect(tsv).to eq(tsv_by_csv_reader)
+    end
+
     it 'reads CSV data and turns it into a Ruby object' do
       config = AdHocTemplate::RecordReader.read_record(@config_source)
       csv = AdHocTemplate::RecordReader::CSVReader.read_record(@csv_source, "subconfigs")
@@ -489,6 +498,13 @@ CSV
 
         expect(csv_reader).to eq(record_reader)
         expect(csv_reader_without_label).to eq(record_reader_without_label)
+      end
+
+      it 'TSV.read_record is an alias of CSV.dump except for its default col_sep value' do
+        csv_reader = AdHocTemplate::RecordReader::CSVReader.read_record(@tsv_source, tsv: "subconfigs")
+        tsv_reader = AdHocTemplate::RecordReader::TSVReader.read_record(@tsv_source, "subconfigs")
+
+        expect(tsv_reader).to eq(csv_reader)
       end
     end
   end
