@@ -598,6 +598,24 @@ RESULT
 
         expect(format_result).to eq(expected_result)
       end
+
+      it '.format_iteration_block returns a header and sub-records YAML like key-value pairs' do
+        expected_result = <<RESULT
+///@#subconfigs
+
+key1-1: value1-1
+key1-2: value1-2
+
+key2-1: value2-1
+key2-2: value2-2
+RESULT
+
+        parsed_data = AdHocTemplate::RecordReader::YAMLReader.read_record(@yaml_source)
+        iteration_keys, key_value_keys, block_keys = AdHocTemplate::RecordReader::DefaultFormReader.send :categorize_keys, parsed_data
+        format_result = AdHocTemplate::RecordReader::DefaultFormReader.send :format_iteration_block, iteration_keys, parsed_data
+
+        expect(format_result).to eq(expected_result)
+      end
     end
   end
 end

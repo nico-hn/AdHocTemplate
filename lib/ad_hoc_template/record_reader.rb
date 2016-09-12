@@ -361,6 +361,16 @@ module AdHocTemplate
         end.join($/)
       end
 
+      def self.format_iteration_block(key_names, labels)
+        key_names.map do |iteration_label|
+          iteration_block = ["///@#{iteration_label}#{$/}"]
+          labels[iteration_label].each do |sub_record|
+             iteration_block.push format_key_value_pairs(sub_record.keys, sub_record)
+          end
+          iteration_block.join($/)
+        end.join($/)
+      end
+
       def self.categorize_keys(labels)
         iteration_part, rest = labels.partition do |e|
           e[1].kind_of? Array
@@ -375,6 +385,7 @@ module AdHocTemplate
 
       private_class_method :format_key_value_pairs
       private_class_method :format_key_value_block
+      private_class_method :format_iteration_block
       private_class_method :categorize_keys
     end
 
