@@ -444,6 +444,14 @@ CSV
       end.to raise_error(error_type)
     end
 
+    it '.dump can generate TSV data too' do
+      col_sep = AdHocTemplate::RecordReader::CSVReader::COL_SEP[:tsv]
+      parsed_data = AdHocTemplate::RecordReader.read_record(@config_source)
+      tsv = AdHocTemplate::RecordReader::CSVReader.dump(parsed_data, col_sep)
+
+      expect(tsv).to eq(@tsv_source)
+    end
+
     it 'reads CSV data and turns it into a Ruby object' do
       config = AdHocTemplate::RecordReader.read_record(@config_source)
       csv = AdHocTemplate::RecordReader::CSVReader.read_record(@csv_source, "subconfigs")

@@ -49,7 +49,7 @@ module AdHocTemplate
         end
       end
 
-      def self.dump(config_data)
+      def self.dump(config_data, col_sep=COL_SEP[:csv])
         data = RecordReader.parse_if_necessary(config_data)
         raise NotSupportedError unless csv_compatible_format?(data)
 
@@ -59,7 +59,7 @@ module AdHocTemplate
           records = data.to_a.transpose
         end
 
-        array_to_csv(records)
+        array_to_csv(records, col_sep)
       end
 
       def self.convert_to_hash(header, row_array)
@@ -99,13 +99,13 @@ module AdHocTemplate
         data.values.find {|v| v.kind_of? Array }
       end
 
-      def self.array_to_csv(records)
+      def self.array_to_csv(records, col_sep)
         # I do not adopt "records.map {|rec| rec.to_csv }.join",
         # because I'm not sure if it is sufficient for certain data or not.
         # For example, a field value may contain carriage returns or line feeds,
         # and in that case, improper handling of the end of record would be damaging.
 
-        CSV.generate do |csv|
+        CSV.generate('', col_sep: col_sep) do |csv|
           records.each {|record| csv << record }
         end
       end
