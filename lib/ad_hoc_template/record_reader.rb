@@ -332,12 +332,11 @@ module AdHocTemplate
       end
 
       def self.dump(labels)
-        iterations, keys = labels.partition {|e| e[1].kind_of? Array }.map {|e| e.map(&:first) }
-        block_keys, kv_keys = keys.partition {|e| /(?:\r?\n|\r)/ =~ labels[e] }
+        iteration_keys, kv_keys, block_keys = categorize_keys(labels)
 
         key_value_part = format_key_names(kv_keys, labels)
 
-        iteration_part = iterations.map do |iteration_label|
+        iteration_part = iteration_keys.map do |iteration_label|
           iteration_block = ["///@#{iteration_label}#{$/}"]
           labels[iteration_label].each do |sub_record|
              iteration_block.push format_key_names(sub_record.keys, sub_record)
