@@ -488,6 +488,11 @@ The value of optional key2 is <%= key2 %>
 
 <%= block %>
 TEMPLATE
+
+        @csv_compatible_template = <<TEMPLATE
+<%= key1 %> <% key2 %>
+<%= key3 %>
+TEMPLATE
       end
 
       it 'can output an empty entry format in YAML' do
@@ -512,6 +517,26 @@ YAML
         command_line_interface = AdHocTemplate::CommandLineInterface.new
         command_line_interface.parse_command_line_options
         expect(command_line_interface.data_format).to eq(:yaml)
+
+        command_line_interface.execute
+      end
+
+      it 'can output an empty entry format in TSV' do
+        expected_format_in_tsv = <<TSV
+key1\tkey2\tkey3
+\t\t
+TSV
+
+        template_filename = "template.txt"
+
+        allow(File).to receive(:read).with(File.expand_path(template_filename)).and_return(@csv_compatible_template)
+        allow(STDOUT).to receive(:print).with(expected_format_in_tsv)
+        allow(ARGF).to receive(:read).with(no_args)
+
+        set_argv("-d tsv --entry-format #{template_filename}")
+        command_line_interface = AdHocTemplate::CommandLineInterface.new
+        command_line_interface.parse_command_line_options
+        expect(command_line_interface.data_format).to eq(:tsv)
 
         command_line_interface.execute
       end

@@ -355,6 +355,7 @@ module AdHocTemplate
       yaml: YAMLReader,
       json: JSONReader,
       csv: CSVReader,
+      tsv: TSVReader,
       default: DefaultFormReader,
     }
 
