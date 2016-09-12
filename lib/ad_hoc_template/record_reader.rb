@@ -334,12 +334,12 @@ module AdHocTemplate
       def self.dump(labels)
         iteration_keys, kv_keys, block_keys = categorize_keys(labels)
 
-        key_value_part = format_key_names(kv_keys, labels)
+        key_value_part = format_key_value_pairs(kv_keys, labels)
 
         iteration_part = iteration_keys.map do |iteration_label|
           iteration_block = ["///@#{iteration_label}#{$/}"]
           labels[iteration_label].each do |sub_record|
-             iteration_block.push format_key_names(sub_record.keys, sub_record)
+             iteration_block.push format_key_value_pairs(sub_record.keys, sub_record)
           end
           iteration_block.join($/)
         end.join($/)
@@ -349,7 +349,7 @@ module AdHocTemplate
         [key_value_part, iteration_part, block_part].join($/).sub(/(#{$/}+)\Z/, $/)
       end
 
-      def self.format_key_names(key_names, labels={})
+      def self.format_key_value_pairs(key_names, labels={})
         key_names.map {|key| "#{key}: #{labels[key]}#{$/}" }.join
       end
 
@@ -373,7 +373,7 @@ module AdHocTemplate
         return iteration_part, key_value_part, block_part
       end
 
-      private_class_method :format_key_names
+      private_class_method :format_key_value_pairs
       private_class_method :categorize_keys
     end
 
