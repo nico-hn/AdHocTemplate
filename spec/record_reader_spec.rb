@@ -508,4 +508,54 @@ CSV
       end
     end
   end
+
+  describe AdHocTemplate::RecordReader::DefaultFormReader do
+    before do
+      @config_source = <<CONFIG
+key1: value1
+key2: value2
+key3: value3
+
+///@#subconfigs
+
+key1-1: value1-1
+key1-2: value1-2
+
+key2-1: value2-1
+key2-2: value2-2
+
+///@block
+
+the first line of block
+the second line of block
+
+the second paragraph in block
+
+CONFIG
+
+      @yaml_source = <<YAML
+key1: value1
+key2: value2
+key3: value3
+'#subconfigs':
+  - key1-1: value1-1
+    key1-2: value1-2
+  - key2-1: value2-1
+    key2-2: value2-2
+block: |
+  the first line of block
+  the second line of block
+  
+  the second paragraph in block
+YAML
+    end
+
+    it ',dump accepts non-empty data' do
+      parsed_data = AdHocTemplate::RecordReader::YAMLReader.read_record(@yaml_source)
+      dump_data = AdHocTemplate::RecordReader::DefaultFormReader.dump(parsed_data)
+      expected_data = @config_source.sub(/(#{$/}+)\Z/, $/)
+
+      expect(dump_data).to eq(expected_data)
+    end
+  end
 end

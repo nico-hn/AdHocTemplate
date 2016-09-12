@@ -332,20 +332,34 @@ module AdHocTemplate
       end
 
       def self.dump(labels)
-        iterations, keys = labels.partition {|e| e[1] }.map {|e| e.map(&:first) }
+        iterations, keys = labels.partition {|e| e[1].kind_of? Array }.map {|e| e.map(&:first) }
+        block_keys, kv_keys = keys.partition {|e| /(?:\r?\n|\r)/ =~ labels[e] }
 
-        key_value_part = format_key_names(keys)
+        key_value_part = format_key_names(kv_keys, labels)
 
         iteration_part = iterations.map do |iteration_label|
-          kv_part = format_key_names(labels[iteration_label][0].keys)
-          "///@#{iteration_label}#{$/*2}#{kv_part}"
+          iteration_block = ["///@#{iteration_label}#{$/}"]
+          labels[iteration_label].each do |sub_record|
+             iteration_block.push format_key_names(sub_record.keys, sub_record)
+          end
+          iteration_block.join($/)
         end.join($/)
 
-        [key_value_part, iteration_part].join($/)
+        block_part = format_key_value_block(block_keys, labels)
+
+        [key_value_part, iteration_part, block_part].join($/).sub(/(#{$/}+)\Z/, $/)
       end
 
-      def self.format_key_names(key_names)
-        key_names.map {|key| "#{key}: #{$/}" }.join
+      def self.format_key_names(key_names, labels={})
+        key_names.map {|key| "#{key}: #{labels[key]}#{$/}" }.join
+      end
+
+      def self.format_key_value_block(key_names, labels)
+        [].tap do |blocks|
+          key_names.each do |key|
+            blocks.push "///@#{key}#{$/*2}#{labels[key]}"
+          end
+        end.join($/)
       end
 
       private_class_method :format_key_names
