@@ -374,6 +374,7 @@ module AdHocTemplate
       end
 
       private_class_method :format_key_value_pairs
+      private_class_method :format_key_value_block
       private_class_method :categorize_keys
     end
 
