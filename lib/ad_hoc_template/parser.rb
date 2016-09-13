@@ -68,7 +68,7 @@ module AdHocTemplate
 
     class TagType
       attr_reader :head, :tail, :token_pat, :remove_iteration_indent
-      attr_reader :iteration_start, :iteration_end
+      attr_reader :iteration_start, :iteration_end, :head_of, :tail_of
       @types = {}
 
       def self.[](tag_name)
@@ -88,7 +88,7 @@ module AdHocTemplate
 
       def assign_type(tag, iteration_tag, fallback_tag)
         @iteration_start, @iteration_end = iteration_tag
-        @head, @tail = {}, {}
+        @head, @tail, @head_of, @tail_of = {}, {}, {}, {}
         [
           [TagNode, tag],
           [IterationTagNode, iteration_tag],
@@ -97,6 +97,8 @@ module AdHocTemplate
           head, tail = head_tail
           @head[head] = node_type
           @tail[tail] = node_type
+          @head_of[node_type] = head
+          @tail_of[node_type] = tail
         end
       end
 
