@@ -142,7 +142,7 @@ module AdHocTemplate
 
     def initialize(str, tag)
       @tag = tag
-      str = remove_trailing_newline_of_iteration_end_tag(str, @tag.iteration_end)
+      str = remove_trailing_newline_of(@tag.iteration_end, str)
       @tokens = PseudoHiki.split_into_tokens(str, @tag.token_pat)
       super()
     end
@@ -159,7 +159,7 @@ module AdHocTemplate
 
     private
 
-    def remove_trailing_newline_of_iteration_end_tag(str, iteration_end_tag)
+    def remove_trailing_newline_of(iteration_end_tag, str)
       str.gsub(/#{Regexp.escape(iteration_end_tag)}#{LINE_END_STR}/, iteration_end_tag)
     end
   end
