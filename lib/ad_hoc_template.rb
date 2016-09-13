@@ -30,6 +30,8 @@ module AdHocTemplate
       case tree
       when Parser::IterationTagNode
         format_iteration_tag(tree)
+      when Parser::FallbackTagNode
+        ''.freeze
       when Parser::TagNode
         format_tag(tree)
       when Parser::Leaf

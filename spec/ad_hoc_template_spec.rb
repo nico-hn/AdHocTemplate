@@ -406,6 +406,51 @@ RESULT
         end
       end
     end
+
+    describe 'fallback block' do
+      before do
+        @template = <<TEMPLATE
+main start
+
+<%#
+<%* content in fallback tag <%= item_in_fallback %> fallback end *%>
+optional content
+<%#iterations
+in iteration tag <%= item %> #%> iteration part end
+#%>
+
+main end
+TEMPLATE
+        @data = <<DATA
+item_in_fallback: ITEM_IN_FALLBACK
+
+///@#iterations
+
+item: ITEM_1
+
+item: ITEM_2
+DATA
+      end
+
+      it 'should be ignored when tags can be filled with data' do
+        expected_result = <<RESULT
+main start
+
+
+optional content
+in iteration tag ITEM_1 in iteration tag ITEM_2  iteration part end
+
+main end
+RESULT
+        tree = AdHocTemplate::Parser.parse(@template)
+        data = AdHocTemplate::RecordReader.read_record(@data)
+        tag_formatter = AdHocTemplate::DefaultTagFormatter.new
+
+        result = AdHocTemplate::DataLoader.format(tree, data, tag_formatter)
+
+        expect(result).to eq(expected_result)
+      end
+    end
   end
 
   it 'can convert &"<> into character entities' do
