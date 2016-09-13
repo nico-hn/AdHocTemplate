@@ -63,6 +63,7 @@ module AdHocTemplate
     end
 
     class IterationTagNode < TagNode; end
+    class FallbackTagNode < TagNode; end
     class Leaf < Parser::Leaf; end
 
     class TagType
@@ -75,22 +76,23 @@ module AdHocTemplate
       end
 
       def self.register(tag_name=:default, tag=["<%", "%>"], iteration_tag=["<%#", "#%>"],
-                        remove_iteration_indent=false)
-        @types[tag_name] = new(tag, iteration_tag, remove_iteration_indent)
+                        fallback_tag=["<%*", "*%>"], remove_iteration_indent=false)
+        @types[tag_name] = new(tag, iteration_tag, fallback_tag, remove_iteration_indent)
       end
 
-      def initialize(tag, iteration_tag, remove_iteration_indent)
-        assign_type(tag, iteration_tag)
+      def initialize(tag, iteration_tag, fallback_tag, remove_iteration_indent)
+        assign_type(tag, iteration_tag, fallback_tag)
         @token_pat = PseudoHiki.compile_token_pat(@head.keys, @tail.keys)
         @remove_iteration_indent = remove_iteration_indent
       end
 
-      def assign_type(tag, iteration_tag)
+      def assign_type(tag, iteration_tag, fallback_tag)
         @iteration_start, @iteration_end = iteration_tag
         @head, @tail = {}, {}
         [
           [TagNode, tag],
-          [IterationTagNode, iteration_tag]
+          [IterationTagNode, iteration_tag],
+          [FallbackTagNode, fallback_tag]
         ].each do |node_type, head_tail|
           head, tail = head_tail
           @head[head] = node_type
@@ -99,11 +101,11 @@ module AdHocTemplate
       end
 
       register
-      register(:square_brackets, ["[[", "]]"], ["[[#", "#]]"])
-      register(:curly_brackets, ["{{", "}}"], ["{{#", "#}}"])
-      register(:xml_like1, ["<!--%", "%-->"], ["<iterate>", "</iterate>"], true)
-      register(:xml_like2, ["<fill>", "</fill>"], ["<iterate>", "</iterate>"], true)
-      register(:xml_comment_like, ["<!--%", "%-->"], ["<!--%iterate%-->", "<!--%/iterate%-->"], true)
+      register(:square_brackets, ["[[", "]]"], ["[[#", "#]]"], ["[[*", "*]]"])
+      register(:curly_brackets, ["{{", "}}"], ["{{#", "#}}"], ["{{*", "*}}"])
+      register(:xml_like1, ["<!--%", "%-->"], ["<iterate>", "</iterate>"], ["<fallback>", "</fallback>"], true)
+      register(:xml_like2, ["<fill>", "</fill>"], ["<iterate>", "</iterate>"], ["<fallback>", "</fallback>"], true)
+      register(:xml_comment_like, ["<!--%", "%-->"], ["<!--%iterate%-->", "<!--%/iterate%-->"], ["<!--%fallback%-->", "<!--%/fallback%-->"], true)
     end
 
     class UserDefinedTagTypeConfigError < StandardError; end
@@ -126,13 +128,14 @@ module AdHocTemplate
 
     def self.register_user_defined_tag_type(config_source)
       config = YAML.load(config_source)
-      %w(tag_name tag iteration_tag).each do |item|
+      %w(tag_name tag iteration_tag fallback_tag).each do |item|
         config[item] || raise(UserDefinedTagTypeConfigError,
                               "\"#{item}\" should be defined.")
       end
       TagType.register(registered_tag_name = config["tag_name"].to_sym,
                        config["tag"],
                        config["iteration_tag"],
+                       config["fallback_tag"],
                        config["remove_indent"] || false)
       registered_tag_name
     end

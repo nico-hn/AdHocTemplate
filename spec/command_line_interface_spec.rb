@@ -209,6 +209,7 @@ TEMPLATE
 tag_name: xml_like3
 tag: ["<!--%", "%-->"]
 iteration_tag: ["<repeat>", "</repeat>"]
+fallback_tag: ["<fallback>", "</fallback>"]
 remove_indent: true
 CONFIG
 

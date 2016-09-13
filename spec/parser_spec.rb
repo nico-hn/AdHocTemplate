@@ -398,6 +398,7 @@ TEMPLATE
 tag_name: xml_like3
 tag: ["<!--%", "%-->"]
 iteration_tag: ["<repeat>", "</repeat>"]
+fallback_tag: ["<fallback>", "</fallback>"]
 remove_indent: true
 CONFIG
         AdHocTemplate::Parser.register_user_defined_tag_type(tag_type_config)
@@ -412,6 +413,7 @@ CONFIG
 tag_name: 
 tag: ["<!--%", "%-->"]
 iteration_tag: ["<repeat>", "</repeat>"]
+fallback_tag: ["<fallback>", "</fallback>"]
 remove_indent: true
 CONFIG
         expect {
