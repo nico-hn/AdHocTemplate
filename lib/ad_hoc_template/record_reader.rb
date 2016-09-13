@@ -132,7 +132,7 @@ module AdHocTemplate
       SEPARATOR = /:\s*/o
       BLOCK_HEAD = /\A\/\/\/@/o
       ITERATION_HEAD = /\A\/\/\/@#/o
-      EMPTY_LINE = /\A(?:\r?\n|\r)\Z/o
+      EMPTY_LINE = /\A#{LINE_END_STR}\Z/o
       ITERATION_MARK = /\A#/o
       READERS_RE = {
         key_value: SEPARATOR,
@@ -369,7 +369,7 @@ module AdHocTemplate
         end.map {|e| e.map(&:first) }
 
         block_part, key_value_part = rest.partition do |e|
-          /(?:\r?\n|\r)/ =~ labels[e]
+          LINE_END_RE =~ labels[e]
         end
 
         return iteration_part, key_value_part, block_part

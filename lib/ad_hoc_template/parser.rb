@@ -4,6 +4,9 @@ require "pseudohiki/inlineparser"
 require "htmlelement"
 
 module AdHocTemplate
+  LINE_END_RE = /(?:\r?\n|\r)/
+  LINE_END_STR = '(?:\r?\n|\r)'
+
   class Parser < TreeStack
     class TagNode < Parser::Node
       attr_reader :type
@@ -15,7 +18,7 @@ module AdHocTemplate
 
       def assign_type(first_leaf)
         if not first_leaf.kind_of? String or /\A\s/ =~ first_leaf
-          return first_leaf.sub(/\A(?:\r?\n|\r)/, "")
+          return first_leaf.sub(/\A#{LINE_END_STR}/, "")
         end
         @type, first_leaf_content = split_by_newline_or_spaces(first_leaf)
         @type = '#'.freeze + @type if kind_of? IterationTagNode
@@ -23,7 +26,7 @@ module AdHocTemplate
       end
 
       def split_by_newline_or_spaces(first_leaf)
-        sep = /\A\S*(?:\r?\n|\r)/ =~ first_leaf ? /(?:\r?\n|\r)/ : /\s+/
+        sep = /\A\S*#{LINE_END_STR}/ =~ first_leaf ? LINE_END_RE : /\s+/
         first_leaf.split(sep, 2)
       end
       private :assign_type, :split_by_newline_or_spaces
@@ -117,8 +120,8 @@ module AdHocTemplate
         tag_type.iteration_start,
         tag_type.iteration_end
       ].map {|tag| Regexp.escape(tag) }
-      template_source.gsub(/^([ \t]+#{start_tag}\S*(?:\r?\n|\r))/) {|s| s.lstrip }
-        .gsub(/^([ \t]+#{end_tag}(?:\r?\n|\r))/) {|s| s.lstrip }
+      template_source.gsub(/^([ \t]+#{start_tag}\S*#{LINE_END_STR})/) {|s| s.lstrip }
+        .gsub(/^([ \t]+#{end_tag}#{LINE_END_STR})/) {|s| s.lstrip }
     end
 
     def self.register_user_defined_tag_type(config_source)
@@ -154,7 +157,7 @@ module AdHocTemplate
     private
 
     def remove_trailing_newline_of_iteration_end_tag(str, iteration_end_tag)
-      str.gsub(/#{Regexp.escape(iteration_end_tag)}(?:\r?\n|\r)/, iteration_end_tag)
+      str.gsub(/#{Regexp.escape(iteration_end_tag)}#{LINE_END_STR}/, iteration_end_tag)
     end
   end
 end

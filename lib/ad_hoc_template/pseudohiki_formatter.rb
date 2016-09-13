@@ -14,7 +14,7 @@ module AdHocTemplate
       end
 
       def self.choose_parser(hiki_source)
-        hiki_source[/(?:\r?\n|\r)/] ? BlockParser : InlineParser
+        hiki_source[LINE_END_RE] ? BlockParser : InlineParser
       end
 
       private_class_method :choose_parser
