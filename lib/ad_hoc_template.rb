@@ -43,7 +43,7 @@ module AdHocTemplate
 
     def format_iteration_tag(tag_node)
       sub_records = @record[tag_node.type]||[@record]
-      tag_node = Parser::TagNode.new.concat(tag_node.clone)
+      tag_node = cast(tag_node)
       fallback_nodes = tag_node.select {|sub_node| sub_node.kind_of? Parser::FallbackTagNode }
 
       sub_records.map do |record|
@@ -51,8 +51,8 @@ module AdHocTemplate
           data_loader = AdHocTemplate::DataLoader.new(record, @tag_formatter)
           tag_node.map {|leaf| leaf.accept(data_loader) }.join
         elsif not fallback_nodes.empty?
-          fallback_nodes = fallback_nodes.map {|node| Parser::IterationTagNode.new.concat(node.clone) }
-          fallback_nodes = Parser::TagNode.new.concat(fallback_nodes.clone)
+          fallback_nodes = fallback_nodes.map {|node| cast(node, Parser::IterationTagNode) }
+          fallback_nodes = cast(fallback_nodes)
           data_loader = AdHocTemplate::DataLoader.new(record, @tag_formatter)
           fallback_nodes.map {|leaf| leaf.accept(data_loader) }
         else
@@ -68,6 +68,12 @@ module AdHocTemplate
 
     def format(tree)
       tree.accept(self).join
+    end
+
+    private
+
+    def cast(node, node_type=Parser::TagNode)
+      node_type.new.concat(node.clone)
     end
   end
 
