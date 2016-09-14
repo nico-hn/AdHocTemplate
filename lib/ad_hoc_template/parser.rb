@@ -16,21 +16,6 @@ module AdHocTemplate
         super
       end
 
-      def assign_type(first_leaf)
-        if not first_leaf.kind_of? String or /\A\s/ =~ first_leaf
-          return first_leaf.sub(/\A#{LINE_END_STR}/, "")
-        end
-        @type, first_leaf_content = split_by_newline_or_spaces(first_leaf)
-        @type = '#'.freeze + @type if kind_of? IterationTagNode
-        first_leaf_content||""
-      end
-
-      def split_by_newline_or_spaces(first_leaf)
-        sep = /\A\S*#{LINE_END_STR}/ =~ first_leaf ? LINE_END_RE : /\s+/
-        first_leaf.split(sep, 2)
-      end
-      private :assign_type, :split_by_newline_or_spaces
-
       def contains_any_value_assigned_tag_node?(record)
         self.select {|n| n.kind_of?(TagNode) }.each do |node|
           if node.kind_of? IterationTagNode
@@ -56,6 +41,20 @@ module AdHocTemplate
       end
 
       private
+
+      def assign_type(first_leaf)
+        if not first_leaf.kind_of? String or /\A\s/ =~ first_leaf
+          return first_leaf.sub(/\A#{LINE_END_STR}/, "")
+        end
+        @type, first_leaf_content = split_by_newline_or_spaces(first_leaf)
+        @type = '#'.freeze + @type if kind_of? IterationTagNode
+        first_leaf_content||""
+      end
+
+      def split_by_newline_or_spaces(first_leaf)
+        sep = /\A\S*#{LINE_END_STR}/ =~ first_leaf ? LINE_END_RE : /\s+/
+        first_leaf.split(sep, 2)
+      end
 
       def empty_sub_records?(record, node)
         sub_records = record[node.type]
