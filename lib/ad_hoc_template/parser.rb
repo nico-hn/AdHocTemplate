@@ -43,6 +43,18 @@ module AdHocTemplate
         false
       end
 
+      def contains_any_value_tag?
+        select {|n| n.kind_of?(TagNode) }.each do |node|
+          case node
+          when IterationTagNode, FallbackTagNode
+            return node.contains_any_value_tag?
+          when TagNode
+            return true
+          end
+        end
+        false
+      end
+
       private
 
       def empty_sub_records?(record, node)

@@ -424,6 +424,44 @@ CONFIG
       end
     end
 
+    describe "#contains_any_value_tag?" do
+      it 'return true if any value tag is contained' do
+      template_with_value_tag =<<TEMPLATE
+main start
+
+<%#
+<%*
+line with <%= value tag %>
+*%>
+#%>
+
+
+main end
+TEMPLATE
+        parsed = AdHocTemplate::Parser.parse(template_with_value_tag)
+        expect(parsed[1].contains_any_value_tag?).to be_truthy
+      end
+
+      it 'return false if no value tag is contained' do
+      template_without_value_tag =<<TEMPLATE
+main start
+
+<%#
+<%*
+line without value tag
+*%>
+#%>
+
+
+main end
+TEMPLATE
+
+        parsed = AdHocTemplate::Parser.parse(template_without_value_tag)
+
+        expect(parsed[1].contains_any_value_tag?).to be_falsy
+      end
+    end
+
     describe AdHocTemplate::Parser::FallbackTagNode do
       it 'is expected to be parsed like IterationTagNode -- used inline' do
         source = 'main start <%# <%* content in fallback_tag <%= tag node in fallback tag %> fallback end *%> optional content with <%#iterations in iteration tag <%= item %> #%> iteration part end  #%> main end'
