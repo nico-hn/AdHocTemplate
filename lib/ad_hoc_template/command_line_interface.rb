@@ -109,9 +109,10 @@ module AdHocTemplate
     end
 
     def choose_data_format(data_format)
+      err_msg = "The given format is not found. The default format is chosen."
       format_part, label_part = data_format.split(/:/, 2)
-      if_any_regex_match(FORMAT_RE_TO_FORMAT, format_part,
-                         "The given format is not found. The default format is chosen.") do |re, format|
+
+      if_any_regex_match(FORMAT_RE_TO_FORMAT, format_part, err_msg) do |re, format|
         @data_format = [:csv, :tsv].include?(format) ? make_csv_option(label_part, format) : format
       end
     end
