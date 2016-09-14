@@ -401,10 +401,11 @@ iteration_tag: ["<repeat>", "</repeat>"]
 fallback_tag: ["<fallback>", "</fallback>"]
 remove_indent: true
 CONFIG
+        iteration_tag_node = AdHocTemplate::Parser::IterationTagNode
         AdHocTemplate::Parser.register_user_defined_tag_type(tag_type_config)
         defined_tag_type = AdHocTemplate::Parser::TagType[:xml_like3]
-        expect(defined_tag_type.iteration_start).to eq('<repeat>')
-        expect(defined_tag_type.iteration_end).to eq('</repeat>')
+        expect(defined_tag_type.head_of[iteration_tag_node]).to eq('<repeat>')
+        expect(defined_tag_type.tail_of[iteration_tag_node]).to eq('</repeat>')
         expect(defined_tag_type.remove_iteration_indent).to eq(true)
       end
 

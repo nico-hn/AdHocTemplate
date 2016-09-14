@@ -68,7 +68,7 @@ module AdHocTemplate
 
     class TagType
       attr_reader :head, :tail, :token_pat, :remove_iteration_indent
-      attr_reader :iteration_start, :iteration_end, :head_of, :tail_of
+      attr_reader :head_of, :tail_of
       @types = {}
 
       def self.[](tag_name)
@@ -87,7 +87,6 @@ module AdHocTemplate
       end
 
       def assign_type(tag, iteration_tag, fallback_tag)
-        @iteration_start, @iteration_end = iteration_tag
         @head, @tail, @head_of, @tail_of = {}, {}, {}, {}
         [
           [TagNode, tag],
@@ -121,8 +120,8 @@ module AdHocTemplate
 
     def self.remove_indent_before_iteration_tags(template_source, tag_type)
       start_tag, end_tag = [
-        tag_type.iteration_start,
-        tag_type.iteration_end
+        tag_type.head_of[IterationTagNode],
+        tag_type.tail_of[IterationTagNode],
       ].map {|tag| Regexp.escape(tag) }
       template_source.gsub(/^([ \t]+#{start_tag}\S*#{LINE_END_STR})/) {|s| s.lstrip }
         .gsub(/^([ \t]+#{end_tag}#{LINE_END_STR})/) {|s| s.lstrip }
@@ -144,7 +143,7 @@ module AdHocTemplate
 
     def initialize(str, tag)
       @tag = tag
-      str = remove_trailing_newline_of(@tag.iteration_end, str)
+      str = remove_trailing_newline_of(@tag.tail_of[IterationTagNode], str)
       @tokens = PseudoHiki.split_into_tokens(str, @tag.token_pat)
       super()
     end
