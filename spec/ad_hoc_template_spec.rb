@@ -421,6 +421,24 @@ in iteration tag <%= item %> #%> iteration part end
 
 main end
 TEMPLATE
+
+        @xml_comment_like_template = <<TEMPLATE
+main start
+
+<!--%iterate%-->
+  <!--%fallback%-->
+content in fallback tag <!--%= item_in_fallback %--> fallback end
+  <!--%/fallback%-->
+optional content
+  <!--%iterate%-->iterations
+in iteration tag <!--%= item %-->
+  <!--%/iterate%-->
+iteration part end
+<!--%/iterate%-->
+
+main end
+TEMPLATE
+
         @data = <<DATA
 item_in_fallback: ITEM_IN_FALLBACK
 
@@ -436,13 +454,32 @@ DATA
         expected_result = <<RESULT
 main start
 
-
 optional content
 in iteration tag ITEM_1 in iteration tag ITEM_2  iteration part end
 
 main end
 RESULT
         tree = AdHocTemplate::Parser.parse(@template)
+        data = AdHocTemplate::RecordReader.read_record(@data)
+        tag_formatter = AdHocTemplate::DefaultTagFormatter.new
+
+        result = AdHocTemplate::DataLoader.format(tree, data, tag_formatter)
+
+        expect(result).to eq(expected_result)
+      end
+
+      it 'should ignore indents preceding fallback tags when TagType[tag_name].remove_iteration_indent is set to true' do
+        expected_result = <<RESULT
+main start
+
+optional content
+in iteration tag ITEM_1
+in iteration tag ITEM_2
+iteration part end
+
+main end
+RESULT
+        tree = AdHocTemplate::Parser.parse(@xml_comment_like_template, :xml_comment_like)
         data = AdHocTemplate::RecordReader.read_record(@data)
         tag_formatter = AdHocTemplate::DefaultTagFormatter.new
 

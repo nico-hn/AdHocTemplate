@@ -114,6 +114,7 @@ module AdHocTemplate
     def self.parse(str, tag_name=:default)
       if TagType[tag_name].remove_iteration_indent
         str = remove_indent_before_iteration_tags(str, TagType[tag_name])
+        str = remove_indent_before_fallback_tags(str, TagType[tag_name])
       end
       new(str, TagType[tag_name]).parse.tree
     end
@@ -125,6 +126,14 @@ module AdHocTemplate
       ].map {|tag| Regexp.escape(tag) }
       template_source.gsub(/^([ \t]+#{start_tag}\S*#{LINE_END_STR})/) {|s| s.lstrip }
         .gsub(/^([ \t]+#{end_tag}#{LINE_END_STR})/) {|s| s.lstrip }
+    end
+
+    def self.remove_indent_before_fallback_tags(template_source, tag_type)
+      tag_re_str = [
+        tag_type.head_of[FallbackTagNode],
+        tag_type.tail_of[FallbackTagNode],
+      ].map {|tag| Regexp.escape(tag) }.join('|')
+      template_source.gsub(/^([ \t]+(?:#{tag_re_str})#{LINE_END_STR})/) {|s| s.lstrip }
     end
 
     def self.register_user_defined_tag_type(config_source)
@@ -144,6 +153,7 @@ module AdHocTemplate
     def initialize(str, tag)
       @tag = tag
       str = remove_trailing_newline_of(@tag.tail_of[IterationTagNode], str)
+      str = remove_trailing_newline_of(@tag.tail_of[FallbackTagNode], str)
       @tokens = PseudoHiki.split_into_tokens(str, @tag.token_pat)
       super()
     end
