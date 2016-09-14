@@ -176,6 +176,12 @@ module AdHocTemplate
       template_source.gsub(/^([ \t]+(?:#{tag_re_str})#{LINE_END_STR})/) {|s| s.lstrip }
     end
 
+    private_class_method(:remove_indents_and_newlines_if_necessary,
+                         :remove_trailing_newline_of,
+                         :remove_trailing_newline_of_end_tags,
+                         :remove_indent_before_iteration_tags,
+                         :remove_indent_before_fallback_tags)
+
     def self.register_user_defined_tag_type(config_source)
       config = YAML.load(config_source)
       %w(tag_name tag iteration_tag fallback_tag).each do |item|
