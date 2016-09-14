@@ -149,13 +149,10 @@ module AdHocTemplate
       remove_trailing_newline_of_end_tags(node_types, str, tag_type)
     end
 
-    def self.remove_trailing_newline_of(end_tag, str)
-      str.gsub(/#{Regexp.escape(end_tag)}#{LINE_END_STR}/, end_tag)
-    end
-
     def self.remove_trailing_newline_of_end_tags(node_types, source, tag_type)
       node_types.inject(source) do |s, node_type|
-        remove_trailing_newline_of(tag_type.tail_of[node_type], s)
+        end_tag = tag_type.tail_of[node_type]
+        s.gsub(/#{Regexp.escape(end_tag)}#{LINE_END_STR}/, end_tag)
       end
     end
 
@@ -177,7 +174,6 @@ module AdHocTemplate
     end
 
     private_class_method(:remove_indents_and_newlines_if_necessary,
-                         :remove_trailing_newline_of,
                          :remove_trailing_newline_of_end_tags,
                          :remove_indent_before_iteration_tags,
                          :remove_indent_before_fallback_tags)
