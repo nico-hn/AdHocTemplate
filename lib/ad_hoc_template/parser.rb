@@ -135,22 +135,27 @@ module AdHocTemplate
     class UserDefinedTagTypeConfigError < StandardError; end
 
     def self.parse(str, tag_name=:default)
-      node_types = [IterationTagNode, FallbackTagNode]
-      if TagType[tag_name].remove_iteration_indent
-        str = remove_indent_before_iteration_tags(str, TagType[tag_name])
-        str = remove_indent_before_fallback_tags(str, TagType[tag_name])
-      end
-      str = remove_trailing_newline_of_end_tags(node_types, str, TagType[tag_name])
+      str = remove_indents_and_newlines_if_necessary(str, tag_name)
       new(str, TagType[tag_name]).parse.tree
+    end
+
+    def self.remove_indents_and_newlines_if_necessary(str, tag_name)
+      node_types = [IterationTagNode, FallbackTagNode]
+      tag_type = TagType[tag_name]
+      if TagType[tag_name].remove_iteration_indent
+        str = remove_indent_before_iteration_tags(str, tag_type)
+        str = remove_indent_before_fallback_tags(str, tag_type)
+      end
+      remove_trailing_newline_of_end_tags(node_types, str, tag_type)
     end
 
     def self.remove_trailing_newline_of(end_tag, str)
       str.gsub(/#{Regexp.escape(end_tag)}#{LINE_END_STR}/, end_tag)
     end
 
-    def self.remove_trailing_newline_of_end_tags(node_types, source, tag)
+    def self.remove_trailing_newline_of_end_tags(node_types, source, tag_type)
       node_types.inject(source) do |s, node_type|
-        remove_trailing_newline_of(tag.tail_of[node_type], s)
+        remove_trailing_newline_of(tag_type.tail_of[node_type], s)
       end
     end
 
