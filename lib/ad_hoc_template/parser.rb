@@ -135,11 +135,23 @@ module AdHocTemplate
     class UserDefinedTagTypeConfigError < StandardError; end
 
     def self.parse(str, tag_name=:default)
+      node_types = [IterationTagNode, FallbackTagNode]
       if TagType[tag_name].remove_iteration_indent
         str = remove_indent_before_iteration_tags(str, TagType[tag_name])
         str = remove_indent_before_fallback_tags(str, TagType[tag_name])
       end
+      str = remove_trailing_newline_of_end_tags(node_types, str, TagType[tag_name])
       new(str, TagType[tag_name]).parse.tree
+    end
+
+    def self.remove_trailing_newline_of(end_tag, str)
+      str.gsub(/#{Regexp.escape(end_tag)}#{LINE_END_STR}/, end_tag)
+    end
+
+    def self.remove_trailing_newline_of_end_tags(node_types, source, tag)
+      node_types.inject(source) do |s, node_type|
+        remove_trailing_newline_of(tag.tail_of[node_type], s)
+      end
     end
 
     def self.remove_indent_before_iteration_tags(template_source, tag_type)
@@ -175,8 +187,6 @@ module AdHocTemplate
 
     def initialize(source, tag)
       @tag = tag
-      node_types = [IterationTagNode, FallbackTagNode]
-      source = remove_trailing_newline_of_end_tags(node_types,  source)
       @tokens = PseudoHiki.split_into_tokens(source, @tag.token_pat)
       super()
     end
@@ -189,18 +199,6 @@ module AdHocTemplate
       end
 
       self
-    end
-
-    private
-
-    def remove_trailing_newline_of(end_tag, str)
-      str.gsub(/#{Regexp.escape(end_tag)}#{LINE_END_STR}/, end_tag)
-    end
-
-    def remove_trailing_newline_of_end_tags(node_types, source)
-      node_types.inject(source) do |s, node_type|
-        remove_trailing_newline_of(@tag.tail_of[node_type], s)
-      end
     end
   end
 end
