@@ -162,13 +162,6 @@ module AdHocTemplate
       remove_trailing_newline_of_end_tags(node_types, str, tag_type)
     end
 
-    def self.remove_trailing_newline_of_end_tags(node_types, source, tag_type)
-      node_types.inject(source) do |s, node_type|
-        end_tag = tag_type.tail_of[node_type]
-        s.gsub(/#{Regexp.escape(end_tag)}#{LINE_END_STR}/, end_tag)
-      end
-    end
-
     def self.remove_indent_before_iteration_tags(template_source, tag_type)
       start_tag, end_tag = [
         tag_type.head_of[IterationTagNode],
@@ -186,10 +179,17 @@ module AdHocTemplate
       template_source.gsub(/^([ \t]+(?:#{tag_re_str})#{LINE_END_STR})/) {|s| s.lstrip }
     end
 
+    def self.remove_trailing_newline_of_end_tags(node_types, source, tag_type)
+      node_types.inject(source) do |s, node_type|
+        end_tag = tag_type.tail_of[node_type]
+        s.gsub(/#{Regexp.escape(end_tag)}#{LINE_END_STR}/, end_tag)
+      end
+    end
+
     private_class_method(:remove_indents_and_newlines_if_necessary,
-                         :remove_trailing_newline_of_end_tags,
                          :remove_indent_before_iteration_tags,
-                         :remove_indent_before_fallback_tags)
+                         :remove_indent_before_fallback_tags,
+                         :remove_trailing_newline_of_end_tags)
 
     def initialize(source, tag)
       @tag = tag
