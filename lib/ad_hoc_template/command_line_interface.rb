@@ -101,8 +101,9 @@ module AdHocTemplate
     private
 
     def choose_tag_type(given_type)
-      if_any_regex_match(TAG_RE_TO_TYPE, given_type,
-                         "The given type is not found. The default tag is chosen.") do |re, tag_type|
+      err_msg = "The given type is not found. The default tag is chosen."
+
+      if_any_regex_match(TAG_RE_TO_TYPE, given_type, err_msg) do |re, tag_type|
         @tag_type = tag_type
       end
     end
