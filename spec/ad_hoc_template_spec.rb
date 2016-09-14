@@ -495,6 +495,43 @@ DATA
         expect(result).to eq(expected_result)
       end
 
+      it 'may not contain any tag' do
+        template = <<TEMPLATE
+main start
+
+<%#
+<%* content in fallback tag without inner tags  fallback end 
+*%>
+optional content
+<%#iterations
+in iteration tag <%= item %> #%> iteration part end
+#%>
+main end
+TEMPLATE
+        expected_result = <<RESULT
+main start
+
+ content in fallback tag without inner tags  fallback end 
+main end
+RESULT
+
+        empty_data = <<DATA
+///@#iterations
+
+item: 
+
+item: 
+DATA
+
+        tree = AdHocTemplate::Parser.parse(template)
+        data = AdHocTemplate::RecordReader.read_record(empty_data)
+        tag_formatter = AdHocTemplate::DefaultTagFormatter.new
+
+        result = AdHocTemplate::DataLoader.format(tree, data, tag_formatter)
+
+        expect(result).to eq(expected_result)
+      end
+
       it 'should ignore indents preceding fallback tags when TagType[tag_name].remove_iteration_indent is set to true' do
         expected_result = <<RESULT
 main start

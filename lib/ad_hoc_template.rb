@@ -77,7 +77,9 @@ module AdHocTemplate
       data_loader = AdHocTemplate::DataLoader.new(record, @tag_formatter)
       fallback_nodes = fallback_nodes.map {|node| cast(node, Parser::IterationTagNode) }
       fallback_nodes = cast(fallback_nodes)
-      fallback_nodes.map {|leaf| leaf.accept(data_loader) }
+      fallback_nodes.map do |node|
+        node.contains_any_value_tag? ? node.accept(data_loader) : node.join
+      end
     end
   end
 
