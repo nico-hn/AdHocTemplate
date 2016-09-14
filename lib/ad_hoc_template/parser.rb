@@ -150,11 +150,11 @@ module AdHocTemplate
       registered_tag_name
     end
 
-    def initialize(str, tag)
+    def initialize(source, tag)
       @tag = tag
-      str = remove_trailing_newline_of(@tag.tail_of[IterationTagNode], str)
-      str = remove_trailing_newline_of(@tag.tail_of[FallbackTagNode], str)
-      @tokens = PseudoHiki.split_into_tokens(str, @tag.token_pat)
+      node_types = [IterationTagNode, FallbackTagNode]
+      source = remove_trailing_newline_of_end_tags(node_types,  source)
+      @tokens = PseudoHiki.split_into_tokens(source, @tag.token_pat)
       super()
     end
 
@@ -170,8 +170,14 @@ module AdHocTemplate
 
     private
 
-    def remove_trailing_newline_of(iteration_end_tag, str)
-      str.gsub(/#{Regexp.escape(iteration_end_tag)}#{LINE_END_STR}/, iteration_end_tag)
+    def remove_trailing_newline_of(end_tag, str)
+      str.gsub(/#{Regexp.escape(end_tag)}#{LINE_END_STR}/, end_tag)
+    end
+
+    def remove_trailing_newline_of_end_tags(node_types, source)
+      node_types.inject(source) do |s, node_type|
+        remove_trailing_newline_of(@tag.tail_of[node_type], s)
+      end
     end
   end
 end
