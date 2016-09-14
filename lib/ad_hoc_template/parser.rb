@@ -138,6 +138,20 @@ module AdHocTemplate
       new(str, TagType[tag_name]).parse.tree
     end
 
+    def self.register_user_defined_tag_type(config_source)
+      config = YAML.load(config_source)
+      %w(tag_name tag iteration_tag fallback_tag).each do |item|
+        config[item] || raise(UserDefinedTagTypeConfigError,
+                              "\"#{item}\" should be defined.")
+      end
+      TagType.register(registered_tag_name = config["tag_name"].to_sym,
+                       config["tag"],
+                       config["iteration_tag"],
+                       config["fallback_tag"],
+                       config["remove_indent"] || false)
+      registered_tag_name
+    end
+
     def self.remove_indents_and_newlines_if_necessary(str, tag_name)
       node_types = [IterationTagNode, FallbackTagNode]
       tag_type = TagType[tag_name]
@@ -176,20 +190,6 @@ module AdHocTemplate
                          :remove_trailing_newline_of_end_tags,
                          :remove_indent_before_iteration_tags,
                          :remove_indent_before_fallback_tags)
-
-    def self.register_user_defined_tag_type(config_source)
-      config = YAML.load(config_source)
-      %w(tag_name tag iteration_tag fallback_tag).each do |item|
-        config[item] || raise(UserDefinedTagTypeConfigError,
-                              "\"#{item}\" should be defined.")
-      end
-      TagType.register(registered_tag_name = config["tag_name"].to_sym,
-                       config["tag"],
-                       config["iteration_tag"],
-                       config["fallback_tag"],
-                       config["remove_indent"] || false)
-      registered_tag_name
-    end
 
     def initialize(source, tag)
       @tag = tag
