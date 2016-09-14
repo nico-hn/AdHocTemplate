@@ -51,10 +51,7 @@ module AdHocTemplate
           data_loader = AdHocTemplate::DataLoader.new(record, @tag_formatter)
           tag_node.map {|leaf| leaf.accept(data_loader) }.join
         elsif not fallback_nodes.empty?
-          fallback_nodes = fallback_nodes.map {|node| cast(node, Parser::IterationTagNode) }
-          fallback_nodes = cast(fallback_nodes)
-          data_loader = AdHocTemplate::DataLoader.new(record, @tag_formatter)
-          fallback_nodes.map {|leaf| leaf.accept(data_loader) }
+          format_fallback_tags(fallback_nodes, record)
         else
           "".freeze
         end
@@ -74,6 +71,13 @@ module AdHocTemplate
 
     def cast(node, node_type=Parser::TagNode)
       node_type.new.concat(node.clone)
+    end
+
+    def format_fallback_tags(fallback_nodes, record)
+      data_loader = AdHocTemplate::DataLoader.new(record, @tag_formatter)
+      fallback_nodes = fallback_nodes.map {|node| cast(node, Parser::IterationTagNode) }
+      fallback_nodes = cast(fallback_nodes)
+      fallback_nodes.map {|leaf| leaf.accept(data_loader) }
     end
   end
 
