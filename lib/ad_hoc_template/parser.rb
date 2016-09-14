@@ -56,6 +56,8 @@ module AdHocTemplate
       def any_value_assigned_to_iteration_tag?(tag_node, record)
         if tag_node.type
           not empty_sub_records?(record, tag_node)
+        elsif tag_node.kind_of? FallbackTagNode
+          false
         else
           tag_node.contains_any_value_assigned_tag_node?(record)
         end

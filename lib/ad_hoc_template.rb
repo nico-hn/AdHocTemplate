@@ -44,11 +44,17 @@ module AdHocTemplate
     def format_iteration_tag(tag_node)
       sub_records = @record[tag_node.type]||[@record]
       tag_node = Parser::TagNode.new.concat(tag_node.clone)
+      fallback_nodes = tag_node.select {|sub_node| sub_node.kind_of? Parser::FallbackTagNode }
 
       sub_records.map do |record|
         if tag_node.contains_any_value_assigned_tag_node?(record)
           data_loader = AdHocTemplate::DataLoader.new(record, @tag_formatter)
           tag_node.map {|leaf| leaf.accept(data_loader) }.join
+        elsif not fallback_nodes.empty?
+          fallback_nodes = fallback_nodes.map {|node| Parser::IterationTagNode.new.concat(node.clone) }
+          fallback_nodes = Parser::TagNode.new.concat(fallback_nodes.clone)
+          data_loader = AdHocTemplate::DataLoader.new(record, @tag_formatter)
+          fallback_nodes.map {|leaf| leaf.accept(data_loader) }
         else
           "".freeze
         end

@@ -468,6 +468,33 @@ RESULT
         expect(result).to eq(expected_result)
       end
 
+      it 'should be shown when tags out side of the node cannot be filled with data' do
+        expected_result = <<RESULT
+main start
+
+ content in fallback tag ITEM_IN_FALLBACK fallback end 
+main end
+RESULT
+
+        empty_data = <<DATA
+item_in_fallback: ITEM_IN_FALLBACK
+
+///@#iterations
+
+item: 
+
+item: 
+DATA
+
+        tree = AdHocTemplate::Parser.parse(@template)
+        data = AdHocTemplate::RecordReader.read_record(empty_data)
+        tag_formatter = AdHocTemplate::DefaultTagFormatter.new
+
+        result = AdHocTemplate::DataLoader.format(tree, data, tag_formatter)
+
+        expect(result).to eq(expected_result)
+      end
+
       it 'should ignore indents preceding fallback tags when TagType[tag_name].remove_iteration_indent is set to true' do
         expected_result = <<RESULT
 main start
