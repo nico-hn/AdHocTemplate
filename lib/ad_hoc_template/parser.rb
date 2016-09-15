@@ -77,15 +77,15 @@ module AdHocTemplate
 
     class IterationTagNode < TagNode
       def assign_value_to_type(first_leaf)
-        non_type_value_part = super
-        change_value_of_iteration_tag_type
-        non_type_value_part
-      end
+        return first_leaf unless first_leaf.kind_of? String
 
-      def change_value_of_iteration_tag_type
-        if @type
-          @type = @type == ':'.freeze ? nil : '#'.freeze + @type.sub(/:\Z/, '')
+        if /\A[^\s:]*:\s/ =~ first_leaf
+          @type, remaining_part = first_leaf.split(/:\s/, 2)
+          @type = @type.empty? ? nil : '#'.freeze + @type
+          return remaining_part
         end
+
+        first_leaf.sub(/\A#{LINE_END_STR}/, '')
       end
     end
 
