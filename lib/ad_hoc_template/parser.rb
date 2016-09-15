@@ -83,12 +83,8 @@ module AdHocTemplate
       end
 
       def change_value_of_iteration_tag_type
-        if kind_of? IterationTagNode
-          if @type == ':'.freeze or @type.nil?
-            @type = nil
-          else
-            @type = '#'.freeze + @type.sub(/:\Z/, '')
-          end
+        if @type
+          @type = @type == ':'.freeze ? nil : '#'.freeze + @type.sub(/:\Z/, '')
         end
       end
     end
