@@ -66,6 +66,62 @@ YAML
       expect(labels).to eq(expected_labels_in_default_format)
     end
 
+    it '.extract_labels should ignore fallback tags if they do not any contain value tag' do
+      template = <<TEMPLATE
+main start
+<%#
+optional start <%* fallback part *%> <%= var1 %>
+<%#iteration <%= var2 %> #%>
+#%>
+<%= var3 %>
+
+main end
+TEMPLATE
+
+      expected = <<EXPECTED
+var1: 
+var3: 
+
+///@#iteration
+
+var2: 
+EXPECTED
+
+      tree = AdHocTemplate::Parser.parse(template)
+      labels = AdHocTemplate::EntryFormatGenerator.extract_labels(tree)
+
+      expect(labels).to eq(expected)
+    end
+
+    it '.extract_labels should labels in fallback tags' do
+      template = <<TEMPLATE
+main start
+<%#
+optional start <%* fallback <%= fallback_var1 %> and <%= fallback_var2 %> *%> <%= var1 %>
+<%#iteration <%= var2 %> #%>
+#%>
+<%= var3 %>
+
+main end
+TEMPLATE
+
+      expected = <<EXPECTED
+fallback_var1: 
+fallback_var2: 
+var1: 
+var3: 
+
+///@#iteration
+
+var2: 
+EXPECTED
+
+      tree = AdHocTemplate::Parser.parse(template)
+      labels = AdHocTemplate::EntryFormatGenerator.extract_labels(tree)
+
+      expect(labels).to eq(expected)
+    end
+
     it '.extract_labels accepts :yaml as its second argument' do
       expected_labels_in_yaml = <<YAML
 ---
