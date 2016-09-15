@@ -13,7 +13,7 @@ module AdHocTemplate
 
       def push(node=TreeStack::Node.new)
         first_leaf = node[0]
-        node[0] = assign_type(first_leaf) if empty? and first_leaf
+        node[0] = assign_value_to_type(first_leaf) if empty? and first_leaf
         super
       end
 
@@ -43,7 +43,7 @@ module AdHocTemplate
 
       private
 
-      def assign_type(first_leaf)
+      def assign_value_to_type(first_leaf)
         if first_leaf.kind_of? String and /\A\s/ =~ first_leaf
           return first_leaf.sub(/\A#{LINE_END_STR}/, "")
         end
