@@ -27,7 +27,7 @@ The following is an example of template format:
 ```
 a test string with tags (<%= key1 %> and <%= key2 %>) in it
 
-<%#iteration_block
+<%#iteration_block:
 the value of sub_key1 is <%= sub_key1 %>
 the value of sub_key2 is <%= sub_key2 %>
 

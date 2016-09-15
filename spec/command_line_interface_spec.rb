@@ -12,7 +12,7 @@ describe AdHocTemplate do
       @template_in_default_format = <<TEMPLATE
 a test string with tags (<%= key1 %> and <%= key2 %>) in it
 
-<%#iteration_block
+<%#iteration_block:
 the value of sub_key1 is <%= sub_key1 %>
 the value of sub_key2 is <%= sub_key2 %>
 
@@ -197,7 +197,7 @@ YAML
       template = <<TEMPLATE
 a test string with tags (<!--%= key1 %--> and <!--%= key2 %-->) in it
 
-<repeat>iteration_block
+<repeat>iteration_block:
 the value of sub_key1 is <!--%= sub_key1 %-->
 the value of sub_key2 is <!--%= sub_key2 %-->
 
@@ -249,7 +249,7 @@ the value of sub_key2 is value3-3
 RESULT
 
         @template_without_iteration_block = <<TEMPLATE
-<%#iteration_block
+<%#iteration_block:
 the value of sub_key1 is <%= key1 %>
 the value of sub_key2 is <%= key2 %>
 the value of sub_key2 is <%= key3 %>
@@ -274,7 +274,7 @@ TEMPLATE
 
       it "can read csv data with an iteration label" do
         template = <<TEMPLATE
-<%#iteration_block
+<%#iteration_block:
 the value of sub_key1 is <%= key1 %>
 the value of sub_key2 is <%= key2 %>
 the value of sub_key2 is <%= key3 %>
@@ -364,7 +364,7 @@ the value of sub_key2 is value3-3
 RESULT
 
         @template_without_iteration_block = <<TEMPLATE
-<%#iteration_block
+<%#iteration_block:
 the value of sub_key1 is <%= key1 %>
 the value of sub_key2 is <%= key2 %>
 the value of sub_key2 is <%= key3 %>
@@ -411,7 +411,7 @@ TEMPLATE
 
       it "can read tsv data with an iteration label" do
         template = <<TEMPLATE
-<%#iteration_block
+<%#iteration_block:
 the value of sub_key1 is <%= key1 %>
 the value of sub_key2 is <%= key2 %>
 the value of sub_key2 is <%= key3 %>
@@ -500,7 +500,7 @@ Key value: <%= key %>
 Optinal values: <%# <%= optional1 %> and <%= optional2 %> are in the record.
 #%>
 
-<%#iteration_block
+<%#iteration_block:
 The value of key1 is <%= key1 %>
 <%#
 The value of optional key2 is <%= key2 %>

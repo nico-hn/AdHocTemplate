@@ -48,7 +48,7 @@ module AdHocTemplate
           return first_leaf.sub(/\A#{LINE_END_STR}/, "")
         end
         @type, first_leaf_content = split_by_newline_or_spaces(first_leaf)
-        format_iteration_tag_type
+        change_value_of_iteration_tag_type
         first_leaf_content||""
       end
 
@@ -75,8 +75,14 @@ module AdHocTemplate
         end
       end
 
-      def format_iteration_tag_type
-        @type = '#'.freeze + @type if kind_of? IterationTagNode
+      def change_value_of_iteration_tag_type
+        if kind_of? IterationTagNode
+          if @type == ':'.freeze
+            @type = nil
+          else
+            @type = '#'.freeze + @type.sub(/:\Z/, '')
+          end
+        end
       end
     end
 

@@ -16,7 +16,7 @@ Key value: <%= key %>
 Optinal values: <%# <%= optional1 %> and <%= optional2 %> are in the record.
 #%>
 
-<%#iteration_block
+<%#iteration_block:
 The value of key1 is <%= key1 %>
 <%#
 The value of optional key2 is <%= key2 %>
@@ -71,7 +71,7 @@ YAML
 main start
 <%#
 optional start <%* fallback part *%> <%= var1 %>
-<%#iteration <%= var2 %> #%>
+<%#iteration: <%= var2 %> #%>
 #%>
 <%= var3 %>
 
@@ -98,7 +98,7 @@ EXPECTED
 main start
 <%#
 optional start <%* fallback <%= fallback_var1 %> and <%= fallback_var2 %> *%> <%= var1 %>
-<%#iteration <%= var2 %> #%>
+<%#iteration: <%= var2 %> #%>
 #%>
 <%= var3 %>
 

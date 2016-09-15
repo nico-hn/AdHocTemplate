@@ -12,7 +12,7 @@ describe AdHocTemplate do
       @template_with_an_iteration_block = <<TEMPLATE
 a test string with tags (<%= key1 %> and <%= key2 %>) in it
 
-<%#iteration_block
+<%#iteration_block:
 the value of sub_key1 is <%= sub_key1 %>
 the value of sub_key2 is <%= sub_key2 %>
 
@@ -145,7 +145,7 @@ RESULT
     it("should not add a newline at the head of IterationTagNode when the type of the node is not specified") do
       template = <<TEMPLATE
 a test string with tags
-<%#iteration_block
+<%#iteration_block:
 the value of sub_key1 is <%= sub_key1 %>
 <%#
   the value of sub_key2 is <%= sub_key2 %>
@@ -192,7 +192,7 @@ The first line in the main part
 <%#
 The first line in the iteration part
 
-<%#iteration_block
+<%#iteration_block:
 The value of key1 is <%= key1 %>
 #%>
 
@@ -209,7 +209,7 @@ Key value: <%= key %>
 Optinal values: <%# <%= optional1 %> and <%= optional2 %> are in the record.
 #%>
 
-<%#iteration_block
+<%#iteration_block:
 The value of key1 is <%= key1 %>
 <%#
 The value of optional key2 is <%= key2 %>
@@ -415,7 +415,7 @@ main start
 <%#
 <%* content in fallback tag <%= item_in_fallback %> fallback end *%>
 optional content
-<%#iterations
+<%#iterations:
 in iteration tag <%= item %> #%> iteration part end
 #%>
 
@@ -430,7 +430,7 @@ main start
 content in fallback tag <!--%= item_in_fallback %--> fallback end
   <!--%/fallback%-->
 optional content
-  <!--%iterate%-->iterations
+  <!--%iterate%-->iterations:
 in iteration tag <!--%= item %-->
   <!--%/iterate%-->
 iteration part end
@@ -503,7 +503,7 @@ main start
 <%* content in fallback tag without inner tags  fallback end 
 *%>
 optional content
-<%#iterations
+<%#iterations:
 in iteration tag <%= item %> #%> iteration part end
 #%>
 main end

@@ -23,7 +23,7 @@ CONFIG
 
       template = <<TEMPLATE
 <ul>
-<%#iteration
+<%#iteration:
   <li>
     <ul>
       <li><%ph key1 %></li>
