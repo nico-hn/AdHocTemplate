@@ -12,7 +12,8 @@ module AdHocTemplate
       attr_reader :type
 
       def push(node=TreeStack::Node.new)
-        node[0] = assign_type(node[0]) if self.empty?
+        first_leaf = node[0]
+        node[0] = assign_type(first_leaf) if empty? and first_leaf
         super
       end
 
@@ -43,7 +44,7 @@ module AdHocTemplate
       private
 
       def assign_type(first_leaf)
-        if not first_leaf.kind_of? String or /\A\s/ =~ first_leaf
+        if first_leaf.kind_of? String and /\A\s/ =~ first_leaf
           return first_leaf.sub(/\A#{LINE_END_STR}/, "")
         end
         @type, first_leaf_content = split_by_newline_or_spaces(first_leaf)

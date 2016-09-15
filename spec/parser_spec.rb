@@ -70,6 +70,19 @@ TEMPLATE
 
         expect(with_indent).not_to eq(without_indent)
       end
+
+      it "may contains nested tags and the first inner tag may not have preceding strings" do
+        template = "main start <%#<%= var1 %> inner part <%= var2 %> inner end #%> main end"
+        tree = AdHocTemplate::Parser.parse(template)
+        expect(tree).to eq([
+                             ["main start "],
+                             [
+                               [["var1 "]],
+                               [" inner part "],
+                               [["var2 "]],
+                               [" inner end "]],
+                             [" main end"]])
+      end
     end
 
     describe "with the square brackets tag type" do
