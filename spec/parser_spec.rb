@@ -83,6 +83,19 @@ TEMPLATE
                                [" inner end "]],
                              [" main end"]])
       end
+
+      it "tags may be put side by side without any string in between" do
+        template = "main start <%# inner start<%= var1 %><%= var2 %>inner end #%> main end"
+        tree = AdHocTemplate::Parser.parse(template)
+        expect(tree).to eq([
+                             ["main start "],
+                             [
+                               [" inner start"],
+                               [["var1 "]],
+                               [["var2 "]],
+                               ["inner end "]],
+                             [" main end"]])
+      end
     end
 
     describe "with the square brackets tag type" do
