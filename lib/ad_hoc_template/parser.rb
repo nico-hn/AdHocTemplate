@@ -73,6 +73,14 @@ module AdHocTemplate
           tag_node.contains_any_value_assigned_tag_node?(record)
         end
       end
+    end
+
+    class IterationTagNode < TagNode
+      def assign_value_to_type(first_leaf)
+        non_type_value_part = super
+        change_value_of_iteration_tag_type
+        non_type_value_part
+      end
 
       def change_value_of_iteration_tag_type
         if kind_of? IterationTagNode
@@ -82,14 +90,6 @@ module AdHocTemplate
             @type = '#'.freeze + @type.sub(/:\Z/, '')
           end
         end
-      end
-    end
-
-    class IterationTagNode < TagNode
-      def assign_value_to_type(first_leaf)
-        non_type_value_part = super
-        change_value_of_iteration_tag_type
-        non_type_value_part
       end
     end
 
