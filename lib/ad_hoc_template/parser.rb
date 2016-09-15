@@ -77,7 +77,7 @@ module AdHocTemplate
 
       def change_value_of_iteration_tag_type
         if kind_of? IterationTagNode
-          if @type == ':'.freeze
+          if @type == ':'.freeze or @type.nil?
             @type = nil
           else
             @type = '#'.freeze + @type.sub(/:\Z/, '')
@@ -86,7 +86,12 @@ module AdHocTemplate
       end
     end
 
-    class IterationTagNode < TagNode; end
+    class IterationTagNode < TagNode
+      def assign_value_to_type(first_leaf)
+        non_type_value_part = super
+      end
+    end
+
     class FallbackTagNode < TagNode; end
     class Leaf < Parser::Leaf; end
 
