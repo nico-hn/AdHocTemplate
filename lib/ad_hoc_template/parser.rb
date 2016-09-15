@@ -89,7 +89,13 @@ module AdHocTemplate
       end
     end
 
-    class FallbackTagNode < TagNode; end
+    class FallbackTagNode < TagNode
+      def assign_value_to_type(first_leaf)
+        return first_leaf unless first_leaf.kind_of? String
+        first_leaf.sub(/\A#{LINE_END_STR}/, '')
+      end
+    end
+
     class Leaf < Parser::Leaf; end
 
     class TagType
