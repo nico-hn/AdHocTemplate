@@ -66,7 +66,7 @@ module AdHocTemplate
       sub_records.map do |record|
         if tag_node.contains_any_value_assigned_tag_node?(record)
           visit_with_sub_record(tag_node, record)
-        elsif fallback_nodes = select_fallback_tags(tag_node)
+        elsif fallback_nodes = select_fallback_nodes(tag_node)
           format_fallback_tags(fallback_nodes, record)
         else
           "".freeze
@@ -117,7 +117,7 @@ module AdHocTemplate
       tag_node.map {|leaf| leaf.accept(data_loader) }.join
     end
 
-    def select_fallback_tags(tag_node)
+    def select_fallback_nodes(tag_node)
       tags = tag_node.select {|sub_node| sub_node.kind_of? Parser::FallbackTagNode }
       tags.empty? ? nil : tags
     end
