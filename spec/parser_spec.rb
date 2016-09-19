@@ -488,6 +488,47 @@ TEMPLATE
       end
     end
 
+    describe "#inner_iteration_tag_labels" do
+      it "returns labels of inner iteration tags" do
+        template =<<TEMPLATE
+<%#authors:
+Name: <%= name %>
+Birthplace: <%= birthplace %>
+Works:
+<%#works|name:
+ * <%= title %>
+<%#
+<%#bio|name:
+Born: <%= birth_date %>
+#%>
+#%>
+#%>
+
+#%>
+TEMPLATE
+
+        tree = AdHocTemplate::Parser.parse(template)
+        expect(tree[0].inner_iteration_tag_labels).to eq (%w(#works|name #bio|name))
+      end
+
+          it "returns nil when there is no inner iteration tags" do
+        template =<<TEMPLATE
+<%#
+Name: <%= name %>
+Birthplace: <%= birthplace %>
+Works:
+ * <%= title %>
+<%#
+Born: <%= birth_date %>
+#%>
+#%>
+TEMPLATE
+
+        tree = AdHocTemplate::Parser.parse(template)
+        expect(tree[0].inner_iteration_tag_labels).to be_nil
+      end
+    end
+
     describe AdHocTemplate::Parser::FallbackTagNode do
       it 'is expected to be parsed like IterationTagNode -- used inline' do
         source = 'main start <%# <%* content in fallback_tag <%= tag node in fallback tag %> fallback end *%> optional content with <%#iterations: in iteration tag <%= item %> #%> iteration part end  #%> main end'
