@@ -348,6 +348,33 @@ JSON
 
       expect(json).to eq(@json_dump.chomp)
     end
+
+    it 'may contain key-value pairs whose value are not String' do
+      json_source = <<JSON
+{
+  "key1": 1,
+  "key2": 2,
+  "#iterate": [
+    {
+      "key3": 3
+    },
+    {
+      "key3": 4
+    }
+  ]
+}
+JSON
+
+      template = '<%= key1 %> and <%h key2 %><%#iterate:  <%= key3 %>'
+      expected_result = '1 and 2 3 4'
+
+      json = AdHocTemplate::RecordReader::JSONReader.read_record(json_source)
+      tree = AdHocTemplate::Parser.parse(template)
+      tag_formatter = AdHocTemplate::DefaultTagFormatter.new
+      result = AdHocTemplate::DataLoader.format(tree, json, tag_formatter)
+
+      expect(result).to eq(expected_result)
+    end
   end
 
   describe AdHocTemplate::RecordReader::CSVReader do
