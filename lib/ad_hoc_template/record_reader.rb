@@ -405,11 +405,7 @@ module AdHocTemplate
     end
 
     def self.parse_if_necessary(source)
-      if source.kind_of? String
-        RecordReader.read_record(source)
-      else
-        source
-      end
+      source.kind_of?(String) ? read_record(source) : source
     end
 
     def self.convert_values_to_string(data)
