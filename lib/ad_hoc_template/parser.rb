@@ -18,7 +18,7 @@ module AdHocTemplate
       end
 
       def contains_any_value_assigned_tag_node?(record)
-        self.select {|n| n.kind_of?(TagNode) }.each do |node|
+        each_tag_node do |node|
           if node.kind_of? IterationTagNode
             return true if any_value_assigned_to_iteration_tag?(node, record)
           else
@@ -26,11 +26,10 @@ module AdHocTemplate
             return true if val and not val.empty?
           end
         end
-        false
       end
 
       def contains_any_value_tag?
-        select {|n| n.kind_of?(TagNode) }.each do |node|
+        each_tag_node do |node|
           case node
           when IterationTagNode, FallbackTagNode
             return node.contains_any_value_tag?
@@ -38,10 +37,14 @@ module AdHocTemplate
             return true
           end
         end
-        false
       end
 
       private
+
+      def each_tag_node
+        select {|n| n.kind_of?(TagNode) }.each {|node| yield node }
+        false
+      end
 
       def assign_value_to_type(first_leaf)
         if first_leaf.kind_of? String and /\A\s/ =~ first_leaf
