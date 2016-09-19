@@ -62,13 +62,12 @@ module AdHocTemplate
     def format_iteration_tag(tag_node)
       sub_records = prepare_sub_records(tag_node)
       tag_node = cast(tag_node)
-      fallback_nodes = tag_node.select {|sub_node| sub_node.kind_of? Parser::FallbackTagNode }
 
       sub_records.map do |record|
         if tag_node.contains_any_value_assigned_tag_node?(record)
           data_loader = AdHocTemplate::DataLoader.new(record, @tag_formatter)
           tag_node.map {|leaf| leaf.accept(data_loader) }.join
-        elsif not fallback_nodes.empty?
+        elsif fallback_nodes = select_fallback_tags(tag_node)
           format_fallback_tags(fallback_nodes, record)
         else
           "".freeze
@@ -112,6 +111,11 @@ module AdHocTemplate
         end
       end
       new_record || record
+    end
+
+    def select_fallback_tags(tag_node)
+      tags = tag_node.select {|sub_node| sub_node.kind_of? Parser::FallbackTagNode }
+      tags.empty? ? nil : tags
     end
 
     def format_fallback_tags(fallback_nodes, record)
