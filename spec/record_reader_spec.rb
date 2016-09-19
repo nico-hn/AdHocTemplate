@@ -149,6 +149,43 @@ expected_config = {
       }
       expect(AdHocTemplate::RecordReader.read_record(data)).to eq(expected_config)
     end
+
+    it "may contain blocks with comments" do
+      data = <<CONFIG
+//// comment1 in key-value block
+
+key1: value1
+//// comment2 in key-value block
+key2: value2
+key3: value3
+//// comment3 in key-value block
+
+///@#subconfigs
+
+key1-1: value1-1
+key1-2: value1-2
+
+key2-1: value2-1
+key2-2: value2-2
+
+///@block
+
+the first line of block
+the second line of block
+
+the second paragraph in block
+
+CONFIG
+
+expected_config = {
+        "key1" => "value1",
+        "key2" => "value2",
+        "key3" => "value3",
+        "#subconfigs" => [{"key1-1"=>"value1-1", "key1-2"=>"value1-2"}, {"key2-1"=>"value2-1", "key2-2"=>"value2-2"}],
+        "block" => "the first line of block\nthe second line of block\n\nthe second paragraph in block\n"
+      }
+      expect(AdHocTemplate::RecordReader.read_record(data)).to eq(expected_config)
+    end
   end
 
   describe AdHocTemplate::RecordReader::YAMLReader do

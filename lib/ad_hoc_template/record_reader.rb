@@ -134,6 +134,7 @@ module AdHocTemplate
       ITERATION_HEAD = /\A\/\/\/@#/o
       EMPTY_LINE = /\A#{LINE_END_STR}\Z/o
       ITERATION_MARK = /\A#/o
+      COMMENT_HEAD = /\A\/\/\/\//
       READERS_RE = {
         key_value: SEPARATOR,
         iteration: ITERATION_HEAD,
@@ -274,6 +275,7 @@ module AdHocTemplate
         end
 
         def read(line)
+          return if COMMENT_HEAD =~ line
           key, value = line.split(SEPARATOR, 2)
           @stack.current_record[key] = value.chomp
         end
