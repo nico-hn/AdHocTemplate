@@ -161,13 +161,16 @@ key3: value3
 //// comment3 in key-value block
 
 ///@#subconfigs
+////comment1 in iteration block
 
+////comment2 in iteration block
 key1-1: value1-1
 key1-2: value1-2
 
 key2-1: value2-1
 key2-2: value2-2
 
+////comment3 in iteration block
 ///@block
 
 the first line of block
