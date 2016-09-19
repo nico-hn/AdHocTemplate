@@ -65,8 +65,7 @@ module AdHocTemplate
 
       sub_records.map do |record|
         if tag_node.contains_any_value_assigned_tag_node?(record)
-          data_loader = AdHocTemplate::DataLoader.new(record, @tag_formatter)
-          tag_node.map {|leaf| leaf.accept(data_loader) }.join
+          visit_with_sub_record(tag_node, record)
         elsif fallback_nodes = select_fallback_tags(tag_node)
           format_fallback_tags(fallback_nodes, record)
         else
@@ -111,6 +110,11 @@ module AdHocTemplate
         end
       end
       new_record || record
+    end
+
+    def visit_with_sub_record(tag_node, record)
+      data_loader = AdHocTemplate::DataLoader.new(record, @tag_formatter)
+      tag_node.map {|leaf| leaf.accept(data_loader) }.join
     end
 
     def select_fallback_tags(tag_node)
