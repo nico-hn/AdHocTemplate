@@ -244,6 +244,66 @@ The value of optional key2 is value2
 RESULT
       end
 
+      describe "nested iteration block" do
+        it "may contain inner iteration blocks" do
+          template =<<TEMPLATE
+<%#authors:
+Name: <%= name %>
+Birthplace: <%= birthplace %>
+Works:
+<%#works|name:
+ * <%= title %>
+#%>
+
+#%>
+TEMPLATE
+          data =<<DATA
+///@#authors
+
+name: Albert Camus
+birthplace: Algeria
+
+name: Marcel Ayme'
+birthplace: France
+
+///@#authors|works|Albert Camus
+
+title: L'E'tranger
+
+title: La Peste
+
+///@#authors|works|Marcel Ayme'
+
+title: Le Passe-muraille
+
+title: Les Contes du chat perche'
+
+DATA
+
+          expected_result =<<RESULT
+Name: Albert Camus
+Birthplace: Algeria
+Works:
+ * L'E'tranger
+ * La Peste
+
+Name: Marcel Ayme'
+Birthplace: France
+Works:
+ * Le Passe-muraille
+ * Les Contes du chat perche'
+
+RESULT
+
+          tree = AdHocTemplate::Parser.parse(template)
+          config = AdHocTemplate::RecordReader.read_record(data)
+          tag_formatter = AdHocTemplate::DefaultTagFormatter.new
+          result = AdHocTemplate::DataLoader.format(tree, config, tag_formatter)
+
+          expect(result).to eq(expected_result)
+        end
+      end
+
       describe "with data in default format" do
         it "should not ignore the content of an iteration block when some data are provided" do
           config_data = <<CONFIG
