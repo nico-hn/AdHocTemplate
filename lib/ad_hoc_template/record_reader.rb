@@ -296,7 +296,7 @@ module AdHocTemplate
           case line
           when BLOCK_HEAD
             setup_new_block(line, String.new)
-          when EMPTY_LINE
+          when EMPTY_LINE, COMMENT_HEAD
             block_value << line unless block_value.empty?
           else
             block_value << line

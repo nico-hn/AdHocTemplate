@@ -173,9 +173,13 @@ key2-2: value2-2
 ////comment3 in iteration block
 ///@block
 
+////comment1 in block
+
+////comment2 in block
 the first line of block
 the second line of block
 
+////comment-like line
 the second paragraph in block
 
 CONFIG
@@ -185,7 +189,7 @@ expected_config = {
         "key2" => "value2",
         "key3" => "value3",
         "#subconfigs" => [{"key1-1"=>"value1-1", "key1-2"=>"value1-2"}, {"key2-1"=>"value2-1", "key2-2"=>"value2-2"}],
-        "block" => "the first line of block\nthe second line of block\n\nthe second paragraph in block\n"
+        "block" => "the first line of block\nthe second line of block\n\n////comment-like line\nthe second paragraph in block\n"
       }
       expect(AdHocTemplate::RecordReader.read_record(data)).to eq(expected_config)
     end
