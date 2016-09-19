@@ -80,7 +80,7 @@ module AdHocTemplate
         return first_leaf unless first_leaf.kind_of? String
 
         if /\A[^\s:]*:\s/ =~ first_leaf
-          @type, remaining_part = first_leaf.split(/:\s/, 2)
+          @type, remaining_part = first_leaf.split(/:(?:#{LINE_END_STR}|\s)/, 2)
           @type = @type.empty? ? nil : '#'.freeze + @type
           return remaining_part
         end
