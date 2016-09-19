@@ -235,6 +235,27 @@ YAML
 
       expect(yaml).to eq(@yaml_dump)
     end
+
+    it 'may contain key-value pairs whose value are not String' do
+      yaml_source = <<YAML
+---
+key1: 1
+key2: 2
+"#iterate":
+  - key3: 3
+  - key3: 4
+YAML
+
+      template = '<%= key1 %> and <%h key2 %><%#iterate:  <%= key3 %>'
+      expected_result = '1 and 2 3 4'
+
+      yaml = AdHocTemplate::RecordReader::YAMLReader.read_record(yaml_source)
+      tree = AdHocTemplate::Parser.parse(template)
+      tag_formatter = AdHocTemplate::DefaultTagFormatter.new
+      result = AdHocTemplate::DataLoader.format(tree, yaml, tag_formatter)
+
+      expect(result).to eq(expected_result)
+    end
   end
 
   describe AdHocTemplate::RecordReader::JSONReader do

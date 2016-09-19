@@ -8,7 +8,7 @@ module AdHocTemplate
   module RecordReader
     module YAMLReader
       def self.read_record(yaml_data)
-        YAML.load(yaml_data)
+        RecordReader.convert_values_to_string(YAML.load(yaml_data))
       end
 
       def self.dump(config_data)
@@ -409,6 +409,16 @@ module AdHocTemplate
         RecordReader.read_record(source)
       else
         source
+      end
+    end
+
+    def self.convert_values_to_string(data)
+      data.each do |k, v|
+        if v.kind_of? Array
+          v.each {|sub_rec| convert_values_to_string(sub_rec) }
+        elsif v and not v.kind_of? String
+          data[k] = v.to_s
+        end
       end
     end
   end
