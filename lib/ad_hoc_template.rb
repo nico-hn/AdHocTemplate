@@ -7,6 +7,24 @@ require "ad_hoc_template/entry_format_generator"
 
 module AdHocTemplate
   class DataLoader
+    class InnerLabel
+      attr_reader :inner_label
+
+      def self.each_label(inner_labels, cur_label)
+        inner_labels.each {|label| yield new(label, cur_label) }
+      end
+
+      def initialize(inner_label, cur_label)
+        @inner_label = inner_label
+        @label, @key = inner_label.sub(/\A#/, ''.freeze).split(/\|/, 2)
+        @cur_label = cur_label
+      end
+
+      def full_label(record)
+        [@cur_label, @label, record[@key]].join('|')
+      end
+    end
+
     def self.format(template, record, tag_formatter=DefaultTagFormatter.new)
       if record.kind_of? Array
         return format_multi_records(template, record, tag_formatter)
@@ -81,13 +99,10 @@ module AdHocTemplate
                                         inner_iteration_labels)
       return record unless cur_label and inner_iteration_labels
       new_record = nil
-      inner_iteration_labels.each do |inner_label|
-        label, key = inner_label.sub(/\A#/, '').split(/\|/, 2)
-        full_label = [cur_label, label, record[key]].join('|')
-        inner_data = @record[full_label]
-        if inner_data
+      InnerLabel.each_label(inner_iteration_labels, cur_label) do |label|
+        if inner_data = @record[label.full_label(record)]
           new_record ||= record.dup
-          new_record[inner_label] = inner_data
+          new_record[label.inner_label] = inner_data
         end
       end
       new_record || record
