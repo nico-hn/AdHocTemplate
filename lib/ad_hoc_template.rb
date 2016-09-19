@@ -10,8 +10,8 @@ module AdHocTemplate
     class InnerLabel
       attr_reader :inner_label
 
-      def self.each_label(inner_labels, cur_label)
-        inner_labels.each {|label| yield new(label, cur_label) }
+      def self.labels(inner_labels, cur_label)
+        inner_labels.map {|label| new(label, cur_label) }
       end
 
       def initialize(inner_label, cur_label)
@@ -93,19 +93,18 @@ module AdHocTemplate
 
     def prepare_sub_records(tag_node)
       cur_label = tag_node.type
-      inner_iteration_labels = tag_node.inner_iteration_tag_labels
+      inner_labels = tag_node.inner_iteration_tag_labels
+      inner_labels = InnerLabel.labels(inner_labels, cur_label) if inner_labels
       sub_records = @record[cur_label]||[@record]
       sub_records.map do |record|
-        prepare_inner_iteration_records(record, cur_label,
-                                        inner_iteration_labels)
+        prepare_inner_iteration_records(record, cur_label, inner_labels)
       end
     end
 
-    def prepare_inner_iteration_records(record, cur_label,
-                                        inner_iteration_labels)
-      return record unless cur_label and inner_iteration_labels
+    def prepare_inner_iteration_records(record, cur_label, inner_labels)
+      return record unless cur_label and inner_labels
       new_record = nil
-      InnerLabel.each_label(inner_iteration_labels, cur_label) do |label|
+      inner_labels.each do |label|
         if inner_data = @record[label.full_label(record)]
           new_record ||= record.dup
           new_record[label.inner_label] = inner_data
