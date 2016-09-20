@@ -160,7 +160,7 @@ JSON
       expect(JSON.parse(labels)).to eq(JSON.parse(expected_labels_in_json))
     end
 
-    it '.extract_labels ' do
+    it '.extract_labels should extract labels from nested iteration tags' do
         template =<<TEMPLATE
 <%#authors:
 Name: <%= name %>
