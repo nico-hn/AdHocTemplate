@@ -46,23 +46,27 @@ module AdHocTemplate
     end
 
     def self.pull_up_inner_iterations(labels)
-      labels.keys.each do |label|
-        sub_records = labels[label]
-        if sub_records.kind_of? Array
-          sub_records.each do |record|
-            record.keys.each do |key|
-              if record[key].kind_of? Array
-                inner_label = [label, key.sub(/\A#/, '')].join('|')
-                labels[inner_label] = record.delete(key)
-              end
-            end
+      each_iteration_label(labels) do |label|
+        labels[label].each do |record|
+          each_iteration_label(record) do |key|
+            inner_label = [label, key.sub(/\A#/, '')].join('|')
+            labels[inner_label] = record.delete(key)
           end
         end
       end
       labels
     end
 
+    def self.each_iteration_label(labels)
+      iteration_labels = labels.keys.select do |label|
+        labels[label].kind_of? Array
+      end
+
+      iteration_labels.each {|label| yield label }
+    end
+
     private_class_method :extract_labels_as_ruby_objects
     private_class_method :pull_up_inner_iterations
+    private_class_method :each_iteration_label
   end
 end
