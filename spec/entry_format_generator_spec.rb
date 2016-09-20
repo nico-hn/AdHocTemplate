@@ -159,5 +159,46 @@ JSON
 
       expect(JSON.parse(labels)).to eq(JSON.parse(expected_labels_in_json))
     end
+
+    it '.extract_labels ' do
+        template =<<TEMPLATE
+<%#authors:
+Name: <%= name %>
+Birthplace: <%= birthplace %>
+Works:
+<%#works|name:
+ * <%= title %>
+#%>
+
+<%#
+<%#bio|name:
+Born: <%= birth_date %>
+#%>
+#%>
+
+#%>
+TEMPLATE
+
+      expected_result =<<RESULT
+
+///@#authors
+
+name: 
+birthplace: 
+
+///@#authors|works|name
+
+title: 
+
+///@#authors|bio|name
+
+birth_date: 
+RESULT
+
+      tree = AdHocTemplate::Parser.parse(template)
+      labels = AdHocTemplate::EntryFormatGenerator.extract_labels(tree)
+
+      expect(labels).to eq(expected_result)
+    end
   end
 end

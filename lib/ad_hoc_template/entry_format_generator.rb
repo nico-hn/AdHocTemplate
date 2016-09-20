@@ -34,6 +34,7 @@ module AdHocTemplate
 
     def self.extract_labels(parsed_template, target_format=nil)
       labels = extract_labels_as_ruby_objects(parsed_template)
+      labels = pull_up_inner_iterations(labels)
 
       RecordReader.dump(labels, target_format)
     end
@@ -44,6 +45,24 @@ module AdHocTemplate
       label_checker.labels
     end
 
+    def self.pull_up_inner_iterations(labels)
+      labels.keys.each do |label|
+        sub_records = labels[label]
+        if sub_records.kind_of? Array
+          sub_records.each do |record|
+            record.keys.each do |key|
+              if record[key].kind_of? Array
+                inner_label = [label, key.sub(/\A#/, '')].join('|')
+                labels[inner_label] = record.delete(key)
+              end
+            end
+          end
+        end
+      end
+      labels
+    end
+
     private_class_method :extract_labels_as_ruby_objects
+    private_class_method :pull_up_inner_iterations
   end
 end
