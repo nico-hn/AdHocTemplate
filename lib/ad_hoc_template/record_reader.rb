@@ -91,14 +91,14 @@ module AdHocTemplate
         end
       end
 
-      def self.compose_inner_iteration_records(csv_records, given_label)
-        outer_label, inner_label, key = given_label.split(/\|/, 3)
+      def self.compose_inner_iteration_records(csv_records, given_label,
+                                               main_record={})
+        outer_label, inner_label, key = ('#' + given_label).split(/\|/, 3)
         values = inner_iteration_records(csv_records, key)
         labels = inner_iteration_labels(outer_label, inner_label, values.keys)
-        records = {}
-        records[ '#' + outer_label] = values.keys.map {|k| { key => k } }
-        values.keys.each {|k| records[labels[k]] = values[k] }
-        records
+        main_record[outer_label] = values.keys.map {|k| { key => k } }
+        values.keys.each {|k| main_record[labels[k]] = values[k] }
+        main_record
       end
 
       def self.inner_iteration_records(csv_records, key)
@@ -109,7 +109,7 @@ module AdHocTemplate
 
       def self.inner_iteration_labels(outer_label, inner_label, keys)
         labels = keys.inject({}) do |h, key|
-          h[key] = ['#'+ outer_label, inner_label, key].join('|')
+          h[key] = [outer_label, inner_label, key].join('|')
           h
         end
       end
