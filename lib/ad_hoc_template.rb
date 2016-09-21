@@ -124,9 +124,8 @@ module AdHocTemplate
 
     def format_fallback_tags(fallback_nodes, record)
       data_loader = AdHocTemplate::DataLoader.new(record, @tag_formatter)
-      fallback_nodes = fallback_nodes.map {|node| cast(node, Parser::IterationTagNode) }
-      fallback_nodes = cast(fallback_nodes)
-      fallback_nodes.map do |node|
+      fallback_nodes.map do |fallback_node|
+        node = cast(fallback_node, Parser::IterationTagNode)
         node.contains_any_value_tag? ? node.accept(data_loader) : node.join
       end
     end
