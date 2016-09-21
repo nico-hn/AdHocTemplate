@@ -94,10 +94,7 @@ module AdHocTemplate
       def self.compose_for_pivot_table_like_structure(csv_records, given_label)
         outer_label, inner_label, key = given_label.split(/\|/, 3)
         values = records_for_inner_iterations(csv_records, key)
-        labels = values.keys.inject({}) do |h, k|
-          h[k] = ['#'+ outer_label, inner_label, k].join('|')
-          h
-        end
+        labels = inner_iteration_labels(outer_label, inner_label, values.keys)
         records = {}
         records[ '#' + outer_label] = values.keys.map {|k| { key => k } }
         values.keys.each {|k| records[labels[k]] = values[k] }
@@ -108,6 +105,13 @@ module AdHocTemplate
         values = Hash.new {|h, k| h[k] = [] }
         csv_records.each {|record| values[record[key]].push record }
         values
+      end
+
+      def self.inner_iteration_labels(outer_label, inner_label, keys)
+        labels = keys.inject({}) do |h, key|
+          h[key] = ['#'+ outer_label, inner_label, key].join('|')
+          h
+        end
       end
 
       def self.csv_compatible_format?(data)
@@ -140,6 +144,7 @@ module AdHocTemplate
       private_class_method :compose_record
       private_class_method :compose_for_pivot_table_like_structure
       private_class_method :records_for_inner_iterations
+      private_class_method :inner_iteration_labels
       private_class_method :csv_compatible_format?, :hashes_to_arrays
       private_class_method :find_sub_records, :array_to_csv
     end
