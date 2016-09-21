@@ -59,11 +59,10 @@ module AdHocTemplate
       end
     end
 
-    def format_iteration_tag(tag_node)
-      sub_records = prepare_sub_records(tag_node)
-      tag_node = cast(tag_node)
+    def format_iteration_tag(iteration_tag_node)
+      tag_node = cast(iteration_tag_node)
 
-      sub_records.map do |record|
+      prepare_sub_records(iteration_tag_node).map do |record|
         if tag_node.contains_any_value_assigned_tag_node?(record)
           visit_with_sub_record(tag_node, record)
         elsif fallback_nodes = select_fallback_nodes(tag_node)
