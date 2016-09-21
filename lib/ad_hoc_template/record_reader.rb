@@ -40,6 +40,9 @@ module AdHocTemplate
         label, sep  = parse_config(config)
         header, *data = CSV.new(csv_data, col_sep: sep).to_a
         csv_records = data.map {|row| convert_to_hash(header, row) }
+        if label and label.index('|')
+          return compose_for_pivot_table_like_structure(csv_records, label)
+        end
         compose_record(csv_records, label)
       end
 
@@ -88,6 +91,22 @@ module AdHocTemplate
         end
       end
 
+      def self.compose_for_pivot_table_like_structure(csv_records, given_label)
+        outer_label, inner_label, key = given_label.split(/\|/, 3)
+        values = Hash.new {|h, k| h[k] = [] }
+        csv_records.each do |record|
+          values[record[key]].push record
+        end
+        labels = values.keys.inject({}) do |h, k|
+          h[k] = ['#'+ outer_label, inner_label, k].join('|')
+          h
+        end
+        records = {}
+        records[ '#' + outer_label] = values.keys.map {|k| { key => k } }
+        values.keys.each {|k| records[labels[k]] = values[k] }
+        records
+      end
+
       def self.csv_compatible_format?(data)
         iteration_blocks_count = data.values.select {|v| v.kind_of? Array }.size
         iteration_blocks_count == 0 or (iteration_blocks_count == 1 && data.size == 1)
@@ -116,6 +135,7 @@ module AdHocTemplate
 
       private_class_method :convert_to_hash, :parse_config
       private_class_method :compose_record
+      private_class_method :compose_for_pivot_table_like_structure
       private_class_method :csv_compatible_format?, :hashes_to_arrays
       private_class_method :find_sub_records, :array_to_csv
     end

@@ -560,6 +560,35 @@ CSV
       expect(csv).to eq(config)
     end
 
+    it 'reads CSV data and arrange it for a pivot table like view' do
+      csv = <<CSV
+name,title,birth_place
+Albert Camus,"L'E'tranger",Algeria
+Albert Camus,La Peste,Algeria
+"Marcel Ayme'",Le Passe-muraille,France
+"Marcel Ayme'","Les Contes du chat perche'",France
+CSV
+
+      expected_result = {
+        '#authors' => [
+          { 'name' => 'Albert Camus' },
+          { 'name' => "Marcel Ayme'" }
+        ],
+        '#authors|works|Albert Camus' => [
+          { "name" => "Albert Camus", "title" => "L'E'tranger", "birth_place" => "Algeria" },
+          { "name" => "Albert Camus", "title" => "La Peste", "birth_place" => "Algeria" }
+        ],
+        "#authors|works|Marcel Ayme'" => [
+          { "name" => "Marcel Ayme'", "title" => "Le Passe-muraille", "birth_place" => "France" },
+          { "name" => "Marcel Ayme'", "title" => "Les Contes du chat perche'", "birth_place" => "France" }
+        ]
+      }
+
+      result = AdHocTemplate::RecordReader::CSVReader.read_record(csv, "authors|works|name")
+
+      expect(result).to eq(expected_result)
+    end
+
     it '.read_record is called from RecordReader.read_record if the format of source data is specified' do
       csv_reader = AdHocTemplate::RecordReader::CSVReader.read_record(@csv_source, "subconfigs")
       record_reader = AdHocTemplate::RecordReader.read_record(@csv_source, csv: "subconfigs")
