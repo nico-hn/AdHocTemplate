@@ -39,14 +39,8 @@ module AdHocTemplate
       def self.read_record(csv_data, config={ csv: nil })
         label, sep  = parse_config(config)
         header, *data = CSV.new(csv_data, col_sep: sep).to_a
-        records = data.map {|row| convert_to_hash(header, row) }
-        if label
-          { '#' + label => records }
-        elsif records.length == 1
-          records[0]
-        else
-          records
-        end
+        csv_records = data.map {|row| convert_to_hash(header, row) }
+        compose_record(csv_records, label)
       end
 
       def self.dump(config_data, col_sep=COL_SEP[:csv])
@@ -84,6 +78,16 @@ module AdHocTemplate
         return label, col_sep
       end
 
+      def self.compose_record(csv_records, label)
+        if label
+          { '#' + label => csv_records }
+        elsif csv_records.length == 1
+          csv_records[0]
+        else
+          csv_records
+        end
+      end
+
       def self.csv_compatible_format?(data)
         iteration_blocks_count = data.values.select {|v| v.kind_of? Array }.size
         iteration_blocks_count == 0 or (iteration_blocks_count == 1 && data.size == 1)
@@ -111,6 +115,7 @@ module AdHocTemplate
       end
 
       private_class_method :convert_to_hash, :parse_config
+      private_class_method :compose_record
       private_class_method :csv_compatible_format?, :hashes_to_arrays
       private_class_method :find_sub_records, :array_to_csv
     end
