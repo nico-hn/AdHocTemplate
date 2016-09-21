@@ -1,0 +1,14 @@
+---
+"#authors":
+- name: Albert Camus
+  "#works|name":
+  - title: L'Étranger
+    year: 1942
+  - title: La Peste
+    year: 1947
+- name: Marcel Aymé
+  "#works|name":
+  - title: Le Passe-muraille
+    year: 1943
+  - title: Les Contes du chat perché
+    year: 1934-1946

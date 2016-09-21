@@ -1,0 +1,18 @@
+<h1>Authors</h1>
+
+<!--%iterate%-->authors:
+<h2><!--%h name %--></h2>
+
+<table summary="List of <!--%h name %-->&#39;s famous works with publication year">
+  <caption>Famous works</caption>
+  <thead>
+    <tr><th scope="col">Title</th><th scope="col">Publication Year</th></tr>
+  </thead>
+  <tbody>
+    <!--%iterate%-->works|name:
+    <tr><td><!--%h title %--></td><td><!--%h year %--></td></tr>
+    <!--%/iterate%-->
+  </tbody>
+</table>
+
+<!--%/iterate%-->
