@@ -96,7 +96,9 @@ module AdHocTemplate
         outer_label, inner_label, key = ('#' + given_label).split(/\|/, 3)
         values = inner_iteration_records(csv_records, key)
         labels = inner_iteration_labels(outer_label, inner_label, values.keys)
-        main_record[outer_label] = values.keys.map {|k| { key => k } }
+        unless main_record[outer_label]
+          main_record[outer_label] = values.keys.map {|k| { key => k } }
+        end
         values.keys.each {|k| main_record[labels[k]] = values[k] }
         main_record
       end
