@@ -41,7 +41,7 @@ module AdHocTemplate
         header, *data = CSV.new(csv_data, col_sep: sep).to_a
         csv_records = data.map {|row| convert_to_hash(header, row) }
         if label and label.index('|')
-          return compose_for_pivot_table_like_structure(csv_records, label)
+          return compose_inner_iteration_records(csv_records, label)
         end
         compose_record(csv_records, label)
       end
@@ -91,7 +91,7 @@ module AdHocTemplate
         end
       end
 
-      def self.compose_for_pivot_table_like_structure(csv_records, given_label)
+      def self.compose_inner_iteration_records(csv_records, given_label)
         outer_label, inner_label, key = given_label.split(/\|/, 3)
         values = inner_iteration_records(csv_records, key)
         labels = inner_iteration_labels(outer_label, inner_label, values.keys)
@@ -142,7 +142,7 @@ module AdHocTemplate
 
       private_class_method :convert_to_hash, :parse_config
       private_class_method :compose_record
-      private_class_method :compose_for_pivot_table_like_structure
+      private_class_method :compose_inner_iteration_records
       private_class_method :inner_iteration_records
       private_class_method :inner_iteration_labels
       private_class_method :csv_compatible_format?, :hashes_to_arrays
