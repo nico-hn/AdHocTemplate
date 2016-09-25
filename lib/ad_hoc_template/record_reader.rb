@@ -34,11 +34,16 @@ module AdHocTemplate
         tsv: "\t"
       }
 
+      module HEADER_POSITION
+        TOP = '__header_top__'
+        LEFT = '__header_left__'
+      end
+
       class NotSupportedError < StandardError; end
 
       def self.read_record(csv_data, config={ csv: nil })
         label, sep  = parse_config(config)
-        header, *data = CSV.new(csv_data, col_sep: sep).to_a
+        header, *data = csv_to_array(csv_data, sep, label)
         csv_records = data.map {|row| convert_to_hash(header, row) }
         if label and label.index('|')
           return compose_inner_iteration_records(csv_records, label)
@@ -79,6 +84,14 @@ module AdHocTemplate
         end
         col_sep = COL_SEP[format||:csv]
         return label, col_sep
+      end
+
+      def self.csv_to_array(csv_data, col_sep, label)
+        array = CSV.new(csv_data, col_sep: col_sep).to_a
+        if not label or label == HEADER_POSITION::LEFT
+          array = array.transpose
+        end
+        array
       end
 
       def self.compose_record(csv_records, label)
@@ -143,7 +156,7 @@ module AdHocTemplate
       end
 
       private_class_method :convert_to_hash, :parse_config
-      private_class_method :compose_record
+      private_class_method :csv_to_array, :compose_record
       private_class_method :compose_inner_iteration_records
       private_class_method :inner_iteration_records
       private_class_method :inner_iteration_labels

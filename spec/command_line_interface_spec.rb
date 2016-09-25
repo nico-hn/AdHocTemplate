@@ -232,6 +232,11 @@ value1-1,value1-2,value1-3
 value2-1,value2-2,value2-3
 value3-1,value3-2,value3-3
 CSV
+        @record_in_csv_with_left_header = <<CSV
+key1,value1-1,value2-1,value3-1
+key2,value1-2,value2-2,value3-2
+key3,value1-3,value2-3,value3-3
+CSV
 
         @expected_result = <<RESULT
 the value of sub_key1 is value1-1
@@ -301,7 +306,7 @@ TEMPLATE
         record_filename = "record.csv"
 
         allow(File).to receive(:read).with(File.expand_path(template_filename)).and_return(@template_without_iteration_block)
-        allow(File).to receive(:read).with(File.expand_path(record_filename)).and_return(@record_in_csv_format)
+        allow(File).to receive(:read).with(File.expand_path(record_filename)).and_return(@record_in_csv_with_left_header)
         allow(STDOUT).to receive(:print).with(@expected_result)
 
         set_argv("--data-format=csv #{template_filename} #{record_filename}")
@@ -313,8 +318,9 @@ TEMPLATE
 
       it "can read csv data of only one record" do
         record_in_csv_format = <<CSV
-key1,key2,key3
-value1-1,value1-2,value1-3
+key1,value1-1
+key2,value1-2
+key3,value1-3
 CSV
 
         expected_result = <<RESULT
@@ -346,6 +352,12 @@ key1	key2	key3
 value1-1	value1-2	value1-3
 value2-1	value2-2	value2-3
 value3-1	value3-2	value3-3
+TSV
+
+        @record_in_tsv_with_left_header = <<TSV
+key1	value1-1	value2-1	value3-1
+key2	value1-2	value2-2	value3-2
+key3	value1-3	value2-3	value3-3
 TSV
 
         @expected_result = <<RESULT
@@ -438,7 +450,7 @@ TEMPLATE
         record_filename = "record.tsv"
 
         allow(File).to receive(:read).with(File.expand_path(template_filename)).and_return(@template_without_iteration_block)
-        allow(File).to receive(:read).with(File.expand_path(record_filename)).and_return(@record_in_tsv_format)
+        allow(File).to receive(:read).with(File.expand_path(record_filename)).and_return(@record_in_tsv_with_left_header)
         allow(STDOUT).to receive(:print).with(@expected_result)
 
         set_argv("--data-format=tsv #{template_filename} #{record_filename}")
@@ -450,8 +462,9 @@ TEMPLATE
 
       it "can read tsv data of only one record" do
         record_in_tsv_format = <<TSV
-key1	key2	key3
-value1-1	value1-2	value1-3
+key1	value1-1
+key2	value1-2
+key3	value1-3
 TSV
 
         expected_result = <<RESULT
