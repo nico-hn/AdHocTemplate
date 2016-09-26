@@ -8,40 +8,40 @@ module AdHocTemplate
         @labels = {}
       end
 
-      def visit(tree)
+      def visit(tree, memo)
         case tree
         when Parser::IterationTagNode, Parser::FallbackTagNode
-          visit_iteration_tag_node(tree)
+          visit_iteration_tag_node(tree, memo)
         when Parser::TagNode
           @labels[tree.join.strip] = nil
         when Parser::Node
-          tree.each {|node| node.accept(self) }
+          tree.each {|node| node.accept(self, memo) }
         end
       end
 
       private
 
-      def visit_iteration_tag_node(tree)
+      def visit_iteration_tag_node(tree, memo)
         if iteration_label = tree.type
           sub_checker = self.class.new
           @labels[iteration_label] = [sub_checker.labels]
-          tree.each { |node| node.accept(sub_checker) }
+          tree.each { |node| node.accept(sub_checker, memo) }
         else
-          tree.each {|node| node.accept(self) }
+          tree.each {|node| node.accept(self, memo) }
         end
       end
     end
 
-    def self.extract_labels(parsed_template, target_format=nil)
-      labels = extract_labels_as_ruby_objects(parsed_template)
+    def self.extract_labels(parsed_template, target_format=nil, memo=nil)
+      labels = extract_labels_as_ruby_objects(parsed_template, memo)
       labels = pull_up_inner_iterations(labels)
 
       RecordReader.dump(labels, target_format)
     end
 
-    def self.extract_labels_as_ruby_objects(parsed_template)
+    def self.extract_labels_as_ruby_objects(parsed_template, memo)
       label_checker = LabelChecker.new
-      parsed_template.accept(label_checker)
+      parsed_template.accept(label_checker, memo)
       label_checker.labels
     end
 

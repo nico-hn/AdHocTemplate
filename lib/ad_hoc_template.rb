@@ -44,42 +44,42 @@ module AdHocTemplate
       @tag_formatter = tag_formatter
     end
 
-    def visit(tree)
+    def visit(tree, memo)
       case tree
       when Parser::IterationTagNode
-        format_iteration_tag(tree)
+        format_iteration_tag(tree, memo)
       when Parser::FallbackTagNode
         ''.freeze
       when Parser::TagNode
-        format_tag(tree)
+        format_tag(tree, memo)
       when Parser::Leaf
         tree.join
       else
-        tree.map {|node| node.accept(self) }
+        tree.map {|node| node.accept(self, memo) }
       end
     end
 
-    def format_iteration_tag(iteration_tag_node)
+    def format_iteration_tag(iteration_tag_node, memo)
       tag_node = cast(iteration_tag_node)
 
       prepare_sub_records(iteration_tag_node).map do |record|
         if tag_node.contains_any_value_assigned_tag_node?(record)
-          visit_with_sub_record(tag_node, record)
+          visit_with_sub_record(tag_node, record, memo)
         elsif fallback_nodes = select_fallback_nodes(tag_node)
-          format_fallback_tags(fallback_nodes, record)
+          format_fallback_tags(fallback_nodes, record, memo)
         else
           "".freeze
         end
       end
     end
 
-    def format_tag(tag_node)
-      leafs = tag_node.map {|leaf| leaf.accept(self) }
+    def format_tag(tag_node, memo)
+      leafs = tag_node.map {|leaf| leaf.accept(self, memo) }
       @tag_formatter.format(tag_node.type, leafs.join.strip, @record)
     end
 
-    def format(tree)
-      tree.accept(self).join
+    def format(tree, memo=nil)
+      tree.accept(self, memo).join
     end
 
     private
@@ -111,9 +111,9 @@ module AdHocTemplate
       new_record || record
     end
 
-    def visit_with_sub_record(tag_node, record)
+    def visit_with_sub_record(tag_node, record, memo)
       data_loader = AdHocTemplate::DataLoader.new(record, @tag_formatter)
-      tag_node.map {|leaf| leaf.accept(data_loader) }.join
+      tag_node.map {|leaf| leaf.accept(data_loader, memo) }.join
     end
 
     def select_fallback_nodes(tag_node)
@@ -121,11 +121,11 @@ module AdHocTemplate
       tags.empty? ? nil : tags
     end
 
-    def format_fallback_tags(fallback_nodes, record)
+    def format_fallback_tags(fallback_nodes, record, memo)
       data_loader = AdHocTemplate::DataLoader.new(record, @tag_formatter)
       fallback_nodes.map do |fallback_node|
         node = cast(fallback_node, Parser::IterationTagNode)
-        node.contains_any_value_tag? ? node.accept(data_loader) : node.join
+        node.contains_any_value_tag? ? node.accept(data_loader, memo) : node.join
       end
     end
   end
