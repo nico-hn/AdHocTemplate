@@ -136,26 +136,12 @@ module AdHocTemplate
 
       def assign_type(tag, iteration_tag, fallback_tag)
         node_tag_pairs = [
-          [TagNode, tag],
-          [IterationTagNode, iteration_tag],
-          [FallbackTagNode, fallback_tag]
+          [TagNode, *tag],
+          [IterationTagNode, *iteration_tag],
+          [FallbackTagNode, *fallback_tag]
         ]
 
-        setup_attributes(node_tag_pairs)
-      end
-
-      private
-
-      def setup_attributes(node_tag_pairs)
-        @head, @tail, @head_of, @tail_of = {}, {}, {}, {}
-
-        node_tag_pairs.each do |node, tag|
-          head, tail = tag
-          @head[head] = node
-          @tail[tail] = node
-          @head_of[node] = head
-          @tail_of[node] = tail
-        end
+        @head, @tail, @head_of, @tail_of = PseudoHiki.associate_nodes_with_tags(node_tag_pairs)
       end
 
       register
