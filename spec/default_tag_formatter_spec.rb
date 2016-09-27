@@ -42,6 +42,19 @@ describe AdHocTemplate do
       AdHocTemplate::DefaultTagFormatter::FUNCTION_TABLE.delete(proc_label)
       expect(proc_assigned).to eq('test for proc assignment: <value1>')
     end
+
+    it '.assign_format can be used to reassign predefined methods' do
+      formatter = AdHocTemplate::DefaultTagFormatter
+      default_equal_sign = formatter::FUNCTION_TABLE["="]
+      expect(default_equal_sign).to eq(:default)
+
+      formatter.assign_format(html_encode: "=")
+      reassigned_equal_sign = formatter::FUNCTION_TABLE["="]
+      expect(reassigned_equal_sign).to eq(:html_encode)
+
+      formatter.assign_format(default: "=")
+      expect(formatter::FUNCTION_TABLE["="]).to eq(default_equal_sign)
+    end
   end
 end
 

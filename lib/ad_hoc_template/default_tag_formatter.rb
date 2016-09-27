@@ -8,7 +8,12 @@ module AdHocTemplate
     }
 
     def self.assign_format(format_label, &func)
-      FUNCTION_TABLE[format_label] = func
+      if format_label.kind_of? Hash and not func
+        func_name, label = format_label.to_a.flatten
+        FUNCTION_TABLE[label] = func_name
+      else
+        FUNCTION_TABLE[format_label] = func
+      end
     end
 
     def find_function(format_label)
