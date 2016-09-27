@@ -2,6 +2,9 @@
 
 require 'ad_hoc_template'
 require 'optparse_plus'
+require 'ad_hoc_template/config_manager'
+
+AdHocTemplate::ConfigManager.require_local_settings
 
 module AdHocTemplate
   class CommandLineInterface
