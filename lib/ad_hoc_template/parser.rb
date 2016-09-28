@@ -19,12 +19,7 @@ module AdHocTemplate
 
       def contains_any_value_assigned_tag_node?(record)
         each_tag_node do |node|
-          if node.kind_of? IterationTagNode
-            return true if any_value_assigned_to_iteration_tag?(node, record)
-          else
-            val = record[node.join.strip]
-            return true if val and not val.empty?
-          end
+          return true if node.contains_any_value_assigned_tag_node?(record)
         end
       end
 
@@ -72,16 +67,6 @@ module AdHocTemplate
           return false if rec.values.find {|val| val and not val.empty? }
         end
       end
-
-      def any_value_assigned_to_iteration_tag?(tag_node, record)
-        if tag_node.type
-          not empty_sub_records?(record, tag_node)
-        elsif tag_node.kind_of? FallbackTagNode
-          false
-        else
-          tag_node.contains_any_value_assigned_tag_node?(record)
-        end
-      end
     end
 
     class IterationTagNode < TagNode
@@ -96,6 +81,13 @@ module AdHocTemplate
 
         first_leaf.sub(/\A#{LINE_END_STR}/, '')
       end
+
+      def contains_any_value_assigned_tag_node?(record)
+        return (not empty_sub_records?(record, self)) if type
+        each_tag_node do |node|
+          return true if node.contains_any_value_assigned_tag_node?(record)
+        end
+      end
     end
 
     class FallbackTagNode < TagNode
@@ -103,9 +95,18 @@ module AdHocTemplate
         return first_leaf unless first_leaf.kind_of? String
         first_leaf.sub(/\A#{LINE_END_STR}/, '')
       end
+
+      def contains_any_value_assigned_tag_node?(record)
+        false
+      end
     end
 
     class ValueNode < TagNode
+      def contains_any_value_assigned_tag_node?(record)
+        val = record[self.join.strip]
+        val and not val.empty?
+      end
+
       def contains_any_value_tag?
         true
       end
