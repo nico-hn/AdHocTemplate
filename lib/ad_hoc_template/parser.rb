@@ -75,7 +75,7 @@ module AdHocTemplate
       end
 
       def contains_any_value_assigned_tag_node?(record)
-        return (not empty_sub_records?(record, self)) if type
+        return not_empty_sub_records?(record) if type
         each_tag_node do |node|
           return true if node.contains_any_value_assigned_tag_node?(record)
         end
@@ -83,12 +83,13 @@ module AdHocTemplate
 
       private
 
-      def empty_sub_records?(record, node)
-        sub_records = record[node.type]
-        return true if sub_records.nil? or sub_records.empty?
+      def not_empty_sub_records?(record)
+        sub_records = record[type]
+        return false if sub_records.nil? or sub_records.empty?
         sub_records.each do |rec|
-          return false if rec.values.find {|val| val and not val.empty? }
+          return true if rec.values.any? {|val| val and not val.empty? }
         end
+        false
       end
     end
 
