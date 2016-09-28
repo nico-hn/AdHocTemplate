@@ -112,6 +112,9 @@ module AdHocTemplate
       end
     end
 
+    class ValueNode < TagNode
+    end
+
     class Leaf < Parser::Leaf; end
 
     class TagType
@@ -136,7 +139,7 @@ module AdHocTemplate
 
       def assign_type(tag, iteration_tag, fallback_tag)
         node_tag_pairs = [
-          [TagNode, *tag],
+          [ValueNode, *tag],
           [IterationTagNode, *iteration_tag],
           [FallbackTagNode, *fallback_tag]
         ]
