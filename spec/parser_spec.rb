@@ -457,6 +457,9 @@ main start
 
 <%#
 <%*
+line without value tag
+*%>
+<%*
 line with <%= value tag %>
 *%>
 #%>
