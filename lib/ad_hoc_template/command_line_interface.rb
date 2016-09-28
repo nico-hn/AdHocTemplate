@@ -53,6 +53,7 @@ module AdHocTemplate
         opt.on(:data_format) {|data_format| choose_data_format(data_format) }
         opt.on(:tag_config) {|tag_config_yaml| register_user_defined_tag_type(tag_config_yaml) }
         opt.on(:entry_format) {|entry_format| @output_empty_entry = true }
+        opt.on(:init_local_settings) { init_local_settings }
 
         opt.parse!
       end
@@ -82,6 +83,13 @@ module AdHocTemplate
     def generate_entry_format
       tree = Parser.parse(@template_data, @tag_type)
       EntryFormatGenerator.extract_labels(tree, @data_format)
+    end
+
+    def init_local_settings
+      AdHocTemplate::ConfigManager.init_local_settings
+      config_dir = File.expand_path(AdHocTemplate::ConfigManager::LOCAL_SETTINGS_DIR)
+      puts "Please edit configuration files created in #{config_dir}"
+      exit
     end
 
     def open_output
@@ -170,3 +178,6 @@ entry_format:
   short: "-e"
   long: "--entry-format"
   description: "Extract tag labels from a template and generate an empty data entry format"
+init_local_settings:
+  long: "--init-local-settings"
+  description: "Generate configuration files for local settings"
