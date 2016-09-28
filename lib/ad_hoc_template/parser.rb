@@ -59,14 +59,6 @@ module AdHocTemplate
         sep = /\A\S*#{LINE_END_STR}/ =~ first_leaf ? LINE_END_RE : /\s+/
         first_leaf.split(sep, 2)
       end
-
-      def empty_sub_records?(record, node)
-        sub_records = record[node.type]
-        return true if sub_records.nil? or sub_records.empty?
-        sub_records.each do |rec|
-          return false if rec.values.find {|val| val and not val.empty? }
-        end
-      end
     end
 
     class IterationTagNode < TagNode
@@ -86,6 +78,16 @@ module AdHocTemplate
         return (not empty_sub_records?(record, self)) if type
         each_tag_node do |node|
           return true if node.contains_any_value_assigned_tag_node?(record)
+        end
+      end
+
+      private
+
+      def empty_sub_records?(record, node)
+        sub_records = record[node.type]
+        return true if sub_records.nil? or sub_records.empty?
+        sub_records.each do |rec|
+          return false if rec.values.find {|val| val and not val.empty? }
         end
       end
     end
