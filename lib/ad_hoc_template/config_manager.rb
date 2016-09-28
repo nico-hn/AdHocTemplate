@@ -38,8 +38,7 @@ module AdHocTemplate
       config_dir = File.expand_path(LOCAL_SETTINGS_DIR)
       settings_rb = File.expand_path(LOCAL_SETTINGS_FILE)
       custom_tag_yaml = File.join(config_dir, TAG_DEF_FILE_NAME)
-      return if File.exist? config_dir
-      FileUtils.mkdir(config_dir)
+      FileUtils.mkdir(config_dir) unless File.exist? config_dir
       create_unless_exist(settings_rb, @local_settings_template)
       create_unless_exist(custom_tag_yaml, @custom_tag_template)
     end

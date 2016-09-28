@@ -123,6 +123,20 @@ YAML
         expect(@settings_file.string).to start_with('AdHocTemplate')
         expect(@tag_def_file.string).to start_with('---')
       end
+
+      it 'does nothing if local setting files already exist' do
+        allow(File).to receive(:exist?).with(@settings_dir).and_return(true)
+        allow(FileUtils).to receive(:mkdir).and_return(false)
+        allow(File).to receive(:exist?).with(@settings_path).and_return(true)
+        allow(@config_manager).to receive(:open).with(@settings_path, 'w').and_yield(@settings_file)
+        allow(File).to receive(:exist?).with(@tag_def_path).and_return(true)
+        allow(@config_manager).to receive(:open).with(@tag_def_path, 'w').and_yield(@tag_def_file)
+
+        @config_manager.init_local_settings
+
+        expect(@settings_file.string).to be_empty
+        expect(@tag_def_file.string).to be_empty
+      end
     end
   end
 end
