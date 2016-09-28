@@ -59,18 +59,23 @@ YAML
     end
 
     describe 'DefaultTagFormatter related methods' do
+      before do
+        @function_table = AdHocTemplate::DefaultTagFormatter:: FUNCTION_TABLE
+        @var = 'french_date'
+        @record = { @var => '2016/09/28' }
+        @expected_result = '28/09/2016'
+      end
+
       it '.assign_format_label is an alias of DefaultTagFormatter.assign_format' do
         AdHocTemplate.local_settings do
           assign_format_label('fd') {|var, record| record[var].split(/\//).reverse.join('/') }
         end
 
-        var = 'french_date'
-        record = { var => '2016/09/28' }
-        result = AdHocTemplate::DefaultTagFormatter:: FUNCTION_TABLE['fd'].call(var, record)
+        result = @function_table['fd'].call(@var, @record)
 
-        expect(result).to eq('28/09/2016')
+        expect(result).to eq(@expected_result)
 
-        AdHocTemplate::DefaultTagFormatter:: FUNCTION_TABLE.delete('fd')
+        @function_table.delete('fd')
       end
 
       it '.define_label_format evaluates a given block in the context of DefaultTagFormatter' do
@@ -84,12 +89,10 @@ YAML
           end
         end
 
-        var = 'french_date'
-        record = { var => '2016/09/28' }
-        method_name = AdHocTemplate::DefaultTagFormatter:: FUNCTION_TABLE['fd']
-        result = AdHocTemplate::DefaultTagFormatter.new.send method_name, var, record
+        method_name = @function_table['fd']
+        result = AdHocTemplate::DefaultTagFormatter.new.send method_name, @var, @record
 
-        expect(result).to eq('28/09/2016')
+        expect(result).to eq(@expected_result)
 
         AdHocTemplate::DefaultTagFormatter.send :undef_method, method_name
       end
