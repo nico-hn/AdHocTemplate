@@ -452,7 +452,7 @@ CONFIG
 
     describe "#contains_any_value_tag?" do
       it 'return true if any value tag is contained' do
-      template_with_value_tag =<<TEMPLATE
+        template_with_value_tag =<<TEMPLATE
 main start
 
 <%#
@@ -469,7 +469,7 @@ TEMPLATE
       end
 
       it 'return false if no value tag is contained' do
-      template_without_value_tag =<<TEMPLATE
+        template_without_value_tag =<<TEMPLATE
 main start
 
 <%#
