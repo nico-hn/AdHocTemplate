@@ -29,6 +29,10 @@ module AdHocTemplate
       AdHocTemplate::DefaultTagFormatter.assign_format(format_label, &func)
     end
 
+    def self.define_label_format(&block)
+      AdHocTemplate::DefaultTagFormatter.module_eval(&block)
+    end
+
     def self.expand_path(path)
       unless /\A[\.\/]/ =~ path
         path = File.join(LOCAL_SETTINGS_DIR, path)

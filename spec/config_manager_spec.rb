@@ -72,6 +72,27 @@ YAML
 
         AdHocTemplate::DefaultTagFormatter:: FUNCTION_TABLE.delete('fd')
       end
+
+      it '.define_label_format evaluates a given block in the context of DefaultTagFormatter' do
+        AdHocTemplate.local_settings do
+          define_label_format do
+            def french_date(var, record)
+              record[var].split(/\//).reverse.join('/')
+            end
+
+            assign_format french_date: 'fd'
+          end
+        end
+
+        var = 'french_date'
+        record = { var => '2016/09/28' }
+        method_name = AdHocTemplate::DefaultTagFormatter:: FUNCTION_TABLE['fd']
+        result = AdHocTemplate::DefaultTagFormatter.new.send method_name, var, record
+
+        expect(result).to eq('28/09/2016')
+
+        AdHocTemplate::DefaultTagFormatter.send :undef_method, method_name
+      end
     end
   end
 end
