@@ -97,5 +97,30 @@ YAML
         AdHocTemplate::DefaultTagFormatter.send :undef_method, method_name
       end
     end
+
+    describe '.init_local_settings' do
+      it 'creates local setting files unless they exist' do
+        config_manager = AdHocTemplate::ConfigManager
+        settings_dir = File.expand_path(config_manager::LOCAL_SETTINGS_DIR)
+        setting_file_name = config_manager::SETTINGS_FILE_NAME
+        tag_def_file_name = config_manager::TAG_DEF_FILE_NAME
+        settings_path = File.expand_path(File.join(settings_dir, setting_file_name))
+        settings_file = StringIO.new('', "w")
+        tag_def_path = File.expand_path(File.join(settings_dir, tag_def_file_name))
+        tag_def_file = StringIO.new('', "w")
+
+        allow(File).to receive(:exist?).with(settings_dir).and_return(false)
+        allow(FileUtils).to receive(:mkdir).and_return(true)
+        allow(File).to receive(:exist?).with(settings_path).and_return(false)
+        allow(config_manager).to receive(:open).with(settings_path, 'w').and_yield(settings_file)
+        allow(File).to receive(:exist?).with(tag_def_path).and_return(false)
+        allow(config_manager).to receive(:open).with(tag_def_path, 'w').and_yield(tag_def_file)
+
+        config_manager.init_local_settings
+
+        expect(settings_file.string).to start_with('AdHocTemplate')
+        expect(tag_def_file.string).to start_with('---')
+      end
+    end
   end
 end
