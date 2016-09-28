@@ -4,7 +4,10 @@ require 'fileutils'
 
 module AdHocTemplate
   class ConfigManager
-    LOCAL_SETTINGS_FILE = '~/.ad_hoc_template/settings.rb'
+    LOCAL_SETTINGS_DIR = '~/.ad_hoc_template/'
+    SETTINGS_FILE_NAME = 'settings.rb'
+    LOCAL_SETTINGS_FILE = File.join(LOCAL_SETTINGS_DIR,
+                                    SETTINGS_FILE_NAME)
 
     def self.require_local_settings
       settings_file = File.expand_path(LOCAL_SETTINGS_FILE)
