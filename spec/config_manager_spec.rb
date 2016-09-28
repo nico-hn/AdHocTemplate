@@ -33,5 +33,29 @@ describe AdHocTemplate do
         expect(AdHocTemplate::ConfigManager).to_not have_received(:require).with(@config_full_path)
       end
     end
+
+    describe '.user_defined_tag' do
+      it 'reads a definition from local file and register it' do
+        tag_type_class = AdHocTemplate::Parser::TagType
+
+        yaml_file_name = 'def_tag.yaml'
+        yaml_file_path = File.expand_path(yaml_file_name)
+        yaml_source = <<YAML
+---
+tag_name: :test_tag
+tag: ['<$', '$>']
+iteration_tag: ['<$#', '#$>']
+fallback_tag: ['<$*', '*$>']
+remove_indent: false
+YAML
+
+        allow(File).to receive(:read).with(yaml_file_path).and_return(yaml_source)
+        allow(File).to receive(:expand_path).and_return(yaml_file_path)
+
+        AdHocTemplate::ConfigManager.user_defined_tag(yaml_file_name)
+
+        expect(tag_type_class[:test_tag]).to be_instance_of(tag_type_class)
+      end
+    end
   end
 end

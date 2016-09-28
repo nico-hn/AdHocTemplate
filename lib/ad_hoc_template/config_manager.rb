@@ -19,5 +19,19 @@ module AdHocTemplate
     def self.configure(&config_block)
       module_eval(&config_block)
     end
+
+    def self.user_defined_tag(def_yaml_path)
+      yaml_source = File.read(expand_path(def_yaml_path))
+      AdHocTemplate::Parser.register_user_defined_tag_type(yaml_source)
+    end
+
+    def self.expand_path(path)
+      unless /\A[\.\/]/ =~ path
+        path = File.join(LOCAL_SETTINGS_DIR, path)
+      end
+      File.expand_path(path)
+    end
+
+    private_class_method :expand_path
   end
 end
