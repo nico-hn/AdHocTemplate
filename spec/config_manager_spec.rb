@@ -57,5 +57,21 @@ YAML
         expect(tag_type_class[:test_tag]).to be_instance_of(tag_type_class)
       end
     end
+
+    describe 'DefaultTagFormatter related methods' do
+      it '.assign_format_label is an alias of DefaultTagFormatter.assign_format' do
+        AdHocTemplate.local_settings do
+          assign_format_label('fd') {|var, record| record[var].split(/\//).reverse.join('/') }
+        end
+
+        var = 'french_date'
+        record = { var => '2016/09/28' }
+        result = AdHocTemplate::DefaultTagFormatter:: FUNCTION_TABLE['fd'].call(var, record)
+
+        expect(result).to eq('28/09/2016')
+
+        AdHocTemplate::DefaultTagFormatter:: FUNCTION_TABLE.delete('fd')
+      end
+    end
   end
 end

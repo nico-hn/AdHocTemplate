@@ -25,6 +25,10 @@ module AdHocTemplate
       AdHocTemplate::Parser.register_user_defined_tag_type(yaml_source)
     end
 
+    def self.assign_format_label(format_label, &func)
+      AdHocTemplate::DefaultTagFormatter.assign_format(format_label, &func)
+    end
+
     def self.expand_path(path)
       unless /\A[\.\/]/ =~ path
         path = File.join(LOCAL_SETTINGS_DIR, path)
