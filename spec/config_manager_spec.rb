@@ -32,6 +32,6 @@ describe AdHocTemplate do
         AdHocTemplate::ConfigManager.require_local_settings
         expect(AdHocTemplate::ConfigManager).to_not have_received(:require).with(@config_full_path)
       end
-end
+    end
   end
 end
