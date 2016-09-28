@@ -29,14 +29,7 @@ module AdHocTemplate
       end
 
       def contains_any_value_tag?
-        each_tag_node do |node|
-          case node
-          when IterationTagNode, FallbackTagNode
-            return node.contains_any_value_tag?
-          when TagNode
-            return true
-          end
-        end
+        each_tag_node {|node| return true if node.contains_any_value_tag? }
       end
 
       def inner_iteration_tag_labels
@@ -113,6 +106,9 @@ module AdHocTemplate
     end
 
     class ValueNode < TagNode
+      def contains_any_value_tag?
+        true
+      end
     end
 
     class Leaf < Parser::Leaf; end
