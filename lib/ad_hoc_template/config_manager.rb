@@ -15,5 +15,9 @@ module AdHocTemplate
         require settings_file
       end
     end
+
+    def self.configure(&config_block)
+      module_eval(&config_block)
+    end
   end
 end

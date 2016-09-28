@@ -4,6 +4,7 @@ require "ad_hoc_template/record_reader"
 require "ad_hoc_template/default_tag_formatter"
 require "ad_hoc_template/pseudohiki_formatter"
 require "ad_hoc_template/entry_format_generator"
+require "ad_hoc_template/config_manager"
 
 module AdHocTemplate
   class DataLoader
@@ -135,5 +136,9 @@ module AdHocTemplate
     tree = Parser.parse(template, tag_type)
     record = RecordReader.read_record(record_data, data_format)
     DataLoader.format(tree, record, tag_formatter)
+  end
+
+  def self.local_settings(&config_block)
+    ConfigManager.configure(&config_block)
   end
 end

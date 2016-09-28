@@ -619,4 +619,14 @@ RESULT
                                    'a string with characters (<%h characters %>) that should be represented as character entities.')
     expect(result).to eq('a string with characters (&amp;, &quot;, &lt; and &gt;) that should be represented as character entities.')
   end
+
+  describe '.local_settings' do
+    it 'evaluates the given block in the context of ConfigManager' do
+      eval_result = AdHocTemplate.local_settings do
+        self::SETTINGS_FILE_NAME
+      end
+
+      expect(eval_result).to eq(AdHocTemplate::ConfigManager::SETTINGS_FILE_NAME)
+    end
+  end
 end
