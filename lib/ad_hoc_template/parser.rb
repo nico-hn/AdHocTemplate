@@ -93,7 +93,7 @@ module AdHocTemplate
       end
     end
 
-    class FallbackTagNode < TagNode
+    class FallbackNode < TagNode
       def assign_value_to_type(first_leaf)
         return first_leaf unless first_leaf.kind_of? String
         first_leaf.sub(/\A#{LINE_END_STR}/, '')
@@ -141,7 +141,7 @@ module AdHocTemplate
         node_tag_pairs = [
           [ValueNode, *tag],
           [IterationNode, *iteration_tag],
-          [FallbackTagNode, *fallback_tag]
+          [FallbackNode, *fallback_tag]
         ]
 
         @head, @tail, @head_of, @tail_of = PseudoHiki.associate_nodes_with_tags(node_tag_pairs)
@@ -177,7 +177,7 @@ module AdHocTemplate
     end
 
     def self.remove_indents_and_newlines_if_necessary(str, tag_name)
-      node_types = [IterationNode, FallbackTagNode]
+      node_types = [IterationNode, FallbackNode]
       tag_type = TagType[tag_name]
       if TagType[tag_name].remove_iteration_indent
         str = remove_indent_before_iteration_tags(str, tag_type)
@@ -197,8 +197,8 @@ module AdHocTemplate
 
     def self.remove_indent_before_fallback_tags(template_source, tag_type)
       tag_re_str = [
-        tag_type.head_of[FallbackTagNode],
-        tag_type.tail_of[FallbackTagNode],
+        tag_type.head_of[FallbackNode],
+        tag_type.tail_of[FallbackNode],
       ].map {|tag| Regexp.escape(tag) }.join('|')
       template_source.gsub(/^([ \t]+(?:#{tag_re_str})#{LINE_END_STR})/) {|s| s.lstrip }
     end

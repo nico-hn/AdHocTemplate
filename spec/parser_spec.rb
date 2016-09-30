@@ -532,7 +532,7 @@ TEMPLATE
       end
     end
 
-    describe AdHocTemplate::Parser::FallbackTagNode do
+    describe AdHocTemplate::Parser::FallbackNode do
       it 'is expected to be parsed like IterationNode -- used inline' do
         source = 'main start <%# <%* content in fallback_tag <%= tag node in fallback tag %> fallback end *%> optional content with <%#iterations: in iteration tag <%= item %> #%> iteration part end  #%> main end'
         expected_tree = [
@@ -557,7 +557,7 @@ TEMPLATE
         fallback = tree[1][1]
 
         expect(tree).to eq(expected_tree)
-        expect(fallback).to be_kind_of(AdHocTemplate::Parser::FallbackTagNode)
+        expect(fallback).to be_kind_of(AdHocTemplate::Parser::FallbackNode)
       end
     end
   end

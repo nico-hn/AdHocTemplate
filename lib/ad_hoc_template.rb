@@ -49,7 +49,7 @@ module AdHocTemplate
       case tree
       when Parser::IterationNode
         format_iteration_tag(tree, memo)
-      when Parser::FallbackTagNode
+      when Parser::FallbackNode
         ''.freeze
       when Parser::ValueNode
         format_value_tag(tree, memo)
@@ -118,7 +118,7 @@ module AdHocTemplate
     end
 
     def select_fallback_nodes(tag_node)
-      tags = tag_node.select {|sub_node| sub_node.kind_of? Parser::FallbackTagNode }
+      tags = tag_node.select {|sub_node| sub_node.kind_of? Parser::FallbackNode }
       tags.empty? ? nil : tags
     end
 
