@@ -432,6 +432,32 @@ module AdHocTemplate
       private_class_method :categorize_keys
     end
 
+    class RecipeReader
+      attr_accessor :output_file
+
+      def initialize
+        @default = {}
+      end
+
+      def read_recipe(recipe_source)
+        recipe = YAMLReader.read_record(recipe_source)
+        setup_default!(recipe)
+        recipe
+      end
+
+      def setup_default!(recipe)
+        recipe.each do |key, val|
+          @default[key] = val unless val.kind_of? Array
+        end
+
+        recipe['blocks'].each do |block|
+          @default.keys.each do |key|
+            block[key] ||= @default[key]
+          end
+        end
+      end
+    end
+
     FORMAT_NAME_TO_READER = {
       yaml: YAMLReader,
       json: JSONReader,

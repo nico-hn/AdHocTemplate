@@ -739,4 +739,94 @@ RESULT
       end
     end
   end
+
+  describe AdHocTemplate::RecordReader::RecipeReader do
+    before do
+      @recipe = <<RECIPE
+---
+template: template.html
+tag_type: :default
+template_encoding: UTF-8
+data: main.aht
+data_format: 
+data_encoding: 
+output_file: 
+blocks:
+- label: "#authors"
+  data: 
+  data_format: 
+  data_encoding: 
+- label: "#authors|works|name"
+  data: authors.csv
+  data_format: csv
+  data_encoding: 
+- label: "#authors|bio|name"
+  data: authors.csv
+  data_format: csv
+  data_encoding: 
+RECIPE
+      @template = <<TEMPLATE
+Title: Famous authors of <%= country %> literature
+
+<%#authors:
+Name: <%= name %>
+Birthplace: <%= birthplace %>
+Works:
+<%#works|name:
+ * <%= title %>
+#%>
+
+<%#
+<%#bio|name:
+Born: <%= birth_date %>
+#%>
+#%>
+
+#%>
+TEMPLATE
+
+      @main_data =<<MAIN_DATA
+country: French
+
+///@#authors:
+
+name: Albert Camus
+
+name: Marcel Ayme'
+MAIN_DATA
+
+      @csv_data =<<CSV_DATA
+name,title,birth_place
+Albert Camus,"L'E'tranger",Algeria
+Albert Camus,La Peste,Algeria
+"Marcel Ayme'",Le Passe-muraille,France
+"Marcel Ayme'","Les Contes du chat perche'",France
+CSV_DATA
+
+      @expected_result =<<EXPECTED_RESULT
+Title: Famous authors of French literature
+
+Name: Albert Camus
+Birthplace: Algeria
+Works:
+ * L'E'tranger
+ * La Peste
+
+Name: Marcel Ayme'
+Birthplace: France
+Works:
+ * Le Passe-muraille
+ * Les Contes du chat perche'
+
+EXPECTED_RESULT
+    end
+
+    it 'reads a recipe' do
+      reader = AdHocTemplate::RecordReader::RecipeReader.new
+      recipe = reader.read_recipe(@recipe)
+
+      expect(recipe['blocks'][0]['data']).to eq('main.aht')
+      expect(recipe['blocks'][1]['data']).to eq('authors.csv')
+    end
+  end
 end
