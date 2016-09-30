@@ -456,6 +456,46 @@ module AdHocTemplate
           end
         end
       end
+
+      def prepare_block_data(block, template_encoding)
+        data_source = read_file(block['data'],
+                                block['data_encoding'],
+                                template_encoding)
+        data_format = prepare_data_format(block)
+        RecordReader.read_record(data_source, data_format)
+      end
+
+      def read_file(file_name, encoding, template_encoding)
+        open(File.expand_path(file_name),
+             open_mode(encoding, template_encoding)) do |file|
+          file.read
+        end
+      end
+
+      def open_mode(encoding, template_encoding)
+        mode = "r"
+        if encoding and not encoding.empty?
+          mode += ":#{encoding}"
+        end
+        if mode[':'] and template_encoding and not template_encoding.empty?
+          mode += ":#{template_encoding}"
+        end
+        mode
+      end
+
+      def prepare_data_format(block)
+        data_format = block['data_format']
+        if not data_format or data_format.empty?
+          data_format = :default
+        end
+        data_format = data_format.to_sym
+        return data_format unless [:csv, :tsv].include? data_format
+        if label = block['label']
+          label = label.sub(/\A#/, '')
+          data_format = { data_format => label }
+        end
+        data_format
+      end
     end
 
     FORMAT_NAME_TO_READER = {

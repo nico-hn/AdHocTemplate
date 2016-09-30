@@ -759,11 +759,11 @@ blocks:
 - label: "#authors|works|name"
   data: authors.csv
   data_format: csv
-  data_encoding: 
+  data_encoding: 'iso-8859-1'
 - label: "#authors|bio|name"
   data: authors.csv
   data_format: csv
-  data_encoding: 
+  data_encoding: 'iso-8859-1'
 RECIPE
       @template = <<TEMPLATE
 Title: Famous authors of <%= country %> literature
@@ -827,6 +827,28 @@ EXPECTED_RESULT
 
       expect(recipe['blocks'][0]['data']).to eq('main.aht')
       expect(recipe['blocks'][1]['data']).to eq('authors.csv')
+    end
+
+    it 'read data into a block from a source file' do
+      expected_result = {
+        "#authors" => [{"name"=>"Albert Camus"}, {"name"=>"Marcel Ayme'"}],
+        "#authors|works|Albert Camus" => [
+          {"name"=>"Albert Camus", "title"=>"L'E'tranger", "birth_place"=>"Algeria"},
+          {"name"=>"Albert Camus", "title"=>"La Peste", "birth_place"=>"Algeria"}],
+        "#authors|works|Marcel Ayme'" => [
+          {"name"=>"Marcel Ayme'", "title"=>"Le Passe-muraille", "birth_place"=>"France"},
+          {"name"=>"Marcel Ayme'", "title"=>"Les Contes du chat perche'", "birth_place"=>"France"}]}
+
+      reader = AdHocTemplate::RecordReader::RecipeReader.new
+      recipe = reader.read_recipe(@recipe)
+      block = recipe['blocks'][1]
+      data_file_path = File.expand_path(block['data'])
+      csv_data = StringIO.new(@csv_data)
+      template_encoding = recipe['template_encoding']
+      open_mode = ['r', block['data_encoding'], template_encoding].join(':')
+      allow(reader).to receive(:open).with(data_file_path, open_mode).and_yield(csv_data)
+      block_data = reader.prepare_block_data(block, template_encoding)
+      expect(block_data).to eq(expected_result)
     end
   end
 end
