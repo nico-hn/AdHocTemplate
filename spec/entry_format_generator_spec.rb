@@ -227,5 +227,52 @@ TEMPLATE
 
       expect(labels).to eq(["#authors", "#authors|works|name", "#authors|bio|name"])
     end
+
+    it '.extract_recipe generates a recipe entry for a given template' do
+      template =<<TEMPLATE
+<%#authors:
+Name: <%= name %>
+Birthplace: <%= birthplace %>
+Works:
+<%#works|name:
+ * <%= title %>
+#%>
+
+<%#
+<%#bio|name:
+Born: <%= birth_date %>
+#%>
+#%>
+
+#%>
+TEMPLATE
+
+      expected_recipe = <<RECIPE
+---
+template: template.html
+tag_type: :default
+template_encoding: UTF-8
+data: 
+data_format: 
+data_encoding: 
+output_file: 
+blocks:
+- label: "#authors"
+  data: 
+  data_format: 
+  data_encoding: 
+- label: "#authors|works|name"
+  data: 
+  data_format: 
+  data_encoding: 
+- label: "#authors|bio|name"
+  data: 
+  data_format: 
+  data_encoding: 
+RECIPE
+
+      recipe = AdHocTemplate::EntryFormatGenerator.extract_recipe(template, 'template.html')
+      expect(recipe).to eq(expected_recipe)
+    end
   end
 end
