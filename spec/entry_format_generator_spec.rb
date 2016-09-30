@@ -4,7 +4,7 @@ require 'spec_helper'
 require 'ad_hoc_template'
 
 describe AdHocTemplate do
-  describe AdHocTemplate::EntryFormatGenerator::LabelChecker do
+  describe AdHocTemplate::EntryFormatGenerator do
     before do
       @template = <<TEMPLATE
 The first line in the main part
@@ -39,12 +39,14 @@ TEMPLATE
         "block" => nil}
     end
 
-    it 'collects tag labels from a parsed template' do
-      tree = AdHocTemplate::Parser.parse(@template)
-      label_checker = AdHocTemplate::EntryFormatGenerator::LabelChecker.new
-      tree.accept(label_checker)
-      labels = label_checker.labels
-      expect(labels).to eq(@expected_labels_as_ruby_objects)
+    describe AdHocTemplate::EntryFormatGenerator::LabelChecker do
+      it 'collects tag labels from a parsed template' do
+        tree = AdHocTemplate::Parser.parse(@template)
+        label_checker = AdHocTemplate::EntryFormatGenerator::LabelChecker.new
+        tree.accept(label_checker)
+        labels = label_checker.labels
+        expect(labels).to eq(@expected_labels_as_ruby_objects)
+      end
     end
 
     it '.extract_form collects tag labels from a parsed template' do
