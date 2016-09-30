@@ -102,7 +102,7 @@ AdHocTemplate.local_settings do
   #
   # define_label_format do
   #   def french_date(var, record)
-  #     record[var].split(/\//).reverse.join('/')
+  #     record[var].split(/\\//).reverse.join('/')
   #   end
   #
   #   assign_format french_date: 'fd'
@@ -111,7 +111,7 @@ AdHocTemplate.local_settings do
   # # The second way -----
   #
   # assign_format_label('fd') do |var, record|
-  #   record[var].split(/\//).reverse.join('/')
+  #   record[var].split(/\\//).reverse.join('/')
   # end
   #
 end
