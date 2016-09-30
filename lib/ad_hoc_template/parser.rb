@@ -30,7 +30,7 @@ module AdHocTemplate
       def inner_iteration_tag_labels
         names = []
         each_tag_node do |node|
-          next unless node.kind_of? IterationTagNode
+          next unless node.kind_of? IterationNode
           names.push node.type if node.type
           if inner_names = node.inner_iteration_tag_labels
             names.concat inner_names
@@ -61,7 +61,7 @@ module AdHocTemplate
       end
     end
 
-    class IterationTagNode < TagNode
+    class IterationNode < TagNode
       def assign_value_to_type(first_leaf)
         return first_leaf unless first_leaf.kind_of? String
 
@@ -140,7 +140,7 @@ module AdHocTemplate
       def assign_type(tag, iteration_tag, fallback_tag)
         node_tag_pairs = [
           [ValueNode, *tag],
-          [IterationTagNode, *iteration_tag],
+          [IterationNode, *iteration_tag],
           [FallbackTagNode, *fallback_tag]
         ]
 
@@ -177,7 +177,7 @@ module AdHocTemplate
     end
 
     def self.remove_indents_and_newlines_if_necessary(str, tag_name)
-      node_types = [IterationTagNode, FallbackTagNode]
+      node_types = [IterationNode, FallbackTagNode]
       tag_type = TagType[tag_name]
       if TagType[tag_name].remove_iteration_indent
         str = remove_indent_before_iteration_tags(str, tag_type)
@@ -188,8 +188,8 @@ module AdHocTemplate
 
     def self.remove_indent_before_iteration_tags(template_source, tag_type)
       start_tag, end_tag = [
-        tag_type.head_of[IterationTagNode],
-        tag_type.tail_of[IterationTagNode],
+        tag_type.head_of[IterationNode],
+        tag_type.tail_of[IterationNode],
       ].map {|tag| Regexp.escape(tag) }
       template_source.gsub(/^([ \t]+#{start_tag}\S*#{LINE_END_STR})/) {|s| s.lstrip }
         .gsub(/^([ \t]+#{end_tag}#{LINE_END_STR})/) {|s| s.lstrip }

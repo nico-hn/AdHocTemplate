@@ -10,7 +10,7 @@ module AdHocTemplate
 
       def visit(tree, memo)
         case tree
-        when Parser::IterationTagNode, Parser::FallbackTagNode
+        when Parser::IterationNode, Parser::FallbackTagNode
           visit_iteration_tag_node(tree, memo)
         when Parser::TagNode
           @labels[tree.join.strip] = nil

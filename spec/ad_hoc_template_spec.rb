@@ -142,7 +142,7 @@ RESULT
       expect(AdHocTemplate::DataLoader.format(tree, config, tag_formatter)).to eq(expected_result)
     end
 
-    it("should not add a newline at the head of IterationTagNode when the type of the node is not specified") do
+    it("should not add a newline at the head of IterationNode when the type of the node is not specified") do
       template = <<TEMPLATE
 a test string with tags
 <%#iteration_block:

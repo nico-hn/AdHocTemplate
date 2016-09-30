@@ -29,7 +29,7 @@ describe AdHocTemplate do
                                [" "]],
                              [" and "],
                              [[" another tag "]]])
-        expect(tree[1]).to be_a_kind_of(AdHocTemplate::Parser::IterationTagNode)
+        expect(tree[1]).to be_a_kind_of(AdHocTemplate::Parser::IterationNode)
       end
 
       it "may contain lines that consist only of an iteration tag" do
@@ -122,7 +122,7 @@ TEMPLATE
                                [" "]],
                              [" and "],
                              [[" another tag "]]])
-        expect(tree[1]).to be_a_kind_of(AdHocTemplate::Parser::IterationTagNode)
+        expect(tree[1]).to be_a_kind_of(AdHocTemplate::Parser::IterationNode)
       end
 
       it "may contain lines that consist only of an iteration tag" do
@@ -163,7 +163,7 @@ content
                                [" "]],
                              [" and "],
                              [[" another tag "]]])
-        expect(tree[1]).to be_a_kind_of(AdHocTemplate::Parser::IterationTagNode)
+        expect(tree[1]).to be_a_kind_of(AdHocTemplate::Parser::IterationNode)
       end
 
       it "may contain lines that consist only of an iteration tag" do
@@ -180,12 +180,12 @@ content
       end
     end
 
-    it("spaces at the head of a line should be preserved when the line is just after a start tag of IterationTagNode") do
+    it("spaces at the head of a line should be preserved when the line is just after a start tag of IterationNode") do
       tree = AdHocTemplate::Parser.parse("<%#iteration:\n  the second line\nthe third line")
       expect(tree).to eq([[["  the second line\nthe third line"]]])
     end
 
-    it("should not add a newline at the head of IterationTagNode when the type of the node is not specified") do
+    it("should not add a newline at the head of IterationNode when the type of the node is not specified") do
       tree = AdHocTemplate::Parser.parse("a test string with tags\n<%#iteration_block:\nthe value of sub_key1 is <%= sub_key1 %>.\n<%#\n  the value of sub_key2 is <%= sub_key2 %>.\n#%>\n#%>")
       expect(tree).to eq([["a test string with tags\n"], [["the value of sub_key1 is "], [["sub_key1 "]], [".\n"], [["  the value of sub_key2 is "], [["sub_key2 "]], [".\n"]]]])
     end
@@ -214,7 +214,7 @@ content
                                [" "]],
                              [" and "],
                              [[" another tag "]]])
-        expect(tree[1]).to be_a_kind_of(AdHocTemplate::Parser::IterationTagNode)
+        expect(tree[1]).to be_a_kind_of(AdHocTemplate::Parser::IterationNode)
       end
 
       it "may contain lines that consist only of an iteration tag" do
@@ -230,12 +230,12 @@ content
         expect(tree).to eq([])
       end
 
-      it("spaces at the head of a line should be preserved when the line is just after a start tag of IterationTagNode") do
+      it("spaces at the head of a line should be preserved when the line is just after a start tag of IterationNode") do
         tree = AdHocTemplate::Parser.parse("<iterate>iteration:\n  the second line\nthe third line</iterate>", :xml_like1)
         expect(tree).to eq([[["  the second line\nthe third line"]]])
       end
 
-      it("should not add a newline at the head of IterationTagNode when the type of the node is not specified") do
+      it("should not add a newline at the head of IterationNode when the type of the node is not specified") do
         tree = AdHocTemplate::Parser.parse("a test string with tags\n<iterate>iteration_block:\nthe value of sub_key1 is <!--%= sub_key1 %-->.\n<iterate>\n  the value of sub_key2 is <!--%= sub_key2 %-->.\n</iterate>\n</iterate>", :xml_like1)
         expect(tree).to eq([["a test string with tags\n"], [["the value of sub_key1 is "], [["sub_key1 "]], [".\n"], [["  the value of sub_key2 is "], [["sub_key2 "]], [".\n"]]]])
       end
@@ -290,7 +290,7 @@ TEMPLATE
                                [" "]],
                              [" and "],
                              [[" another tag "]]])
-        expect(tree[1]).to be_a_kind_of(AdHocTemplate::Parser::IterationTagNode)
+        expect(tree[1]).to be_a_kind_of(AdHocTemplate::Parser::IterationNode)
       end
 
       it "may contain lines that consist only of an iteration tag" do
@@ -306,12 +306,12 @@ content
         expect(tree).to eq([])
       end
 
-      it("spaces at the head of a line should be preserved when the line is just after a start tag of IterationTagNode") do
+      it("spaces at the head of a line should be preserved when the line is just after a start tag of IterationNode") do
         tree = AdHocTemplate::Parser.parse("<iterate>iteration:\n  the second line\nthe third line</iterate>", :xml_like2)
         expect(tree).to eq([[["  the second line\nthe third line"]]])
       end
 
-      it("should not add a newline at the head of IterationTagNode when the type of the node is not specified") do
+      it("should not add a newline at the head of IterationNode when the type of the node is not specified") do
         tree = AdHocTemplate::Parser.parse("a test string with tags\n<iterate>iteration_block:\nthe value of sub_key1 is <fill>= sub_key1 </fill>.\n<iterate>\n  the value of sub_key2 is <fill>= sub_key2 </fill>.\n</iterate>\n</iterate>", :xml_like2)
         expect(tree).to eq([["a test string with tags\n"], [["the value of sub_key1 is "], [["sub_key1 "]], [".\n"], [["  the value of sub_key2 is "], [["sub_key2 "]], [".\n"]]]])
       end
@@ -341,7 +341,7 @@ content
                                [" "]],
                              [" and "],
                              [[" another tag "]]])
-        expect(tree[1]).to be_a_kind_of(AdHocTemplate::Parser::IterationTagNode)
+        expect(tree[1]).to be_a_kind_of(AdHocTemplate::Parser::IterationNode)
       end
 
       it "may contain lines that consist only of an iteration tag" do
@@ -357,12 +357,12 @@ content
         expect(tree).to eq([])
       end
 
-      it("spaces at the head of a line should be preserved when the line is just after a start tag of IterationTagNode") do
+      it("spaces at the head of a line should be preserved when the line is just after a start tag of IterationNode") do
         tree = AdHocTemplate::Parser.parse("<!--%iterate%-->iteration:\n  the second line\nthe third line<!--%/iterate%-->", :xml_comment_like)
         expect(tree).to eq([[["  the second line\nthe third line"]]])
       end
 
-      it("should not add a newline at the head of IterationTagNode when the type of the node is not specified") do
+      it("should not add a newline at the head of IterationNode when the type of the node is not specified") do
         tree = AdHocTemplate::Parser.parse("a test string with tags\n<!--%iterate%-->iteration_block:\nthe value of sub_key1 is <!--%= sub_key1 %-->.\n<!--%iterate%-->\n  the value of sub_key2 is <!--%= sub_key2 %-->.\n<!--%/iterate%-->\n<!--%/iterate%-->", :xml_comment_like)
         expect(tree).to eq([["a test string with tags\n"], [["the value of sub_key1 is "], [["sub_key1 "]], [".\n"], [["  the value of sub_key2 is "], [["sub_key2 "]], [".\n"]]]])
       end
@@ -427,7 +427,7 @@ iteration_tag: ["<repeat>", "</repeat>"]
 fallback_tag: ["<fallback>", "</fallback>"]
 remove_indent: true
 CONFIG
-        iteration_tag_node = AdHocTemplate::Parser::IterationTagNode
+        iteration_tag_node = AdHocTemplate::Parser::IterationNode
         AdHocTemplate::Parser.register_user_defined_tag_type(tag_type_config)
         defined_tag_type = AdHocTemplate::Parser::TagType[:xml_like3]
         expect(defined_tag_type.head_of[iteration_tag_node]).to eq('<repeat>')
@@ -533,7 +533,7 @@ TEMPLATE
     end
 
     describe AdHocTemplate::Parser::FallbackTagNode do
-      it 'is expected to be parsed like IterationTagNode -- used inline' do
+      it 'is expected to be parsed like IterationNode -- used inline' do
         source = 'main start <%# <%* content in fallback_tag <%= tag node in fallback tag %> fallback end *%> optional content with <%#iterations: in iteration tag <%= item %> #%> iteration part end  #%> main end'
         expected_tree = [
           ["main start "],
