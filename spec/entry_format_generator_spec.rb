@@ -95,7 +95,7 @@ EXPECTED
       expect(labels).to eq(expected)
     end
 
-    it '.extract_form should labels in fallback tags' do
+    it '.extract_form should collect labels in fallback tags' do
       template = <<TEMPLATE
 main start
 <%#
