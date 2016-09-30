@@ -47,7 +47,7 @@ TEMPLATE
       expect(labels).to eq(@expected_labels_as_ruby_objects)
     end
 
-    it '.extract_labels collects tag labels from a parsed template' do
+    it '.extract_form collects tag labels from a parsed template' do
       expected_labels_in_default_format = <<YAML
 key: 
 optional1: 
@@ -61,12 +61,12 @@ key2:
 YAML
 
       tree = AdHocTemplate::Parser.parse(@template)
-      labels = AdHocTemplate::EntryFormatGenerator.extract_labels(tree)
+      labels = AdHocTemplate::EntryFormatGenerator.extract_form(tree)
 
       expect(labels).to eq(expected_labels_in_default_format)
     end
 
-    it '.extract_labels should ignore fallback tags if they do not any contain value tag' do
+    it '.extract_form should ignore fallback tags if they do not any contain value tag' do
       template = <<TEMPLATE
 main start
 <%#
@@ -88,12 +88,12 @@ var2:
 EXPECTED
 
       tree = AdHocTemplate::Parser.parse(template)
-      labels = AdHocTemplate::EntryFormatGenerator.extract_labels(tree)
+      labels = AdHocTemplate::EntryFormatGenerator.extract_form(tree)
 
       expect(labels).to eq(expected)
     end
 
-    it '.extract_labels should labels in fallback tags' do
+    it '.extract_form should labels in fallback tags' do
       template = <<TEMPLATE
 main start
 <%#
@@ -117,12 +117,12 @@ var2:
 EXPECTED
 
       tree = AdHocTemplate::Parser.parse(template)
-      labels = AdHocTemplate::EntryFormatGenerator.extract_labels(tree)
+      labels = AdHocTemplate::EntryFormatGenerator.extract_form(tree)
 
       expect(labels).to eq(expected)
     end
 
-    it '.extract_labels accepts :yaml as its second argument' do
+    it '.extract_form accepts :yaml as its second argument' do
       expected_labels_in_yaml = <<YAML
 ---
 key: 
@@ -135,12 +135,12 @@ block:
 YAML
 
       tree = AdHocTemplate::Parser.parse(@template)
-      labels = AdHocTemplate::EntryFormatGenerator.extract_labels(tree, :yaml)
+      labels = AdHocTemplate::EntryFormatGenerator.extract_form(tree, :yaml)
 
       expect(labels).to eq(expected_labels_in_yaml)
     end
 
-    it '.extract_labels accepts :json as its second argument' do
+    it '.extract_form accepts :json as its second argument' do
       expected_labels_in_json = <<JSON
 {
   "key":null,
@@ -155,12 +155,12 @@ YAML
 JSON
 
       tree = AdHocTemplate::Parser.parse(@template)
-      labels = AdHocTemplate::EntryFormatGenerator.extract_labels(tree, :json)
+      labels = AdHocTemplate::EntryFormatGenerator.extract_form(tree, :json)
 
       expect(JSON.parse(labels)).to eq(JSON.parse(expected_labels_in_json))
     end
 
-    it '.extract_labels should extract labels from nested iteration tags' do
+    it '.extract_form should extract labels from nested iteration tags' do
         template =<<TEMPLATE
 <%#authors:
 Name: <%= name %>
@@ -196,7 +196,7 @@ birth_date:
 RESULT
 
       tree = AdHocTemplate::Parser.parse(template)
-      labels = AdHocTemplate::EntryFormatGenerator.extract_labels(tree)
+      labels = AdHocTemplate::EntryFormatGenerator.extract_form(tree)
 
       expect(labels).to eq(expected_result)
     end

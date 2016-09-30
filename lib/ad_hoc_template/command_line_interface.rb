@@ -82,7 +82,7 @@ module AdHocTemplate
 
     def generate_entry_format
       tree = Parser.parse(@template_data, @tag_type)
-      EntryFormatGenerator.extract_labels(tree, @data_format)
+      EntryFormatGenerator.extract_form(tree, @data_format)
     end
 
     def init_local_settings

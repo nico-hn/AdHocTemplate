@@ -32,14 +32,14 @@ module AdHocTemplate
       end
     end
 
-    def self.extract_labels(parsed_template, target_format=nil, memo=nil)
-      labels = extract_labels_as_ruby_objects(parsed_template, memo)
+    def self.extract_form(parsed_template, target_format=nil, memo=nil)
+      labels = extract_form_as_ruby_objects(parsed_template, memo)
       labels = pull_up_inner_iterations(labels)
 
       RecordReader.dump(labels, target_format)
     end
 
-    def self.extract_labels_as_ruby_objects(parsed_template, memo)
+    def self.extract_form_as_ruby_objects(parsed_template, memo)
       label_checker = LabelChecker.new
       parsed_template.accept(label_checker, memo)
       label_checker.labels
@@ -65,7 +65,7 @@ module AdHocTemplate
       iteration_labels.each {|label| yield label }
     end
 
-    private_class_method :extract_labels_as_ruby_objects
+    private_class_method :extract_form_as_ruby_objects
     private_class_method :pull_up_inner_iterations
     private_class_method :each_iteration_label
   end
