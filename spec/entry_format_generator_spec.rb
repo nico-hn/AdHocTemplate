@@ -202,5 +202,30 @@ RESULT
 
       expect(labels).to eq(expected_result)
     end
+
+    it '.extract_iteration_labels collects iteration labels in a template' do
+              template =<<TEMPLATE
+<%#authors:
+Name: <%= name %>
+Birthplace: <%= birthplace %>
+Works:
+<%#works|name:
+ * <%= title %>
+#%>
+
+<%#
+<%#bio|name:
+Born: <%= birth_date %>
+#%>
+#%>
+
+#%>
+TEMPLATE
+
+      tree = AdHocTemplate::Parser.parse(template)
+      labels = AdHocTemplate::EntryFormatGenerator.extract_iteration_labels(tree)
+
+      expect(labels).to eq(["#authors", "#authors|works|name", "#authors|bio|name"])
+    end
   end
 end

@@ -39,6 +39,11 @@ module AdHocTemplate
       RecordReader.dump(labels, target_format)
     end
 
+    def self.extract_iteration_labels(parsed_template, memo=nil)
+      labels = extract_form_as_ruby_objects(parsed_template, memo)
+      pull_up_inner_iterations(labels).keys
+    end
+
     def self.extract_form_as_ruby_objects(parsed_template, memo)
       label_checker = LabelChecker.new
       parsed_template.accept(label_checker, memo)
