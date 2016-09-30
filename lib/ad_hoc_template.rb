@@ -51,8 +51,8 @@ module AdHocTemplate
         format_iteration_tag(tree, memo)
       when Parser::FallbackTagNode
         ''.freeze
-      when Parser::TagNode
-        format_tag(tree, memo)
+      when Parser::ValueNode
+        format_value_tag(tree, memo)
       when Parser::Leaf
         tree.join
       else
@@ -74,7 +74,7 @@ module AdHocTemplate
       end
     end
 
-    def format_tag(tag_node, memo)
+    def format_value_tag(tag_node, memo)
       leafs = tag_node.map {|leaf| leaf.accept(self, memo) }
       @tag_formatter.format(tag_node.type, leafs.join.strip, @record)
     end
