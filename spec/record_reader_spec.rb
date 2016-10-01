@@ -770,12 +770,11 @@ Title: Famous authors of <%= country %> literature
 
 <%#authors:
 Name: <%= name %>
-Birthplace: <%= birthplace %>
+Birthplace: <%= birth_place %>
 Works:
 <%#works|name:
  * <%= title %>
 #%>
-
 <%#
 <%#bio|name:
 Born: <%= birth_date %>
@@ -791,16 +790,18 @@ country: French
 ///@#authors
 
 name: Albert Camus
+birth_place: Algeria
 
 name: Marcel Ayme'
+birth_place: France
 MAIN_DATA
 
       @csv_data =<<CSV_DATA
-name,title,birth_place
-Albert Camus,"L'E'tranger",Algeria
-Albert Camus,La Peste,Algeria
-"Marcel Ayme'",Le Passe-muraille,France
-"Marcel Ayme'","Les Contes du chat perche'",France
+name,title
+Albert Camus,"L'E'tranger"
+Albert Camus,La Peste
+"Marcel Ayme'",Le Passe-muraille
+"Marcel Ayme'","Les Contes du chat perche'"
 CSV_DATA
 
       @expected_result =<<EXPECTED_RESULT
@@ -833,11 +834,11 @@ EXPECTED_RESULT
       expected_result = {
         "#authors" => [{"name"=>"Albert Camus"}, {"name"=>"Marcel Ayme'"}],
         "#authors|works|Albert Camus" => [
-          {"name"=>"Albert Camus", "title"=>"L'E'tranger", "birth_place"=>"Algeria"},
-          {"name"=>"Albert Camus", "title"=>"La Peste", "birth_place"=>"Algeria"}],
+          {"name"=>"Albert Camus", "title"=>"L'E'tranger"},
+          {"name"=>"Albert Camus", "title"=>"La Peste"}],
         "#authors|works|Marcel Ayme'" => [
-          {"name"=>"Marcel Ayme'", "title"=>"Le Passe-muraille", "birth_place"=>"France"},
-          {"name"=>"Marcel Ayme'", "title"=>"Les Contes du chat perche'", "birth_place"=>"France"}]}
+          {"name"=>"Marcel Ayme'", "title"=>"Le Passe-muraille"},
+          {"name"=>"Marcel Ayme'", "title"=>"Les Contes du chat perche'"}]}
 
       reader = AdHocTemplate::RecordReader::RecipeReader.new
       recipe = reader.read_recipe(@recipe)
@@ -854,13 +855,13 @@ EXPECTED_RESULT
     it '#merge_blocks reads blocks and merge them' do
       expected_result = {
         "country" => "French",
-        "#authors" => [{"name"=>"Albert Camus"}, {"name"=>"Marcel Ayme'"}],
+        "#authors" => [{"name"=>"Albert Camus", "birth_place"=>"Algeria"}, {"name"=>"Marcel Ayme'", "birth_place"=>"France"}],
         "#authors|works|Albert Camus" => [
-          {"name"=>"Albert Camus", "title"=>"L'E'tranger", "birth_place"=>"Algeria"},
-          {"name"=>"Albert Camus", "title"=>"La Peste", "birth_place"=>"Algeria"}],
+          {"name"=>"Albert Camus", "title"=>"L'E'tranger"},
+          {"name"=>"Albert Camus", "title"=>"La Peste"}],
         "#authors|works|Marcel Ayme'" => [
-          {"name"=>"Marcel Ayme'", "title"=>"Le Passe-muraille", "birth_place"=>"France"},
-          {"name"=>"Marcel Ayme'", "title"=>"Les Contes du chat perche'", "birth_place"=>"France"}]}
+          {"name"=>"Marcel Ayme'", "title"=>"Le Passe-muraille"},
+          {"name"=>"Marcel Ayme'", "title"=>"Les Contes du chat perche'"}]}
 
       reader = AdHocTemplate::RecordReader::RecipeReader.new
       recipe = reader.read_recipe(@recipe)
