@@ -876,5 +876,23 @@ EXPECTED_RESULT
       main_block = reader.merge_blocks(recipe)
       expect(main_block).to eq(expected_result)
     end
+
+    it "#merge_blocks' result can be used as input of DataLoader.parse" do
+      reader = AdHocTemplate::RecordReader::RecipeReader.new
+      recipe = reader.read_recipe(@recipe)
+      template_encoding = recipe['template_encoding']
+      allow(reader).to receive(:open).with(File.expand_path(recipe['data']), 'r').and_yield(StringIO.new(@main_data))
+      recipe['blocks'].each do |block|
+        data_file_path = File.expand_path(block['data'])
+        csv_data = StringIO.new(@csv_data)
+        open_mode = ['r', block['data_encoding'], template_encoding].join(':')
+        allow(reader).to receive(:open).with(data_file_path, open_mode).and_yield(StringIO.new(@csv_data))
+      end
+
+      main_block = reader.merge_blocks(recipe)
+      tree = AdHocTemplate::Parser.parse(@template)
+      result = AdHocTemplate::DataLoader.format(tree, main_block)
+      expect(result).to eq(@expected_result)
+    end
   end
 end
