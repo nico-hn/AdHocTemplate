@@ -3,7 +3,7 @@
 require 'ad_hoc_template'
 
 module AdHocTemplate
-  class RecipeReader
+  class RecipeManager
     attr_accessor :output_file, :template_encoding
 
     def initialize
