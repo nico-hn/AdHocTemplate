@@ -433,7 +433,7 @@ module AdHocTemplate
     end
 
     class RecipeReader
-      attr_accessor :output_file
+      attr_accessor :output_file, :template_encoding
 
       def initialize
         @default = {}
@@ -442,7 +442,20 @@ module AdHocTemplate
       def read_recipe(recipe_source)
         recipe = YAMLReader.read_record(recipe_source)
         setup_default!(recipe)
+        @template_encoding = @default['template_encoding']
+        @output_file = @default['output_file']
         recipe
+      end
+
+      def merge_blocks(recipe)
+        prepare_block_data(recipe, @template_encoding).tap do |main_block|
+          recipe['blocks'].each do |block_source|
+            block = prepare_block_data(block_source, @template_encoding)
+            block.keys.each do |key|
+              main_block[key] ||= block[key]
+            end
+          end
+        end
       end
 
       def setup_default!(recipe)
@@ -454,6 +467,14 @@ module AdHocTemplate
           @default.keys.each do |key|
             block[key] ||= @default[key]
           end
+        end
+        setup_main_label
+      end
+
+      def setup_main_label
+        if data_format = @default['data_format'] and
+            [:csv, :tsv].include? data_format
+          @default['label'] ||= CSVReader::HEADER_POSITION::LEFT
         end
       end
 
