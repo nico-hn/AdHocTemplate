@@ -3,7 +3,6 @@
 require 'ad_hoc_template'
 
 module AdHocTemplate
-  module RecordReader
     class RecipeReader
       attr_accessor :output_file, :template_encoding
 
@@ -12,7 +11,7 @@ module AdHocTemplate
       end
 
       def read_recipe(recipe_source)
-        recipe = YAMLReader.read_record(recipe_source)
+        recipe = RecordReader::YAMLReader.read_record(recipe_source)
         setup_default!(recipe)
         @template_encoding = @default['template_encoding']
         @output_file = @default['output_file']
@@ -56,7 +55,7 @@ module AdHocTemplate
       def setup_main_label
         if data_format = @default['data_format'] and
             [:csv, :tsv].include? data_format
-          @default['label'] ||= CSVReader::HEADER_POSITION::LEFT
+          @default['label'] ||= RecordReader::CSVReader::HEADER_POSITION::LEFT
         end
       end
 
@@ -92,5 +91,4 @@ module AdHocTemplate
         data_format
       end
     end
-  end
 end

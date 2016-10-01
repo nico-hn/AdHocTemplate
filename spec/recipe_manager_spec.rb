@@ -5,7 +5,7 @@ require 'ad_hoc_template'
 require 'ad_hoc_template/recipe_manager'
 
 describe AdHocTemplate do
-  describe AdHocTemplate::RecordReader::RecipeReader do
+  describe AdHocTemplate::RecipeReader do
     before do
       @recipe = <<RECIPE
 ---
@@ -88,7 +88,7 @@ EXPECTED_RESULT
     end
 
     it 'reads a recipe' do
-      reader = AdHocTemplate::RecordReader::RecipeReader.new
+      reader = AdHocTemplate::RecipeReader.new
       recipe = reader.read_recipe(@recipe)
 
       expect(recipe['blocks'][0]['data']).to eq('main.aht')
@@ -105,7 +105,7 @@ EXPECTED_RESULT
           {"name"=>"Marcel Ayme'", "title"=>"Le Passe-muraille"},
           {"name"=>"Marcel Ayme'", "title"=>"Les Contes du chat perche'"}]}
 
-      reader = AdHocTemplate::RecordReader::RecipeReader.new
+      reader = AdHocTemplate::RecipeReader.new
       recipe = reader.read_recipe(@recipe)
       block = recipe['blocks'][1]
       data_file_path = File.expand_path(block['data'])
@@ -128,7 +128,7 @@ EXPECTED_RESULT
           {"name"=>"Marcel Ayme'", "title"=>"Le Passe-muraille"},
           {"name"=>"Marcel Ayme'", "title"=>"Les Contes du chat perche'"}]}
 
-      reader = AdHocTemplate::RecordReader::RecipeReader.new
+      reader = AdHocTemplate::RecipeReader.new
       recipe = reader.read_recipe(@recipe)
       template_encoding = recipe['template_encoding']
       allow(reader).to receive(:open).with(File.expand_path(recipe['data']), 'r').and_yield(StringIO.new(@main_data))
@@ -143,7 +143,7 @@ EXPECTED_RESULT
     end
 
     it "#merge_blocks' result can be used as input of DataLoader.parse" do
-      reader = AdHocTemplate::RecordReader::RecipeReader.new
+      reader = AdHocTemplate::RecipeReader.new
       recipe = reader.read_recipe(@recipe)
       template_encoding = recipe['template_encoding']
       allow(reader).to receive(:open).with(File.expand_path(recipe['data']), 'r').and_yield(StringIO.new(@main_data))
