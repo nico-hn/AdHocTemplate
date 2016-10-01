@@ -788,7 +788,7 @@ TEMPLATE
       @main_data =<<MAIN_DATA
 country: French
 
-///@#authors:
+///@#authors
 
 name: Albert Camus
 
