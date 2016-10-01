@@ -7,7 +7,7 @@ module AdHocTemplate
   class RecipeManager
     include Utils
 
-    attr_accessor :output_file, :template_encoding
+    attr_reader :output_file, :template_encoding
 
     def initialize
       @default = {}
