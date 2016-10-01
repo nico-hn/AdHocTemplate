@@ -829,7 +829,7 @@ EXPECTED_RESULT
       expect(recipe['blocks'][1]['data']).to eq('authors.csv')
     end
 
-    it 'read data into a block from a source file' do
+    it '#prepare_block_data reads data into a block from a source file' do
       expected_result = {
         "#authors" => [{"name"=>"Albert Camus"}, {"name"=>"Marcel Ayme'"}],
         "#authors|works|Albert Camus" => [
