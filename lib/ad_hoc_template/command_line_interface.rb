@@ -3,11 +3,13 @@
 require 'ad_hoc_template'
 require 'optparse_plus'
 require 'ad_hoc_template/config_manager'
+require 'ad_hoc_template/utils'
 
 AdHocTemplate::ConfigManager.require_local_settings
 
 module AdHocTemplate
   class CommandLineInterface
+    include Utils
     attr_accessor :output_filename, :template_data, :record_data, :tag_type, :data_format
     attr_writer :output_empty_entry
 
@@ -26,13 +28,6 @@ module AdHocTemplate
       /\Aj(son)?/i => :json,
       /\Ac(sv)?/i => :csv,
       /\At(sv)?/i => :tsv,
-    }
-
-    FILE_EXTENTIONS = {
-      /\.ya?ml\Z/i => :yaml,
-      /\.json\Z/i => :json,
-      /\.csv\Z/i => :csv,
-      /\.tsv\Z/i => :tsv,
     }
 
     def initialize
@@ -136,23 +131,6 @@ module AdHocTemplate
     def make_csv_option(iteration_label, format)
       return format if iteration_label.nil? or iteration_label.empty?
       { format => iteration_label }
-    end
-
-    def guess_file_format(filename)
-      if_any_regex_match(FILE_EXTENTIONS, filename) do |ext_re, format|
-        return format
-      end
-    end
-
-    def if_any_regex_match(regex_table, target, failure_message=nil)
-      regex_table.each do |re, paired_value|
-        if re =~ target
-          yield re, paired_value
-          return
-        end
-      end
-      STDERR.puts failure_message if failure_message
-      nil
     end
   end
 end
