@@ -458,6 +458,16 @@ module AdHocTemplate
         end
       end
 
+      def prepare_block_data(block, template_encoding)
+        data_source = read_file(block['data'],
+                                block['data_encoding'],
+                                template_encoding)
+        data_format = prepare_data_format(block)
+        RecordReader.read_record(data_source, data_format)
+      end
+
+      private
+
       def setup_default!(recipe)
         recipe.each do |key, val|
           @default[key] = val unless val.kind_of? Array
@@ -476,14 +486,6 @@ module AdHocTemplate
             [:csv, :tsv].include? data_format
           @default['label'] ||= CSVReader::HEADER_POSITION::LEFT
         end
-      end
-
-      def prepare_block_data(block, template_encoding)
-        data_source = read_file(block['data'],
-                                block['data_encoding'],
-                                template_encoding)
-        data_format = prepare_data_format(block)
-        RecordReader.read_record(data_source, data_format)
       end
 
       def read_file(file_name, encoding, template_encoding)
