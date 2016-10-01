@@ -1,9 +1,12 @@
 #!/usr/bin/env ruby
 
 require 'ad_hoc_template'
+require 'ad_hoc_template/utils'
 
 module AdHocTemplate
   class RecipeManager
+    include Utils
+
     attr_accessor :output_file, :template_encoding
 
     def initialize
@@ -30,6 +33,7 @@ module AdHocTemplate
     end
 
     def prepare_block_data(block, template_encoding)
+      determine_data_format!(block)
       data_source = read_file(block['data'],
                               block['data_encoding'],
                               template_encoding)
@@ -57,6 +61,15 @@ module AdHocTemplate
           [:csv, :tsv].include? data_format
         @default['label'] ||= RecordReader::CSVReader::HEADER_POSITION::LEFT
       end
+    end
+
+    def determine_data_format!(block)
+      data_format = block['data_format']
+      if not data_format and block['data']
+        data_format = guess_file_format(block['data'])
+      end
+
+      block['data_format'] ||= data_format
     end
 
     def read_file(file_name, encoding, template_encoding)

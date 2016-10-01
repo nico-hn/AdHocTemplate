@@ -117,6 +117,48 @@ EXPECTED_RESULT
       expect(block_data).to eq(expected_result)
     end
 
+    it '#prepare_block_data guesses data_format from the extention of data file' do
+      recipe_source = <<RECIPE
+---
+template: template.html
+tag_type: :default
+template_encoding: UTF-8
+data: main.aht
+data_format: 
+data_encoding: 
+output_file: 
+blocks:
+- label: "#authors"
+  data: 
+  data_format: 
+  data_encoding: 
+- label: "#authors|works|name"
+  data: authors.csv
+  data_format: 
+  data_encoding: 'iso-8859-1'
+RECIPE
+
+      expected_result = {
+        "#authors" => [{"name"=>"Albert Camus"}, {"name"=>"Marcel Ayme'"}],
+        "#authors|works|Albert Camus" => [
+          {"name"=>"Albert Camus", "title"=>"L'E'tranger"},
+          {"name"=>"Albert Camus", "title"=>"La Peste"}],
+        "#authors|works|Marcel Ayme'" => [
+          {"name"=>"Marcel Ayme'", "title"=>"Le Passe-muraille"},
+          {"name"=>"Marcel Ayme'", "title"=>"Les Contes du chat perche'"}]}
+
+      reader = AdHocTemplate::RecipeManager.new
+      recipe = reader.read_recipe(recipe_source)
+      block = recipe['blocks'][1]
+      data_file_path = File.expand_path(block['data'])
+      csv_data = StringIO.new(@csv_data)
+      template_encoding = recipe['template_encoding']
+      open_mode = ['r', block['data_encoding'], template_encoding].join(':')
+      allow(reader).to receive(:open).with(data_file_path, open_mode).and_yield(csv_data)
+      block_data = reader.prepare_block_data(block, template_encoding)
+      expect(block_data).to eq(expected_result)
+    end
+
     it '#merge_blocks reads blocks and merge them' do
       expected_result = {
         "country" => "French",
