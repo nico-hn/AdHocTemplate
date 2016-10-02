@@ -85,11 +85,10 @@ module AdHocTemplate
     end
 
     def open_mode(encoding)
-      mode = "r"
-      if encoding and not encoding.empty?
-        mode += ":#{encoding}"
-      end
-      mode
+      mode = "rb"
+      return mode unless encoding and not encoding.empty?
+      bom = /\AUTF/i =~ encoding ? 'BOM|' : ''
+      mode += ":#{bom}#{encoding}"
     end
 
     def prepare_data_format(block)
