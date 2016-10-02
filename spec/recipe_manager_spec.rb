@@ -110,10 +110,9 @@ EXPECTED_RESULT
       block = recipe['blocks'][1]
       data_file_path = File.expand_path(block['data'])
       csv_data = StringIO.new(@csv_data)
-      template_encoding = recipe['template_encoding']
-      open_mode = ['r', block['data_encoding'], template_encoding].join(':')
+      open_mode = ['r', block['data_encoding']].join(':')
       allow(reader).to receive(:open).with(data_file_path, open_mode).and_yield(csv_data)
-      block_data = reader.prepare_block_data(block, template_encoding)
+      block_data = reader.prepare_block_data(block)
       expect(block_data).to eq(expected_result)
     end
 
@@ -152,10 +151,9 @@ RECIPE
       block = recipe['blocks'][1]
       data_file_path = File.expand_path(block['data'])
       csv_data = StringIO.new(@csv_data)
-      template_encoding = recipe['template_encoding']
-      open_mode = ['r', block['data_encoding'], template_encoding].join(':')
+      open_mode = ['r', block['data_encoding']].join(':')
       allow(reader).to receive(:open).with(data_file_path, open_mode).and_yield(csv_data)
-      block_data = reader.prepare_block_data(block, template_encoding)
+      block_data = reader.prepare_block_data(block)
       expect(block_data).to eq(expected_result)
     end
 
@@ -172,12 +170,11 @@ RECIPE
 
       reader = AdHocTemplate::RecipeManager.new(@recipe)
       recipe = reader.recipe
-      template_encoding = recipe['template_encoding']
       allow(reader).to receive(:open).with(File.expand_path(recipe['data']), 'r').and_yield(StringIO.new(@main_data))
       recipe['blocks'].each do |block|
         data_file_path = File.expand_path(block['data'])
         csv_data = StringIO.new(@csv_data)
-        open_mode = ['r', block['data_encoding'], template_encoding].join(':')
+        open_mode = ['r', block['data_encoding']].join(':')
         allow(reader).to receive(:open).with(data_file_path, open_mode).and_yield(StringIO.new(@csv_data))
       end
       main_block = reader.load_records
@@ -187,12 +184,11 @@ RECIPE
     it "the result of #load_records can be used as input of DataLoader.parse" do
       reader = AdHocTemplate::RecipeManager.new(@recipe)
       recipe = reader.recipe
-      template_encoding = recipe['template_encoding']
       allow(reader).to receive(:open).with(File.expand_path(recipe['data']), 'r').and_yield(StringIO.new(@main_data))
       recipe['blocks'].each do |block|
         data_file_path = File.expand_path(block['data'])
         csv_data = StringIO.new(@csv_data)
-        open_mode = ['r', block['data_encoding'], template_encoding].join(':')
+        open_mode = ['r', block['data_encoding']].join(':')
         allow(reader).to receive(:open).with(data_file_path, open_mode).and_yield(StringIO.new(@csv_data))
       end
 
@@ -205,14 +201,12 @@ RECIPE
     it "the return value of .new_recipe_from_source can be used as input of DataLoader.parse" do
       reader = AdHocTemplate::RecipeManager.new(@recipe)
       recipe = reader.recipe
-      template_encoding = recipe['template_encoding']
 
       allow_any_instance_of(AdHocTemplate::RecipeManager).to receive(:open).with(File.expand_path(recipe['data']), 'r').and_yield(StringIO.new(@main_data))
       recipe['blocks'].each do |block|
         data_file_path = File.expand_path(block['data'])
         csv_data = StringIO.new(@csv_data)
-        open_mode = ['r', block['data_encoding'], template_encoding].join(':')
-        open_mode = 'r'if open_mode == 'r::UTF-8'
+        open_mode = block['data_encoding'] ? ['r', block['data_encoding']].join(':') : 'r'
         expect_any_instance_of(AdHocTemplate::RecipeManager).to receive(:open).with(data_file_path, open_mode).and_yield(StringIO.new(@csv_data))
       end
 

@@ -28,9 +28,9 @@ module AdHocTemplate
     end
 
     def load_records
-      @records = prepare_block_data(@recipe, @template_encoding).tap do |main_block|
+      @records = prepare_block_data(@recipe).tap do |main_block|
         @recipe['blocks'].each do |block_source|
-          block = prepare_block_data(block_source, @template_encoding)
+          block = prepare_block_data(block_source)
           block.keys.each do |key|
             main_block[key] ||= block[key]
           end
@@ -38,11 +38,10 @@ module AdHocTemplate
       end
     end
 
-    def prepare_block_data(block, template_encoding)
+    def prepare_block_data(block)
       determine_data_format!(block)
       data_source = read_file(block['data'],
-                              block['data_encoding'],
-                              template_encoding)
+                              block['data_encoding'])
       data_format = prepare_data_format(block)
       RecordReader.read_record(data_source, data_format)
     end
@@ -78,20 +77,17 @@ module AdHocTemplate
       block['data_format'] ||= data_format
     end
 
-    def read_file(file_name, encoding, template_encoding)
+    def read_file(file_name, encoding)
       open(File.expand_path(file_name),
-           open_mode(encoding, template_encoding)) do |file|
+           open_mode(encoding)) do |file|
         file.read
       end
     end
 
-    def open_mode(encoding, template_encoding)
+    def open_mode(encoding)
       mode = "r"
       if encoding and not encoding.empty?
         mode += ":#{encoding}"
-      end
-      if mode[':'] and template_encoding and not template_encoding.empty?
-        mode += ":#{template_encoding}"
       end
       mode
     end
