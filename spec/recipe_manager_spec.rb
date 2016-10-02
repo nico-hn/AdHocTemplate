@@ -49,6 +49,12 @@ Born: <%= birth_date %>
 #%>
 TEMPLATE
 
+      @parsed_template = [
+        ["Title: Famous authors of "], [["country "]], [" literature\n\n"],
+        [["Name: "], [["name "]], ["\nBirthplace: "], [["birth_place "]],
+          ["\nWorks:\n"], [[" * "], [["title "]], ["\n"]], [[""],
+            [["Born: "], [["birth_date "]], ["\n"]]], ["\n"]]]
+
       @main_data =<<MAIN_DATA
 country: French
 
@@ -215,6 +221,17 @@ RECIPE
       tree = AdHocTemplate::Parser.parse(@template)
       result = AdHocTemplate::DataLoader.format(tree, main_block.records)
       expect(result).to eq(@expected_result)
+    end
+
+    it "#parse_template parses the template file specified in the recipe" do
+      reader = AdHocTemplate::RecipeManager.new(@recipe)
+      template_path = File.expand_path(reader.recipe['template'])
+      open_mode = 'rb:BOM|UTF-8'
+      expect_any_instance_of(AdHocTemplate::RecipeManager).to receive(:open).with(template_path, open_mode).and_yield(StringIO.new(@template))
+
+      reader.parse_template
+
+      expect(reader.template).to eq(@parsed_template)
     end
   end
 end

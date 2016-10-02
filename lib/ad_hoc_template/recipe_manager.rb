@@ -7,7 +7,7 @@ module AdHocTemplate
   class RecipeManager
     include Utils
 
-    attr_reader :output_file, :template_encoding
+    attr_reader :output_file, :template_encoding, :template
     attr_accessor :records, :recipe
 
     def self.new_recipe_from_source(source)
@@ -44,6 +44,15 @@ module AdHocTemplate
                               block['data_encoding'])
       data_format = prepare_data_format(block)
       RecordReader.read_record(data_source, data_format)
+    end
+
+    def parse_template
+      template_path = File.expand_path(@recipe['template'])
+      template_source = open(template_path,
+                             open_mode(@template_encoding)) do |file|
+        file.read
+      end
+      @template = Parser.parse(template_source)
     end
 
     private
