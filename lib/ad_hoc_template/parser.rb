@@ -43,7 +43,7 @@ module AdHocTemplate
       private
 
       def each_tag_node
-        select {|n| n.kind_of?(TagNode) }.each {|node| yield node }
+        each {|node| yield node if node.kind_of?(TagNode) }
         false
       end
 
