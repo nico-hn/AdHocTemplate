@@ -12,8 +12,8 @@ module AdHocTemplate
 
     def self.new_recipe_from_source(source)
       new.tap do |manager|
-        manager.recipe = manager.read_recipe(source)
-        manager.records = manager.merge_blocks(manager.recipe)
+        manager.read_recipe(source)
+        manager.records = manager.merge_blocks
       end
     end
 
@@ -22,16 +22,16 @@ module AdHocTemplate
     end
 
     def read_recipe(recipe_source)
-      recipe = RecordReader::YAMLReader.read_record(recipe_source)
+      @recipe = RecordReader::YAMLReader.read_record(recipe_source)
       setup_default!(recipe)
       @template_encoding = @default['template_encoding']
       @output_file = @default['output_file']
-      recipe
+      @recipe
     end
 
-    def merge_blocks(recipe)
-      prepare_block_data(recipe, @template_encoding).tap do |main_block|
-        recipe['blocks'].each do |block_source|
+    def merge_blocks
+      prepare_block_data(@recipe, @template_encoding).tap do |main_block|
+        @recipe['blocks'].each do |block_source|
           block = prepare_block_data(block_source, @template_encoding)
           block.keys.each do |key|
             main_block[key] ||= block[key]

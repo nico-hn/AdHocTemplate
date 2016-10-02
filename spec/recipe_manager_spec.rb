@@ -180,7 +180,7 @@ RECIPE
         open_mode = ['r', block['data_encoding'], template_encoding].join(':')
         allow(reader).to receive(:open).with(data_file_path, open_mode).and_yield(StringIO.new(@csv_data))
       end
-      main_block = reader.merge_blocks(recipe)
+      main_block = reader.merge_blocks
       expect(main_block).to eq(expected_result)
     end
 
@@ -196,7 +196,7 @@ RECIPE
         allow(reader).to receive(:open).with(data_file_path, open_mode).and_yield(StringIO.new(@csv_data))
       end
 
-      main_block = reader.merge_blocks(recipe)
+      main_block = reader.merge_blocks
       tree = AdHocTemplate::Parser.parse(@template)
       result = AdHocTemplate::DataLoader.format(tree, main_block)
       expect(result).to eq(@expected_result)
