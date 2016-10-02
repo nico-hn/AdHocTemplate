@@ -74,11 +74,9 @@ module AdHocTemplate
     end
 
     def self.each_iteration_label(labels)
-      iteration_labels = labels.keys.select do |label|
-        labels[label].kind_of? Array
+      labels.keys.each do |label|
+        yield label if labels[label].kind_of? Array
       end
-
-      iteration_labels.each {|label| yield label }
     end
 
     def self.recipe_entry(template_path, tag_type, encoding)
