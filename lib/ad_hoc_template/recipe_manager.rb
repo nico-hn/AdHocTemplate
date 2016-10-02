@@ -11,14 +11,12 @@ module AdHocTemplate
     attr_accessor :records, :recipe
 
     def self.new_recipe_from_source(source)
-      new.tap do |manager|
-        manager.read_recipe(source)
-        manager.load_records
-      end
+      new(source).tap {|manager| manager.load_records }
     end
 
-    def initialize
+    def initialize(recipe_source)
       @default = {}
+      read_recipe(recipe_source)
     end
 
     def read_recipe(recipe_source)

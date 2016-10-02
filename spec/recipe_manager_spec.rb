@@ -88,8 +88,8 @@ EXPECTED_RESULT
     end
 
     it 'reads a recipe' do
-      reader = AdHocTemplate::RecipeManager.new
-      recipe = reader.read_recipe(@recipe)
+      reader = AdHocTemplate::RecipeManager.new(@recipe)
+      recipe = reader.recipe
 
       expect(recipe['blocks'][0]['data']).to eq('main.aht')
       expect(recipe['blocks'][1]['data']).to eq('authors.csv')
@@ -105,8 +105,8 @@ EXPECTED_RESULT
           {"name"=>"Marcel Ayme'", "title"=>"Le Passe-muraille"},
           {"name"=>"Marcel Ayme'", "title"=>"Les Contes du chat perche'"}]}
 
-      reader = AdHocTemplate::RecipeManager.new
-      recipe = reader.read_recipe(@recipe)
+      reader = AdHocTemplate::RecipeManager.new(@recipe)
+      recipe = reader.recipe
       block = recipe['blocks'][1]
       data_file_path = File.expand_path(block['data'])
       csv_data = StringIO.new(@csv_data)
@@ -147,8 +147,8 @@ RECIPE
           {"name"=>"Marcel Ayme'", "title"=>"Le Passe-muraille"},
           {"name"=>"Marcel Ayme'", "title"=>"Les Contes du chat perche'"}]}
 
-      reader = AdHocTemplate::RecipeManager.new
-      recipe = reader.read_recipe(recipe_source)
+      reader = AdHocTemplate::RecipeManager.new(recipe_source)
+      recipe = reader.recipe
       block = recipe['blocks'][1]
       data_file_path = File.expand_path(block['data'])
       csv_data = StringIO.new(@csv_data)
@@ -170,8 +170,8 @@ RECIPE
           {"name"=>"Marcel Ayme'", "title"=>"Le Passe-muraille"},
           {"name"=>"Marcel Ayme'", "title"=>"Les Contes du chat perche'"}]}
 
-      reader = AdHocTemplate::RecipeManager.new
-      recipe = reader.read_recipe(@recipe)
+      reader = AdHocTemplate::RecipeManager.new(@recipe)
+      recipe = reader.recipe
       template_encoding = recipe['template_encoding']
       allow(reader).to receive(:open).with(File.expand_path(recipe['data']), 'r').and_yield(StringIO.new(@main_data))
       recipe['blocks'].each do |block|
@@ -185,8 +185,8 @@ RECIPE
     end
 
     it "the result of #load_records can be used as input of DataLoader.parse" do
-      reader = AdHocTemplate::RecipeManager.new
-      recipe = reader.read_recipe(@recipe)
+      reader = AdHocTemplate::RecipeManager.new(@recipe)
+      recipe = reader.recipe
       template_encoding = recipe['template_encoding']
       allow(reader).to receive(:open).with(File.expand_path(recipe['data']), 'r').and_yield(StringIO.new(@main_data))
       recipe['blocks'].each do |block|
@@ -203,8 +203,8 @@ RECIPE
     end
 
     it "the return value of .new_recipe_from_source can be used as input of DataLoader.parse" do
-      reader = AdHocTemplate::RecipeManager.new
-      recipe = reader.read_recipe(@recipe)
+      reader = AdHocTemplate::RecipeManager.new(@recipe)
+      recipe = reader.recipe
       template_encoding = recipe['template_encoding']
 
       allow_any_instance_of(AdHocTemplate::RecipeManager).to receive(:open).with(File.expand_path(recipe['data']), 'r').and_yield(StringIO.new(@main_data))
