@@ -2,6 +2,7 @@
 
 require 'spec_helper'
 require 'ad_hoc_template'
+require 'stringio'
 
 describe AdHocTemplate do
   describe AdHocTemplate::EntryFormatGenerator do
@@ -273,6 +274,33 @@ RECIPE
 
       recipe = AdHocTemplate::EntryFormatGenerator.extract_recipe(template, 'template.html')
       expect(recipe).to eq(expected_recipe)
+    end
+
+    it '.extract_recipes_from_template_files' do
+      recipe_entry = <<RECIPE
+---
+template: template1.html
+tag_type: :default
+template_encoding: UTF-8
+data: 
+data_format: 
+data_encoding: 
+output_file: 
+blocks:
+- label: "#iteration_block"
+  data: 
+  data_format: 
+  data_encoding: 
+RECIPE
+      recipe_entry2 = recipe_entry.sub(/template1\.html/, 'template2.html')
+
+      template_names = %w(template1.html template2.html)
+      template_names.each do |template_name|
+        allow(AdHocTemplate::EntryFormatGenerator).to receive(:open).with(File.expand_path(template_name)).and_yield(StringIO.new(@template))
+      end
+
+      result = AdHocTemplate::EntryFormatGenerator.extract_recipes_from_template_files(template_names)
+      expect(result).to eq(recipe_entry + recipe_entry2)
     end
   end
 end

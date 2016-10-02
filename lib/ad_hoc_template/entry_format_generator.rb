@@ -39,6 +39,17 @@ module AdHocTemplate
       RecordReader.dump(labels, target_format)
     end
 
+    def self.extract_recipes_from_template_files(template_paths, tag_type=:default,
+                                                 encoding=Encoding.default_external.names[0])
+      recipes = template_paths.map do |path|
+        full_path = File.expand_path(path)
+        template_source = open(full_path) {|file| file.read }
+        extract_recipe(template_source, path, tag_type, encoding)
+      end
+
+      recipes.join
+    end
+
     def self.extract_recipe(template_source, template_path,
                             tag_type=:default, encoding='UTF-8')
       recipe = recipe_entry(template_path, tag_type, encoding)
