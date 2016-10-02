@@ -13,7 +13,7 @@ module AdHocTemplate
     def self.new_recipe_from_source(source)
       new.tap do |manager|
         manager.read_recipe(source)
-        manager.records = manager.merge_blocks
+        manager.load_records
       end
     end
 
@@ -29,8 +29,8 @@ module AdHocTemplate
       @recipe
     end
 
-    def merge_blocks
-      prepare_block_data(@recipe, @template_encoding).tap do |main_block|
+    def load_records
+      @records = prepare_block_data(@recipe, @template_encoding).tap do |main_block|
         @recipe['blocks'].each do |block_source|
           block = prepare_block_data(block_source, @template_encoding)
           block.keys.each do |key|

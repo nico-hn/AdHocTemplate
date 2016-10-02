@@ -159,7 +159,7 @@ RECIPE
       expect(block_data).to eq(expected_result)
     end
 
-    it '#merge_blocks reads blocks and merge them' do
+    it '#load_records reads blocks and merge them' do
       expected_result = {
         "country" => "French",
         "#authors" => [{"name"=>"Albert Camus", "birth_place"=>"Algeria"}, {"name"=>"Marcel Ayme'", "birth_place"=>"France"}],
@@ -180,11 +180,11 @@ RECIPE
         open_mode = ['r', block['data_encoding'], template_encoding].join(':')
         allow(reader).to receive(:open).with(data_file_path, open_mode).and_yield(StringIO.new(@csv_data))
       end
-      main_block = reader.merge_blocks
+      main_block = reader.load_records
       expect(main_block).to eq(expected_result)
     end
 
-    it "#merge_blocks' result can be used as input of DataLoader.parse" do
+    it "the result of #load_records can be used as input of DataLoader.parse" do
       reader = AdHocTemplate::RecipeManager.new
       recipe = reader.read_recipe(@recipe)
       template_encoding = recipe['template_encoding']
@@ -196,7 +196,7 @@ RECIPE
         allow(reader).to receive(:open).with(data_file_path, open_mode).and_yield(StringIO.new(@csv_data))
       end
 
-      main_block = reader.merge_blocks
+      main_block = reader.load_records
       tree = AdHocTemplate::Parser.parse(@template)
       result = AdHocTemplate::DataLoader.format(tree, main_block)
       expect(result).to eq(@expected_result)
