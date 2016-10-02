@@ -8,6 +8,14 @@ module AdHocTemplate
     include Utils
 
     attr_reader :output_file, :template_encoding
+    attr_accessor :records, :recipe
+
+    def self.new_recipe_from_source(source)
+      new.tap do |manager|
+        manager.recipe = manager.read_recipe(source)
+        manager.records = manager.merge_blocks(manager.recipe)
+      end
+    end
 
     def initialize
       @default = {}
