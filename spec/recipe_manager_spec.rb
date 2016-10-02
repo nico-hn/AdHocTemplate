@@ -15,7 +15,7 @@ template_encoding: UTF-8
 data: main.aht
 data_format: 
 data_encoding: 
-output_file: 
+output_file: output.html
 blocks:
 - label: "#authors"
   data: 
@@ -232,6 +232,29 @@ RECIPE
       reader.parse_template
 
       expect(reader.template).to eq(@parsed_template)
+    end
+
+    it "#update_output_file writes the result into an output file specified in the recipe" do
+      reader = AdHocTemplate::RecipeManager.new(@recipe)
+      recipe = reader.recipe
+
+      allow_any_instance_of(AdHocTemplate::RecipeManager).to receive(:open).with(File.expand_path(recipe['data']), 'rb').and_yield(StringIO.new(@main_data))
+      recipe['blocks'].each do |block|
+        data_file_path = File.expand_path(block['data'])
+        csv_data = StringIO.new(@csv_data)
+        open_mode = block['data_encoding'] ? ['rb', block['data_encoding']].join(':') : 'rb'
+        expect_any_instance_of(AdHocTemplate::RecipeManager).to receive(:open).with(data_file_path, open_mode).and_yield(StringIO.new(@csv_data))
+      end
+
+      template_path = File.expand_path(reader.recipe['template'])
+      open_mode = 'rb:BOM|UTF-8'
+      output_file_path = File.expand_path(reader.recipe['output_file'])
+      output_file = StringIO.new(@template)
+      expect_any_instance_of(AdHocTemplate::RecipeManager).to receive(:open).with(template_path, open_mode).and_yield(StringIO.new(@template))
+      expect_any_instance_of(AdHocTemplate::RecipeManager).to receive(:open).with(output_file_path, 'wb:UTF-8').and_yield(output_file)
+
+      reader.update_output_file
+      expect(output_file.string).to eq(@expected_result)
     end
   end
 end

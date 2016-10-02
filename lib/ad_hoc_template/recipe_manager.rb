@@ -55,6 +55,18 @@ module AdHocTemplate
       @template = Parser.parse(template_source)
     end
 
+    def update_output_file
+      @records ||= load_records
+      parse_template
+      content = AdHocTemplate::DataLoader.format(@template, @records)
+      mode = @template_encoding ? "wb:#{@template_encoding}" : 'wb'
+      if @output_file
+        open(File.expand_path(@output_file), mode) {|file| file.print content }
+      else
+        STDOUT.print content
+      end
+    end
+
     private
 
     def setup_default!(recipe)
