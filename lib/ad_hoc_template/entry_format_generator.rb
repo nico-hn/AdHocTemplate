@@ -44,7 +44,7 @@ module AdHocTemplate
       recipe = recipe_entry(template_path, tag_type, encoding)
       parsed_template = Parser.parse(template_source, tag_type)
       extract_iteration_labels(parsed_template).each do |label|
-        recipe['blocks'].push recipe_block_entry(label)
+        recipe['blocks'].push recipe_block_entry(label) if label.start_with? '#'
       end
 
       RecordReader.dump(recipe, :yaml)
