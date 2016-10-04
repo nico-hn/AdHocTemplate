@@ -52,7 +52,9 @@ module AdHocTemplate
                              open_mode(@template_encoding)) do |file|
         file.read
       end
-      @template = Parser.parse(template_source)
+      tag_type = @recipe['tag_type'] || :default
+      tag_type = tag_type.to_sym unless tag_type.kind_of? Symbol
+      @template = Parser.parse(template_source, tag_type)
     end
 
     def update_output_file
