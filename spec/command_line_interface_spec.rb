@@ -60,11 +60,18 @@ RESULT
     end
 
     it "can set the internal/external encoding from the command line" do
-      command_line_interface = AdHocTemplate::CommandLineInterface.new
-      set_argv("-E UTF-8:Shift_JIS")
-      command_line_interface.parse_command_line_options
-      expect(Encoding.default_external.names).to include("UTF-8")
-      expect(Encoding.default_internal.names).to include("Shift_JIS")
+      begin
+        default_external = Encoding.default_external
+        default_internal = Encoding.default_internal
+        command_line_interface = AdHocTemplate::CommandLineInterface.new
+        set_argv("-E UTF-8:Shift_JIS")
+        command_line_interface.parse_command_line_options
+        expect(Encoding.default_external.names).to include("UTF-8")
+        expect(Encoding.default_internal.names).to include("Shift_JIS")
+      ensure
+        Encoding.default_external = default_external
+        Encoding.default_internal = default_internal
+      end
     end
 
     it "can specify the output file from command line" do
