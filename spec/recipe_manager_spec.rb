@@ -204,25 +204,6 @@ RECIPE
       expect(result).to eq(@expected_result)
     end
 
-    it "the return value of .new_recipe_from_source can be used as input of DataLoader.parse" do
-      reader = AdHocTemplate::RecipeManager.new(@recipe)
-      recipe = reader.recipe
-
-      allow_any_instance_of(AdHocTemplate::RecipeManager).to receive(:open).with(File.expand_path(recipe['data']), 'rb:BOM|UTF-8').and_yield(StringIO.new(@main_data))
-      recipe['blocks'].each do |block|
-        data_file_path = File.expand_path(block['data'])
-        csv_data = StringIO.new(@csv_data)
-        open_mode = block['data_encoding'] ? ['rb', block['data_encoding']].join(':') : 'rb:BOM|UTF-8'
-        expect_any_instance_of(AdHocTemplate::RecipeManager).to receive(:open).with(data_file_path, open_mode).and_yield(StringIO.new(@csv_data))
-      end
-
-      main_block = AdHocTemplate::RecipeManager.new_recipe_from_source(@recipe)
-
-      tree = AdHocTemplate::Parser.parse(@template)
-      result = AdHocTemplate::DataLoader.format(tree, main_block.records)
-      expect(result).to eq(@expected_result)
-    end
-
     it "#parse_template parses the template file specified in the recipe" do
       reader = AdHocTemplate::RecipeManager.new(@recipe)
       template_path = File.expand_path(reader.recipe['template'])

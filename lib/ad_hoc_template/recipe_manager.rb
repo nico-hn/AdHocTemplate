@@ -19,10 +19,6 @@ module AdHocTemplate
       end
     end
 
-    def self.new_recipe_from_source(source)
-      new(source).tap {|manager| manager.load_records }
-    end
-
     def initialize(recipe_source)
       @default = {}
       read_recipe(recipe_source)
