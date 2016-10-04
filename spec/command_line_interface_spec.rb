@@ -2,6 +2,7 @@
 
 require 'shellwords'
 require 'stringio'
+require 'fileutils'
 require 'spec_helper'
 require 'ad_hoc_template'
 require 'ad_hoc_template/command_line_interface'
@@ -631,6 +632,30 @@ RECIPE
         command_line_interface.parse_command_line_options
 
         command_line_interface.execute
+      end
+    end
+
+    describe '--cooking-recipe' do
+      it 'reads a recipe and updates output files' do
+        en_expected_result = File.read('spec/test_data/en/recipe/expected_result.html')
+        ja_expected_result = File.read('spec/test_data/ja/recipe/expected_result.html')
+        en_result_path = 'spec/test_data/en/recipe/result.html'
+        ja_result_path = 'spec/test_data/ja/recipe/result.html'
+
+        set_argv("-c spec/test_data/recipe.yaml")
+        command_line_interface = AdHocTemplate::CommandLineInterface.new
+        command_line_interface.parse_command_line_options
+
+        command_line_interface.execute
+
+        en_result = File.read(en_result_path)
+        ja_result = File.read(ja_result_path)
+
+        expect(en_result).to eq(en_expected_result)
+        expect(ja_result).to eq(ja_expected_result)
+
+        FileUtils.rm(en_result_path)
+        FileUtils.rm(ja_result_path)
       end
     end
   end

@@ -3,6 +3,7 @@
 require 'ad_hoc_template'
 require 'optparse_plus'
 require 'ad_hoc_template/config_manager'
+require 'ad_hoc_template/recipe_manager'
 require 'ad_hoc_template/utils'
 
 AdHocTemplate::ConfigManager.require_local_settings
@@ -50,6 +51,7 @@ module AdHocTemplate
         opt.on(:entry_format) {|entry_format| @output_empty_entry = true }
         opt.on(:init_local_settings) { init_local_settings }
         opt.on(:recipe_template) { @output_recipe_template = true }
+        opt.on(:cooking_recipe) {|recipe_yaml| @recipe_yaml = recipe_yaml }
 
         opt.parse!
       end
@@ -95,6 +97,10 @@ module AdHocTemplate
                                             @tag_type)
     end
 
+    def update_output_files_in_recipe(recipe)
+      AdHocTemplate::RecipeManager.update_output_files_in_recipe(recipe)
+    end
+
     def open_output
       if @output_filename
         open(@output_filename, "wb") do |out|
@@ -107,6 +113,7 @@ module AdHocTemplate
 
     def execute
       parse_command_line_options
+      return update_output_files_in_recipe(@recipe_yaml) if @recipe_yaml
       read_input_files
       output = if @output_empty_entry
                  generate_entry_format
@@ -177,3 +184,7 @@ recipe_template:
   short: "-R"
   long: "--recipe-template"
   description: "Generate recipe entries for template files given on the command line"
+cooking_recipe:
+  short: "-c [recipe_yaml]"
+  long: "--cooking-recipe [=recipe_yaml]"
+  description: "Update output files specified in the recipe file"

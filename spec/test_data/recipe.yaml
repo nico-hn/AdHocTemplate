@@ -1,0 +1,34 @@
+---
+template: spec/test_data/en/recipe/template.html
+tag_type: :xml_comment_like
+template_encoding: UTF-8
+data: spec/test_data/en/recipe/main.aht
+data_format: 
+data_encoding: UTF-8
+output_file: spec/test_data/en/recipe/result.html
+blocks:
+- label: "#authors"
+  data: 
+  data_format: 
+  data_encoding: 
+- label: "#authors|works|name"
+  data: spec/test_data/en/inner_iteration/data.csv
+  data_format: 
+  data_encoding: 
+---
+template: spec/test_data/ja/recipe/template.html
+tag_type: :xml_comment_like
+template_encoding: UTF-8
+data: spec/test_data/ja/recipe/main.aht
+data_format: 
+data_encoding: 
+output_file: spec/test_data/ja/recipe/result.html
+blocks:
+- label: "#authors"
+  data: 
+  data_format: 
+  data_encoding: 
+- label: "#authors|works|name"
+  data: spec/test_data/ja/inner_iteration/data.csv
+  data_format: 
+  data_encoding: 

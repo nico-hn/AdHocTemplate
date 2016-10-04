@@ -10,6 +10,15 @@ module AdHocTemplate
     attr_reader :output_file, :template_encoding, :template
     attr_accessor :records, :recipe
 
+    def self.update_output_files_in_recipe(recipe)
+      recipe_source = open(File.expand_path(recipe)) {|file| file.read }
+      recipes = YAML.load_stream(recipe_source)
+      recipes.each do |recipe|
+        manager = new(recipe)
+        manager.update_output_file
+      end
+    end
+
     def self.new_recipe_from_source(source)
       new(source).tap {|manager| manager.load_records }
     end
@@ -20,8 +29,12 @@ module AdHocTemplate
     end
 
     def read_recipe(recipe_source)
-      @recipe = RecordReader::YAMLReader.read_record(recipe_source)
-      setup_default!(recipe)
+      @recipe = if recipe_source.kind_of? String
+                  RecordReader::YAMLReader.read_record(recipe_source)
+                else
+                  recipe_source
+                end
+      setup_default!(@recipe)
       @template_encoding = @default['template_encoding']
       @output_file = @default['output_file']
       @recipe
