@@ -578,8 +578,8 @@ TSV
       end
     end
 
-    describe '--recipe-template reads template files and geperates a blank recipe' do
-      it 'reads templates' do
+    describe '--recipe-template' do
+      it 'reads template files and geperates a blank recipe' do
         expected_result = <<RECIPE
 ---
 template: spec/test_data/en/recipe/template.html
