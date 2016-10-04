@@ -671,7 +671,7 @@ block: |
 YAML
     end
 
-    it ',dump accepts non-empty data' do
+    it '.dump accepts non-empty data' do
       parsed_data = AdHocTemplate::RecordReader::YAMLReader.read_record(@yaml_source)
       dump_data = AdHocTemplate::RecordReader::DefaultFormReader.dump(parsed_data)
       expected_data = @config_source.sub(/(#{$/}+)\Z/, $/)
