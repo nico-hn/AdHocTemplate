@@ -176,7 +176,7 @@ RECIPE
 
       reader = AdHocTemplate::RecipeManager.new(@recipe)
       recipe = reader.recipe
-      allow(reader).to receive(:open).with(File.expand_path(recipe['data']), 'rb').and_yield(StringIO.new(@main_data))
+      allow(reader).to receive(:open).with(File.expand_path(recipe['data']), 'rb:BOM|UTF-8').and_yield(StringIO.new(@main_data))
       recipe['blocks'].each do |block|
         data_file_path = File.expand_path(block['data'])
         csv_data = StringIO.new(@csv_data)
@@ -190,7 +190,7 @@ RECIPE
     it "the result of #load_records can be used as input of DataLoader.parse" do
       reader = AdHocTemplate::RecipeManager.new(@recipe)
       recipe = reader.recipe
-      allow(reader).to receive(:open).with(File.expand_path(recipe['data']), 'rb').and_yield(StringIO.new(@main_data))
+      allow(reader).to receive(:open).with(File.expand_path(recipe['data']), 'rb:BOM|UTF-8').and_yield(StringIO.new(@main_data))
       recipe['blocks'].each do |block|
         data_file_path = File.expand_path(block['data'])
         csv_data = StringIO.new(@csv_data)
@@ -208,11 +208,11 @@ RECIPE
       reader = AdHocTemplate::RecipeManager.new(@recipe)
       recipe = reader.recipe
 
-      allow_any_instance_of(AdHocTemplate::RecipeManager).to receive(:open).with(File.expand_path(recipe['data']), 'rb').and_yield(StringIO.new(@main_data))
+      allow_any_instance_of(AdHocTemplate::RecipeManager).to receive(:open).with(File.expand_path(recipe['data']), 'rb:BOM|UTF-8').and_yield(StringIO.new(@main_data))
       recipe['blocks'].each do |block|
         data_file_path = File.expand_path(block['data'])
         csv_data = StringIO.new(@csv_data)
-        open_mode = block['data_encoding'] ? ['rb', block['data_encoding']].join(':') : 'rb'
+        open_mode = block['data_encoding'] ? ['rb', block['data_encoding']].join(':') : 'rb:BOM|UTF-8'
         expect_any_instance_of(AdHocTemplate::RecipeManager).to receive(:open).with(data_file_path, open_mode).and_yield(StringIO.new(@csv_data))
       end
 
@@ -238,11 +238,11 @@ RECIPE
       reader = AdHocTemplate::RecipeManager.new(@recipe)
       recipe = reader.recipe
 
-      allow_any_instance_of(AdHocTemplate::RecipeManager).to receive(:open).with(File.expand_path(recipe['data']), 'rb').and_yield(StringIO.new(@main_data))
+      allow_any_instance_of(AdHocTemplate::RecipeManager).to receive(:open).with(File.expand_path(recipe['data']), 'rb:BOM|UTF-8').and_yield(StringIO.new(@main_data))
       recipe['blocks'].each do |block|
         data_file_path = File.expand_path(block['data'])
         csv_data = StringIO.new(@csv_data)
-        open_mode = block['data_encoding'] ? ['rb', block['data_encoding']].join(':') : 'rb'
+        open_mode = block['data_encoding'] ? ['rb', block['data_encoding']].join(':') : 'rb:BOM|UTF-8'
         expect_any_instance_of(AdHocTemplate::RecipeManager).to receive(:open).with(data_file_path, open_mode).and_yield(StringIO.new(@csv_data))
       end
 

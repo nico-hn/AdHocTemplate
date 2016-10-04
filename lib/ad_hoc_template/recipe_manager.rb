@@ -106,6 +106,7 @@ module AdHocTemplate
     end
 
     def open_mode(encoding)
+      encoding ||= Encoding.default_external.names[0]
       mode = "rb"
       return mode unless encoding and not encoding.empty?
       bom = /\AUTF/i =~ encoding ? 'BOM|' : ''
