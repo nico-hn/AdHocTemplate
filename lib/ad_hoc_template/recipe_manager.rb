@@ -8,7 +8,7 @@ module AdHocTemplate
     include Utils
 
     attr_reader :output_file, :template_encoding, :template
-    attr_accessor :records, :recipe
+    attr_reader :records, :recipe
 
     def self.update_output_files_in_recipe(recipe)
       recipe_source = open(File.expand_path(recipe)) {|file| file.read }
