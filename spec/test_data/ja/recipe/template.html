@@ -1,0 +1,20 @@
+<h1><!--%h country %-->文学の著名な作家</h1>
+
+<!--%iterate%-->authors:
+<h2><!--%h name %--></h2>
+
+<p>生年: <!--%h birth_year %--></p>
+
+<table summary="<!--%h name %-->の著名な作品とその出版年のリスト">
+  <caption>著名な作品</caption>
+  <thead>
+    <tr><th scope="col">作品名</th><th scope="col">出版年</th></tr>
+  </thead>
+  <tbody>
+    <!--%iterate%-->works|name:
+    <tr><td><!--%h title %--></td><td><!--%h year %--></td></tr>
+    <!--%/iterate%-->
+  </tbody>
+</table>
+
+<!--%/iterate%-->

@@ -577,5 +577,54 @@ TSV
         command_line_interface.execute
       end
     end
+
+    describe '--recipe-template reads template files and geperates a blank recipe' do
+      it 'reads templates' do
+        expected_result = <<RECIPE
+---
+template: spec/test_data/en/recipe/template.html
+tag_type: :xml_comment_like
+template_encoding: UTF-8
+data: 
+data_format: 
+data_encoding: 
+output_file: 
+blocks:
+- label: "#authors"
+  data: 
+  data_format: 
+  data_encoding: 
+- label: "#authors|works|name"
+  data: 
+  data_format: 
+  data_encoding: 
+---
+template: spec/test_data/ja/recipe/template.html
+tag_type: :xml_comment_like
+template_encoding: UTF-8
+data: 
+data_format: 
+data_encoding: 
+output_file: 
+blocks:
+- label: "#authors"
+  data: 
+  data_format: 
+  data_encoding: 
+- label: "#authors|works|name"
+  data: 
+  data_format: 
+  data_encoding: 
+RECIPE
+
+        allow(STDOUT).to receive(:print).with(expected_result)
+
+        set_argv("-R -t xml_comment_like spec/test_data/en/recipe/template.html spec/test_data/ja/recipe/template.html")
+        command_line_interface = AdHocTemplate::CommandLineInterface.new
+        command_line_interface.parse_command_line_options
+
+        command_line_interface.execute
+      end
+    end
   end
 end

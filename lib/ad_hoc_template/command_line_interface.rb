@@ -49,6 +49,7 @@ module AdHocTemplate
         opt.on(:tag_config) {|tag_config_yaml| register_user_defined_tag_type(tag_config_yaml) }
         opt.on(:entry_format) {|entry_format| @output_empty_entry = true }
         opt.on(:init_local_settings) { init_local_settings }
+        opt.on(:recipe_template) { @output_recipe_template = true }
 
         opt.parse!
       end
@@ -87,6 +88,13 @@ module AdHocTemplate
       exit
     end
 
+    def generate_recipe_template(templates)
+      encoding = Encoding.default_external.names[0]
+      AdHocTemplate::EntryFormatGenerator.
+        extract_recipes_from_template_files(templates,
+                                            @tag_type)
+    end
+
     def open_output
       if @output_filename
         open(@output_filename, "wb") do |out|
@@ -100,7 +108,13 @@ module AdHocTemplate
     def execute
       parse_command_line_options
       read_input_files
-      output = @output_empty_entry ? generate_entry_format : render
+      output = if @output_empty_entry
+                 generate_entry_format
+               elsif @output_recipe_template
+                 generate_recipe_template(ARGV)
+               else
+                 render
+               end
       open_output {|out| out.print output }
     end
 
@@ -159,3 +173,7 @@ entry_format:
 init_local_settings:
   long: "--init-local-settings"
   description: "Generate configuration files for local settings"
+recipe_template:
+  short: "-R"
+  long: "--recipe-template"
+  description: "Generate recipe entries for template files given on the command line"
