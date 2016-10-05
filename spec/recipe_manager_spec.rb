@@ -187,6 +187,37 @@ RECIPE
       expect(main_block).to eq(expected_result)
     end
 
+    it '#load_records may read recipes without iteration blocks' do
+      recipe_source = <<RECIPE
+---
+template: template.html
+tag_type: :default
+template_encoding: UTF-8
+data: main.aht
+data_format: 
+data_encoding: 
+output_file: 
+RECIPE
+
+      main_data = <<MAIN_DATA
+country: French
+century: 20
+
+MAIN_DATA
+
+      expected_result = {
+        "country" => "French",
+        "century" => "20"
+      }
+
+      reader = AdHocTemplate::RecipeManager.new(recipe_source)
+      recipe = reader.recipe
+      allow(reader).to receive(:open).with(File.expand_path(recipe['data']), 'rb:BOM|UTF-8').and_yield(StringIO.new(main_data))
+
+      main_block = reader.load_records
+      expect(main_block).to eq(expected_result)
+    end
+
     it "the result of #load_records can be used as input of DataLoader.parse" do
       reader = AdHocTemplate::RecipeManager.new(@recipe)
       recipe = reader.recipe

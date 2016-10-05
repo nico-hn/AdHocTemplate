@@ -98,12 +98,21 @@ module AdHocTemplate
         @default[key] = val unless val.kind_of? Array
       end
 
+      setup_sub_blocks!(recipe)
+      setup_main_label
+    end
+
+    def setup_sub_blocks!(recipe)
+      unless recipe['blocks']
+        recipe['blocks'] = []
+        return
+      end
+
       recipe['blocks'].each do |block|
         @default.keys.each do |key|
           block[key] ||= @default[key]
         end
       end
-      setup_main_label
     end
 
     def setup_main_label
