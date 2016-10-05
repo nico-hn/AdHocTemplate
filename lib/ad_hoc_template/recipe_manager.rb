@@ -10,12 +10,14 @@ module AdHocTemplate
     attr_reader :output_file, :template_encoding, :template
     attr_reader :records, :recipe
 
-    def self.update_output_files_in_recipe(recipe)
+    def self.update_output_files_in_recipe(recipe, force_update=false)
       recipe_source = open(File.expand_path(recipe)) {|file| file.read }
       recipes = YAML.load_stream(recipe_source)
       recipes.each do |recipe|
         manager = new(recipe)
-        manager.update_output_file
+        if manager.modified_after_last_output? or force_update
+          manager.update_output_file
+        end
       end
     end
 
@@ -78,6 +80,16 @@ module AdHocTemplate
       end
     end
 
+    def modified_after_last_output?
+      output_path = File.expand_path(@output_file)
+      return true unless File.exist? output_path
+      output_time = File.mtime(output_path)
+      return true if modified_time(@recipe['template']) >= output_time
+      data_files = @recipe['blocks'].map {|block| block['data'] }
+      data_files.unshift(@recipe['data'])
+      data_files.any? {|data_file| modified_time(data_file) >= output_time }
+    end
+
     private
 
     def setup_default!(recipe)
@@ -136,6 +148,10 @@ module AdHocTemplate
         data_format = { data_format => label }
       end
       data_format
+    end
+
+    def modified_time(filename)
+      File.mtime(File.expand_path(filename))
     end
   end
 end

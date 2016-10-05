@@ -237,6 +237,56 @@ RECIPE
       reader.update_output_file
       expect(output_file.string).to eq(@expected_result)
     end
+
+    describe '#modified_after_last_output?' do
+      before do
+        recipe_source = File.read('spec/test_data/recipe.yaml')
+        @recipe = AdHocTemplate::RecipeManager.new(recipe_source)
+        @near_average_time = File.mtime(@recipe.recipe['template'])
+        @newest_file_time = @near_average_time + 3600
+        @oldest_file_time = @near_average_time - 3600
+        @output_path = File.expand_path(@recipe.recipe['output_file'])
+      end
+
+      it 'returns true when the output file does not exist' do
+        allow(File).to receive(:exist?).with(@output_path).and_return(false)
+
+        expect(@recipe.modified_after_last_output?).to be_truthy
+      end
+
+      it 'returns true when the output file is older than the template file' do
+        allow(File).to receive(:exist?).with(@output_path).and_return(true)
+        allow(File).to receive(:mtime).with(@output_path).and_return(@near_average_time)
+        allow(File).to receive(:mtime).with(File.expand_path(@recipe.recipe['template'])).and_return(@newest_file_time)
+        @recipe.recipe['blocks'].each do |block|
+          allow(File).to receive(:mtime).with(File.expand_path(block['data'])).and_return(@oldest_file_time)
+        end
+
+        expect(@recipe.modified_after_last_output?).to be_truthy
+      end
+
+      it 'returns true when the output file is older than data files' do
+        allow(File).to receive(:exist?).with(@output_path).and_return(true)
+        allow(File).to receive(:mtime).with(@output_path).and_return(@near_average_time)
+        allow(File).to receive(:mtime).with(File.expand_path(@recipe.recipe['template'])).and_return(@oldest_file_time)
+        @recipe.recipe['blocks'].each do |block|
+          allow(File).to receive(:mtime).with(File.expand_path(block['data'])).and_return(@newest_file_time)
+        end
+
+        expect(@recipe.modified_after_last_output?).to be_truthy
+      end
+
+      it 'returns false when the output file is the newest file' do
+        allow(File).to receive(:exist?).with(@output_path).and_return(true)
+        allow(File).to receive(:mtime).with(@output_path).and_return(@newest_file_time)
+        allow(File).to receive(:mtime).with(File.expand_path(@recipe.recipe['template'])).and_return(@near_average_time)
+        @recipe.recipe['blocks'].each do |block|
+          allow(File).to receive(:mtime).with(File.expand_path(block['data'])).and_return(@near_average_time)
+        end
+
+        expect(@recipe.modified_after_last_output?).to be_falsy
+      end
+    end
   end
 end
 
