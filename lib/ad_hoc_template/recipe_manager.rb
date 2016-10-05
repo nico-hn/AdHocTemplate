@@ -81,6 +81,7 @@ module AdHocTemplate
     end
 
     def modified_after_last_output?
+      return true unless @output_file # a unit test should be added
       output_path = File.expand_path(@output_file)
       return true unless File.exist? output_path
       output_time = File.mtime(output_path)
