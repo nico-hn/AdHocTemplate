@@ -36,6 +36,7 @@ module AdHocTemplate
       @output_filename = nil
       @tag_type = :default
       @data_format = nil
+      @force_update = false
     end
 
     def parse_command_line_options
@@ -52,6 +53,7 @@ module AdHocTemplate
         opt.on(:init_local_settings) { init_local_settings }
         opt.on(:recipe_template) { @output_recipe_template = true }
         opt.on(:cooking_recipe) {|recipe_yaml| @recipe_yaml = recipe_yaml }
+        opt.on(:force_update) { @force_update = true }
 
         opt.parse!
       end
@@ -98,7 +100,8 @@ module AdHocTemplate
     end
 
     def update_output_files_in_recipe(recipe)
-      AdHocTemplate::RecipeManager.update_output_files_in_recipe(recipe)
+      AdHocTemplate::RecipeManager.update_output_files_in_recipe(recipe,
+                                                                 @force_update)
     end
 
     def open_output
@@ -188,3 +191,6 @@ cooking_recipe:
   short: "-c [recipe_yaml]"
   long: "--cooking-recipe [=recipe_yaml]"
   description: "Update output files specified in the recipe file"
+force_update:
+  long: "--force-update"
+  description: "Update output files in recipe, even when they are newer than template/data files"
