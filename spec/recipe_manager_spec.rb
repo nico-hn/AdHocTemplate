@@ -276,6 +276,28 @@ RECIPE
         expect(@recipe.modified_after_last_output?).to be_truthy
       end
 
+      it 'returns true when RecipeManager#output_file returns nil' do
+        recipe_source = <<RECIPE
+---
+template: template.html
+tag_type: :default
+template_encoding: UTF-8
+data: main.aht
+data_format: 
+data_encoding: 
+output_file: 
+blocks:
+- label: "#authors"
+  data: 
+  data_format: 
+  data_encoding: 
+RECIPE
+
+        recipe = AdHocTemplate::RecipeManager.new(recipe_source)
+
+        expect(recipe.modified_after_last_output?).to be_truthy
+      end
+
       it 'returns false when the output file is the newest file' do
         allow(File).to receive(:exist?).with(@output_path).and_return(true)
         allow(File).to receive(:mtime).with(@output_path).and_return(@newest_file_time)
