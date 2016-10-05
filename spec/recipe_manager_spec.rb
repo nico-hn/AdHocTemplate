@@ -218,6 +218,45 @@ MAIN_DATA
       expect(main_block).to eq(expected_result)
     end
 
+    it '#load_records may read recipes of which #recipe["data"] is not specified' do
+      recipe_source = <<RECIPE
+---
+template: template.html
+tag_type: :default
+template_encoding: UTF-8
+data: 
+data_format: 
+data_encoding: 
+output_file: 
+blocks:
+- label: "#authors"
+  data: 
+  data_format: 
+  data_encoding: 
+- label: "#authors|works|name"
+  data: authors.csv
+  data_format: 
+  data_encoding: 'iso-8859-1'
+RECIPE
+
+      expected_result = {
+        "#authors" => [{"name"=>"Albert Camus"}, {"name"=>"Marcel Ayme'"}],
+        "#authors|works|Albert Camus" => [
+          {"name"=>"Albert Camus", "title"=>"L'E'tranger"},
+          {"name"=>"Albert Camus", "title"=>"La Peste"}],
+        "#authors|works|Marcel Ayme'" => [
+          {"name"=>"Marcel Ayme'", "title"=>"Le Passe-muraille"},
+          {"name"=>"Marcel Ayme'", "title"=>"Les Contes du chat perche'"}]
+      }
+
+      reader = AdHocTemplate::RecipeManager.new(recipe_source)
+      recipe = reader.recipe
+      allow(reader).to receive(:open).with(File.expand_path(recipe['blocks'][1]['data']), 'rb:iso-8859-1').and_yield(StringIO.new(@csv_data))
+      main_block = reader.load_records
+
+      expect(main_block).to eq(expected_result)
+    end
+
     it "the result of #load_records can be used as input of DataLoader.parse" do
       reader = AdHocTemplate::RecipeManager.new(@recipe)
       recipe = reader.recipe

@@ -51,6 +51,7 @@ module AdHocTemplate
 
     def prepare_block_data(block)
       determine_data_format!(block)
+      return {} unless block['data']
       data_source = read_file(block['data'],
                               block['data_encoding'])
       data_format = prepare_data_format(block)
