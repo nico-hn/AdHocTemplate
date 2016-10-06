@@ -187,20 +187,19 @@ module AdHocTemplate
     end
 
     def self.remove_indent_before_iteration_tags(template_source, tag_type)
-      start_tag, end_tag = [
-        tag_type.head_of[IterationNode],
-        tag_type.tail_of[IterationNode],
-      ].map {|tag| Regexp.escape(tag) }
+      start_tag, end_tag = regexp_escape_tag_pair(tag_type, IterationNode)
       template_source.gsub(/^([ \t]+#{start_tag}\S*#{LINE_END_STR})/) {|s| s.lstrip }
         .gsub(/^([ \t]+#{end_tag}#{LINE_END_STR})/) {|s| s.lstrip }
     end
 
     def self.remove_indent_before_fallback_tags(template_source, tag_type)
-      tag_re_str = [
-        tag_type.head_of[FallbackNode],
-        tag_type.tail_of[FallbackNode],
-      ].map {|tag| Regexp.escape(tag) }.join('|')
+      tag_re_str = regexp_escape_tag_pair(tag_type, FallbackNode).join('|')
       template_source.gsub(/^([ \t]+(?:#{tag_re_str})#{LINE_END_STR})/) {|s| s.lstrip }
+    end
+
+    def self.regexp_escape_tag_pair(tag_type, node_class)
+      [tag_type.head_of[node_class],
+        tag_type.tail_of[node_class]].map {|tag| Regexp.escape(tag) }
     end
 
     def self.remove_trailing_newline_of_end_tags(node_types, source, tag_type)
@@ -213,6 +212,7 @@ module AdHocTemplate
     private_class_method(:remove_indents_and_newlines_if_necessary,
                          :remove_indent_before_iteration_tags,
                          :remove_indent_before_fallback_tags,
+                         :regexp_escape_tag_pair,
                          :remove_trailing_newline_of_end_tags)
 
     def initialize(source, tag)
