@@ -106,7 +106,7 @@ module AdHocTemplate
 
     class ValueNode < TagNode
       def contains_any_value_assigned_tag_node?(record)
-        val = record[self.join.strip]
+        val = record[join.strip]
         val and not val.empty?
       end
 
@@ -223,9 +223,9 @@ module AdHocTemplate
 
     def parse
       while token = @tokens.shift
-        next if @tag.tail[token] == current_node.class and self.pop
-        next if @tag.head[token] and self.push @tag.head[token].new
-        self.push Leaf.create(token)
+        next if @tag.tail[token] == current_node.class and pop
+        next if @tag.head[token] and push @tag.head[token].new
+        push Leaf.create(token)
       end
 
       self
