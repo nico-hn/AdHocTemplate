@@ -8,24 +8,6 @@ require "ad_hoc_template/config_manager"
 
 module AdHocTemplate
   class DataLoader
-    class InnerLabel
-      attr_reader :inner_label
-
-      def self.labels(inner_labels, cur_label)
-        inner_labels.map {|label| new(label, cur_label) }
-      end
-
-      def initialize(inner_label, cur_label)
-        @inner_label = inner_label
-        @label, @key = inner_label.sub(/\A#/, ''.freeze).split(/\|/, 2)
-        @cur_label = cur_label
-      end
-
-      def full_label(record)
-        [@cur_label, @label, record[@key]].join('|')
-      end
-    end
-
     def self.format(template, record, tag_formatter=DefaultTagFormatter.new)
       if record.kind_of? Array
         return format_multi_records(template, record, tag_formatter)
@@ -95,16 +77,10 @@ module AdHocTemplate
       cur_label = tag_node.type
       sub_records = data_loader.record[cur_label]||[data_loader.record]
       return sub_records unless cur_label
-      inner_labels = prepare_inner_labels(tag_node)
+      inner_labels = tag_node.inner_labels
       return sub_records unless inner_labels
       sub_records.map do |record|
         prepare_inner_iteration_records(record, inner_labels, data_loader)
-      end
-    end
-
-    def prepare_inner_labels(tag_node)
-      if labels = tag_node.inner_iteration_tag_labels
-        InnerLabel.labels(labels, tag_node.type)
       end
     end
 

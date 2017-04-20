@@ -9,6 +9,24 @@ module AdHocTemplate
 
   class Parser < TreeStack
     class TagNode < Parser::Node
+      class InnerLabel
+        attr_reader :inner_label
+
+        def self.labels(inner_labels, cur_label)
+          inner_labels.map {|label| new(label, cur_label) }
+        end
+
+        def initialize(inner_label, cur_label)
+          @inner_label = inner_label
+          @label, @key = inner_label.sub(/\A#/, ''.freeze).split(/\|/, 2)
+          @cur_label = cur_label
+        end
+
+        def full_label(record)
+          [@cur_label, @label, record[@key]].join('|')
+        end
+      end
+
       attr_reader :type
 
       def push(node=TreeStack::Node.new)
@@ -25,6 +43,12 @@ module AdHocTemplate
 
       def contains_any_value_tag?
         each_tag_node {|node| return true if node.contains_any_value_tag? }
+      end
+
+      def inner_labels
+        if labels = inner_iteration_tag_labels
+          InnerLabel.labels(labels, @type)
+        end
       end
 
       def inner_iteration_tag_labels
