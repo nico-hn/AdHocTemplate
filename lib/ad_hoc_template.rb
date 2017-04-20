@@ -95,11 +95,16 @@ module AdHocTemplate
       cur_label = tag_node.type
       sub_records = data_loader.record[cur_label]||[data_loader.record]
       return sub_records unless cur_label
-      inner_labels = tag_node.inner_iteration_tag_labels
+      inner_labels = prepare_inner_labels(tag_node)
       return sub_records unless inner_labels
-      inner_labels = InnerLabel.labels(inner_labels, cur_label)
       sub_records.map do |record|
         prepare_inner_iteration_records(record, inner_labels, data_loader)
+      end
+    end
+
+    def prepare_inner_labels(tag_node)
+      if labels = tag_node.inner_iteration_tag_labels
+        InnerLabel.labels(labels, tag_node.type)
       end
     end
 
