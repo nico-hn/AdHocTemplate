@@ -45,7 +45,7 @@ module AdHocTemplate
       @tag_formatter = tag_formatter
     end
 
-    attr_reader :record
+    attr_reader :record, :tag_formatter
 
     def visit(tree, memo)
       case tree
@@ -67,9 +67,9 @@ module AdHocTemplate
 
       prepare_sub_records(iteration_tag_node, inner_label.record).map do |record|
         if tag_node.contains_any_value_assigned_tag_node?(record)
-          visit_with_sub_record(tag_node, record, memo, @tag_formatter)
+          visit_with_sub_record(tag_node, record, memo, inner_label.tag_formatter)
         elsif fallback_nodes = select_fallback_nodes(tag_node)
-          format_fallback_tags(fallback_nodes, record, memo, @tag_formatter)
+          format_fallback_tags(fallback_nodes, record, memo, inner_label.tag_formatter)
         else
           "".freeze
         end
@@ -78,7 +78,7 @@ module AdHocTemplate
 
     def format_value_tag(tag_node, inner_label, memo)
       leafs = tag_node.map {|leaf| leaf.accept(self, memo) }
-      @tag_formatter.format(tag_node.type, leafs.join.strip, inner_label.record)
+      inner_label.tag_formatter.format(tag_node.type, leafs.join.strip, inner_label.record)
     end
 
     def format(tree, memo=nil)
