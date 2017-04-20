@@ -62,23 +62,23 @@ module AdHocTemplate
       end
     end
 
-    def format_iteration_tag(iteration_tag_node, inner_label, memo)
+    def format_iteration_tag(iteration_tag_node, data_loader, memo)
       tag_node = cast(iteration_tag_node)
 
-      prepare_sub_records(iteration_tag_node, inner_label).map do |record|
+      prepare_sub_records(iteration_tag_node, data_loader).map do |record|
         if tag_node.contains_any_value_assigned_tag_node?(record)
-          visit_with_sub_record(tag_node, record, memo, inner_label)
+          visit_with_sub_record(tag_node, record, memo, data_loader)
         elsif fallback_nodes = select_fallback_nodes(tag_node)
-          format_fallback_tags(fallback_nodes, record, memo, inner_label)
+          format_fallback_tags(fallback_nodes, record, memo, data_loader)
         else
           "".freeze
         end
       end
     end
 
-    def format_value_tag(tag_node, inner_label, memo)
+    def format_value_tag(tag_node, data_loader, memo)
       leafs = tag_node.map {|leaf| leaf.accept(self, memo) }
-      inner_label.tag_formatter.format(tag_node.type, leafs.join.strip, inner_label.record)
+      data_loader.tag_formatter.format(tag_node.type, leafs.join.strip, data_loader.record)
     end
 
     def format(tree, memo=nil)
@@ -91,22 +91,22 @@ module AdHocTemplate
       node_type.new.concat(node.clone)
     end
 
-    def prepare_sub_records(tag_node, inner_label)
+    def prepare_sub_records(tag_node, data_loader)
       cur_label = tag_node.type
-      sub_records = inner_label.record[cur_label]||[inner_label.record]
+      sub_records = data_loader.record[cur_label]||[data_loader.record]
       return sub_records unless cur_label
       inner_labels = tag_node.inner_iteration_tag_labels
       return sub_records unless inner_labels
       inner_labels = InnerLabel.labels(inner_labels, cur_label)
       sub_records.map do |record|
-        prepare_inner_iteration_records(record, inner_labels, inner_label)
+        prepare_inner_iteration_records(record, inner_labels, data_loader)
       end
     end
 
-    def prepare_inner_iteration_records(record, inner_labels, inner_label)
+    def prepare_inner_iteration_records(record, inner_labels, data_loader)
       new_record = nil
       inner_labels.each do |label|
-        if inner_data = inner_label.record[label.full_label(record)]
+        if inner_data = data_loader.record[label.full_label(record)]
           new_record ||= record.dup
           new_record[label.inner_label] = inner_data
         end
@@ -114,8 +114,8 @@ module AdHocTemplate
       new_record || record
     end
 
-    def visit_with_sub_record(tag_node, record, memo, inner_label)
-      data_loader = AdHocTemplate::DataLoader.new(record, inner_label.tag_formatter)
+    def visit_with_sub_record(tag_node, record, memo, data_loader)
+      data_loader = AdHocTemplate::DataLoader.new(record, data_loader.tag_formatter)
       tag_node.map {|leaf| leaf.accept(data_loader, memo) }.join
     end
 
@@ -124,8 +124,8 @@ module AdHocTemplate
       tags.empty? ? nil : tags
     end
 
-    def format_fallback_tags(fallback_nodes, record, memo, inner_label)
-      data_loader = AdHocTemplate::DataLoader.new(record, inner_label.tag_formatter)
+    def format_fallback_tags(fallback_nodes, record, memo, data_loader)
+      data_loader = AdHocTemplate::DataLoader.new(record, data_loader.tag_formatter)
       fallback_nodes.map do |fallback_node|
         node = cast(fallback_node, Parser::IterationNode)
         node.contains_any_value_tag? ? node.accept(data_loader, memo) : node.join
