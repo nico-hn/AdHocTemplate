@@ -65,7 +65,7 @@ module AdHocTemplate
     def format_iteration_tag(iteration_tag_node, inner_label, memo)
       tag_node = cast(iteration_tag_node)
 
-      prepare_sub_records(iteration_tag_node, inner_label.record).map do |record|
+      prepare_sub_records(iteration_tag_node, inner_label).map do |record|
         if tag_node.contains_any_value_assigned_tag_node?(record)
           visit_with_sub_record(tag_node, record, memo, inner_label.tag_formatter)
         elsif fallback_nodes = select_fallback_nodes(tag_node)
@@ -91,15 +91,15 @@ module AdHocTemplate
       node_type.new.concat(node.clone)
     end
 
-    def prepare_sub_records(tag_node, self_record)
+    def prepare_sub_records(tag_node, inner_label)
       cur_label = tag_node.type
-      sub_records = self_record[cur_label]||[self_record]
+      sub_records = inner_label.record[cur_label]||[inner_label.record]
       return sub_records unless cur_label
       inner_labels = tag_node.inner_iteration_tag_labels
       return sub_records unless inner_labels
       inner_labels = InnerLabel.labels(inner_labels, cur_label)
       sub_records.map do |record|
-        prepare_inner_iteration_records(record, inner_labels, self_record)
+        prepare_inner_iteration_records(record, inner_labels, inner_label.record)
       end
     end
 
