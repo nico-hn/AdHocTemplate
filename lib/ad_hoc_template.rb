@@ -40,12 +40,12 @@ module AdHocTemplate
       end.join
     end
 
+    attr_reader :record, :tag_formatter
+
     def initialize(record, tag_formatter=DefaultTagFormatter.new)
       @record = record
       @tag_formatter = tag_formatter
     end
-
-    attr_reader :record, :tag_formatter
 
     def visit(tree, memo)
       case tree
