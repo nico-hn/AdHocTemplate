@@ -99,14 +99,14 @@ module AdHocTemplate
       return sub_records unless inner_labels
       inner_labels = InnerLabel.labels(inner_labels, cur_label)
       sub_records.map do |record|
-        prepare_inner_iteration_records(record, inner_labels, inner_label.record)
+        prepare_inner_iteration_records(record, inner_labels, inner_label)
       end
     end
 
-    def prepare_inner_iteration_records(record, inner_labels, self_record)
+    def prepare_inner_iteration_records(record, inner_labels, inner_label)
       new_record = nil
       inner_labels.each do |label|
-        if inner_data = self_record[label.full_label(record)]
+        if inner_data = inner_label.record[label.full_label(record)]
           new_record ||= record.dup
           new_record[label.inner_label] = inner_data
         end
