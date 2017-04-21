@@ -59,7 +59,7 @@ module AdHocTemplate
     end
 
     def format_value_tag(tag_node, data_loader, memo)
-      leafs = tag_node.map {|leaf| leaf.accept(self, memo) }
+      leafs = tag_node.map {|leaf| leaf.accept(data_loader, memo) }
       data_loader.tag_formatter.format(tag_node.type, leafs.join.strip, data_loader.record)
     end
 
