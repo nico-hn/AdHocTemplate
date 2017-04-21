@@ -45,7 +45,7 @@ module AdHocTemplate
         each_tag_node {|node| return true if node.contains_any_value_tag? }
       end
 
-      def inner_labels
+      def inner_iteration_labels
         return unless @type
         if labels = inner_iteration_tag_labels
           InnerLabel.labels(labels, @type)
