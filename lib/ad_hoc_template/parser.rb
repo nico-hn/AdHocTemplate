@@ -99,7 +99,7 @@ module AdHocTemplate
         end
       end
 
-      def inner_iteration_labels
+      def inner_labels
         return unless @type
         if labels = inner_iteration_tag_labels
           InnerLabel.labels(labels, @type)
