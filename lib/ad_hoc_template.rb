@@ -67,6 +67,12 @@ module AdHocTemplate
       tree.accept(self, memo).join
     end
 
+    protected
+
+    def sub_records(tag_node)
+      @record[tag_node.type] || [@record]
+    end
+
     private
 
     def cast(node, node_type=Parser::TagNode)
@@ -75,7 +81,7 @@ module AdHocTemplate
 
     def prepare_sub_records(tag_node, data_loader)
       cur_label = tag_node.type
-      sub_records = data_loader.record[cur_label]||[data_loader.record]
+      sub_records = data_loader.sub_records(tag_node)
       return sub_records unless cur_label
       inner_labels = tag_node.inner_labels
       return sub_records unless inner_labels
