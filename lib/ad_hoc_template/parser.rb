@@ -9,24 +9,6 @@ module AdHocTemplate
 
   class Parser < TreeStack
     class TagNode < Parser::Node
-      class InnerLabel
-        attr_reader :inner_label
-
-        def self.labels(inner_labels, cur_label)
-          inner_labels.map {|label| new(label, cur_label) }
-        end
-
-        def initialize(inner_label, cur_label)
-          @inner_label = inner_label
-          @label, @key = inner_label.sub(/\A#/, ''.freeze).split(/\|/, 2)
-          @cur_label = cur_label
-        end
-
-        def full_label(record)
-          [@cur_label, @label, record[@key]].join('|')
-        end
-      end
-
       attr_reader :type
 
       def push(node=TreeStack::Node.new)
@@ -43,13 +25,6 @@ module AdHocTemplate
 
       def contains_any_value_tag?
         each_tag_node {|node| return true if node.contains_any_value_tag? }
-      end
-
-      def inner_iteration_labels
-        return unless @type
-        if labels = inner_iteration_tag_labels
-          InnerLabel.labels(labels, @type)
-        end
       end
 
       def inner_iteration_tag_labels
@@ -87,6 +62,24 @@ module AdHocTemplate
     end
 
     class IterationNode < TagNode
+      class InnerLabel
+        attr_reader :inner_label
+
+        def self.labels(inner_labels, cur_label)
+          inner_labels.map {|label| new(label, cur_label) }
+        end
+
+        def initialize(inner_label, cur_label)
+          @inner_label = inner_label
+          @label, @key = inner_label.sub(/\A#/, ''.freeze).split(/\|/, 2)
+          @cur_label = cur_label
+        end
+
+        def full_label(record)
+          [@cur_label, @label, record[@key]].join('|')
+        end
+      end
+
       def assign_value_to_type(first_leaf)
         return first_leaf unless first_leaf.kind_of? String
 
@@ -103,6 +96,13 @@ module AdHocTemplate
         return not_empty_sub_records?(record) if type
         each_tag_node do |node|
           return true if node.contains_any_value_assigned_tag_node?(record)
+        end
+      end
+
+      def inner_iteration_labels
+        return unless @type
+        if labels = inner_iteration_tag_labels
+          InnerLabel.labels(labels, @type)
         end
       end
 
