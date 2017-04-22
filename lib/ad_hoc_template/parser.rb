@@ -49,6 +49,10 @@ module AdHocTemplate
         nodes.empty? ? nil : nodes
       end
 
+      def format_sub_nodes(data_loader, memo)
+        map {|leaf| leaf.accept(data_loader, memo) }.join
+      end
+
       private
 
       def each_tag_node

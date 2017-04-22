@@ -59,8 +59,8 @@ module AdHocTemplate
     end
 
     def format_value_tag(tag_node, data_loader, memo)
-      leafs = tag_node.map {|leaf| leaf.accept(data_loader, memo) }
-      data_loader.tag_formatter.format(tag_node.type, leafs.join.strip, data_loader.record)
+      leafs = tag_node.format_sub_nodes(data_loader, memo).strip
+      data_loader.tag_formatter.format(tag_node.type, leafs, data_loader.record)
     end
 
     def format(tree, memo=nil)
@@ -97,7 +97,7 @@ module AdHocTemplate
 
     def visit_with_sub_record(tag_node, record, memo, data_loader)
       data_loader = AdHocTemplate::DataLoader.new(record, data_loader.tag_formatter)
-      tag_node.map {|leaf| leaf.accept(data_loader, memo) }.join
+      tag_node.format_sub_nodes(data_loader, memo)
     end
 
     def format_fallback_tags(fallback_nodes, record, memo, data_loader)
