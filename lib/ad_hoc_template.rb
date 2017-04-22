@@ -45,7 +45,7 @@ module AdHocTemplate
     end
 
     def format_iteration_tag(iteration_tag_node, data_loader, memo)
-      tag_node = cast(iteration_tag_node)
+      tag_node = iteration_tag_node.cast
 
       prepare_sub_records(iteration_tag_node, data_loader).map do |record|
         if tag_node.contains_any_value_assigned_tag_node?(record)
@@ -74,10 +74,6 @@ module AdHocTemplate
     end
 
     private
-
-    def cast(node, node_type=Parser::TagNode)
-      node_type.new.concat(node.clone)
-    end
 
     def prepare_sub_records(tag_node, data_loader)
       unless inner_labels = tag_node.inner_labels
@@ -112,7 +108,7 @@ module AdHocTemplate
     def format_fallback_tags(fallback_nodes, record, memo, data_loader)
       data_loader = AdHocTemplate::DataLoader.new(record, data_loader.tag_formatter)
       fallback_nodes.map do |fallback_node|
-        node = cast(fallback_node, Parser::IterationNode)
+        node = fallback_node.cast(Parser::IterationNode)
         node.contains_any_value_tag? ? node.accept(data_loader, memo) : node.join
       end
     end

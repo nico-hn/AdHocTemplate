@@ -40,6 +40,10 @@ module AdHocTemplate
         names unless names.empty?
       end
 
+      def cast(node_type=Parser::TagNode)
+        node_type.new.concat(self.clone)
+      end
+
       private
 
       def each_tag_node
