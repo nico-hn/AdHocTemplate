@@ -50,7 +50,7 @@ module AdHocTemplate
       prepare_sub_records(iteration_tag_node, data_loader).map do |record|
         if tag_node.contains_any_value_assigned_tag_node?(record)
           visit_with_sub_record(tag_node, record, memo, data_loader)
-        elsif fallback_nodes = select_fallback_nodes(tag_node)
+        elsif fallback_nodes = tag_node.select_fallback_nodes
           format_fallback_tags(fallback_nodes, record, memo, data_loader)
         else
           "".freeze
@@ -98,11 +98,6 @@ module AdHocTemplate
     def visit_with_sub_record(tag_node, record, memo, data_loader)
       data_loader = AdHocTemplate::DataLoader.new(record, data_loader.tag_formatter)
       tag_node.map {|leaf| leaf.accept(data_loader, memo) }.join
-    end
-
-    def select_fallback_nodes(tag_node)
-      tags = tag_node.select {|sub_node| sub_node.kind_of? Parser::FallbackNode }
-      tags.empty? ? nil : tags
     end
 
     def format_fallback_tags(fallback_nodes, record, memo, data_loader)

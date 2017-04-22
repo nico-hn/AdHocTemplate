@@ -44,6 +44,11 @@ module AdHocTemplate
         node_type.new.concat(self.clone)
       end
 
+      def select_fallback_nodes
+        nodes = select {|sub_node| sub_node.kind_of? Parser::FallbackNode }
+        nodes.empty? ? nil : nodes
+      end
+
       private
 
       def each_tag_node
