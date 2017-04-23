@@ -100,8 +100,7 @@ module AdHocTemplate
     end
 
     def visit_with_sub_record(tag_node, record, memo, data_loader)
-      data_loader = data_loader.new_with_record(record)
-      tag_node.format_sub_nodes(data_loader, memo)
+      tag_node.format_sub_nodes(data_loader.new_with_record(record), memo)
     end
 
     def format_fallback_tags(fallback_nodes, record, memo, data_loader)
