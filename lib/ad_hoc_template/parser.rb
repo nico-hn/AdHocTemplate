@@ -27,6 +27,10 @@ module AdHocTemplate
         each_tag_node {|node| return true if node.contains_any_value_tag? }
       end
 
+      def contains_any_fallback_tag?
+        any? {|sub_node| sub_node.kind_of? Parser::FallbackNode }
+      end
+
       def inner_iteration_tag_labels
         names = []
         each_tag_node do |node|

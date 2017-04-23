@@ -491,6 +491,20 @@ TEMPLATE
       end
     end
 
+    describe '#contains_any_fallback_tag?' do
+      it 'returns true if a FallbackNode is contained' do
+        source = 'main start <%# <%* content in fallback_tag <%= tag node in fallback tag %> fallback end *%> optional content with <%#iterations: in iteration tag <%= item %> #%> iteration part end  #%> main end'
+        tree = AdHocTemplate::Parser.parse(source)
+        expect(tree[1].contains_any_fallback_tag?).to be_truthy
+      end
+
+      it 'returns false if no FallbackNode is contained' do
+        source = 'main start <%# <% content in non-fallback_tag <%= tag node in non-fallback tag %> fallback end %> optional content with <%#iterations: in iteration tag <%= item %> #%> iteration part end  #%> main end'
+        tree = AdHocTemplate::Parser.parse(source)
+        expect(tree[1].contains_any_fallback_tag?).to be_falsy
+      end
+    end
+
     describe "#inner_iteration_tag_labels" do
       it "returns labels of inner iteration tags" do
         template =<<TEMPLATE
