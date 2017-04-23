@@ -144,6 +144,11 @@ module AdHocTemplate
       def contains_any_value_assigned_tag_node?(record)
         false
       end
+
+      def format_sub_nodes(data_loader, memo)
+        node = cast(Parser::IterationNode)
+        node.contains_any_value_tag? ? node.accept(data_loader, memo) : node.join
+      end
     end
 
     class ValueNode < TagNode
