@@ -48,13 +48,7 @@ module AdHocTemplate
       tag_node = iteration_tag_node.cast
 
       prepare_sub_records(iteration_tag_node, data_loader).map do |record|
-        if tag_node.contains_any_value_assigned_tag_node?(record)
-          tag_node.format_sub_nodes(data_loader.new_with_record(record), memo)
-        elsif fallback_nodes = tag_node.select_fallback_nodes
-          format_fallback_tags(fallback_nodes, record, memo, data_loader)
-        else
-          "".freeze
-        end
+        format_sub_nodes(tag_node, record, data_loader, memo)
       end
     end
 
@@ -97,6 +91,16 @@ module AdHocTemplate
         end
       end
       new_record || record
+    end
+
+    def format_sub_nodes(tag_node, record, data_loader, memo)
+      if tag_node.contains_any_value_assigned_tag_node?(record)
+        tag_node.format_sub_nodes(data_loader.new_with_record(record), memo)
+      elsif fallback_nodes = tag_node.select_fallback_nodes
+        format_fallback_tags(fallback_nodes, record, memo, data_loader)
+      else
+        "".freeze
+      end
     end
 
     def format_fallback_tags(fallback_nodes, record, memo, data_loader)
