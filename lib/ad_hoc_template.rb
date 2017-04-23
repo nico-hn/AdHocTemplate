@@ -67,6 +67,10 @@ module AdHocTemplate
       tree.accept(self, memo).join
     end
 
+    def new_with_record(record)
+      self.class.new(record, @tag_formatter)
+    end
+
     protected
 
     def sub_records(tag_node)
@@ -96,12 +100,12 @@ module AdHocTemplate
     end
 
     def visit_with_sub_record(tag_node, record, memo, data_loader)
-      data_loader = AdHocTemplate::DataLoader.new(record, data_loader.tag_formatter)
+      data_loader = data_loader.new_with_record(record)
       tag_node.format_sub_nodes(data_loader, memo)
     end
 
     def format_fallback_tags(fallback_nodes, record, memo, data_loader)
-      data_loader = AdHocTemplate::DataLoader.new(record, data_loader.tag_formatter)
+      data_loader = data_loader.new_with_record(record)
       fallback_nodes.map do |fallback_node|
         node = fallback_node.cast(Parser::IterationNode)
         node.contains_any_value_tag? ? node.accept(data_loader, memo) : node.join
