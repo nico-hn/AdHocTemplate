@@ -80,11 +80,11 @@ module AdHocTemplate
         return data_loader.sub_records(tag_node)
       end
       data_loader.sub_records(tag_node).map do |record|
-        prepare_inner_iteration_records(record, inner_labels, data_loader)
+        merge_inner_iteration_records(record, inner_labels, data_loader)
       end
     end
 
-    def prepare_inner_iteration_records(record, inner_labels, data_loader)
+    def merge_inner_iteration_records(record, inner_labels, data_loader)
       new_record = nil
       inner_labels.each do |label|
         if inner_data = data_loader.record[label.full_label(record)]
