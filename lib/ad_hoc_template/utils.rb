@@ -2,7 +2,7 @@
 
 module AdHocTemplate
   module Utils
-        FILE_EXTENTIONS = {
+    FILE_EXTENTIONS = {
       /\.ya?ml\Z/i => :yaml,
       /\.json\Z/i => :json,
       /\.csv\Z/i => :csv,
@@ -19,7 +19,7 @@ module AdHocTemplate
       regex_table.each do |re, paired_value|
         if re =~ target
           yield re, paired_value
-          return
+          return nil
         end
       end
       STDERR.puts failure_message if failure_message
