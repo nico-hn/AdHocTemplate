@@ -96,8 +96,8 @@ module AdHocTemplate
     def format_sub_nodes(tag_node, record, data_loader, memo)
       if tag_node.contains_any_value_assigned_tag_node?(record)
         tag_node.format_sub_nodes(data_loader.new_with_record(record), memo)
-      elsif fallback_nodes = tag_node.select_fallback_nodes
-        format_fallback_tags(fallback_nodes,
+      elsif tag_node.contains_any_fallback_tag?
+        format_fallback_tags(tag_node.select_fallback_nodes,
                              data_loader.new_with_record(record), memo)
       else
         "".freeze
