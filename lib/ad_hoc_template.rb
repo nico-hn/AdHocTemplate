@@ -1,10 +1,10 @@
-require "ad_hoc_template/version"
-require "ad_hoc_template/parser"
-require "ad_hoc_template/record_reader"
-require "ad_hoc_template/default_tag_formatter"
-require "ad_hoc_template/pseudohiki_formatter"
-require "ad_hoc_template/entry_format_generator"
-require "ad_hoc_template/config_manager"
+require 'ad_hoc_template/version'
+require 'ad_hoc_template/parser'
+require 'ad_hoc_template/record_reader'
+require 'ad_hoc_template/default_tag_formatter'
+require 'ad_hoc_template/pseudohiki_formatter'
+require 'ad_hoc_template/entry_format_generator'
+require 'ad_hoc_template/config_manager'
 
 module AdHocTemplate
   class DataLoader
@@ -100,7 +100,7 @@ module AdHocTemplate
         format_fallback_tags(tag_node.select_fallback_nodes,
                              data_loader.new_with_record(record), memo)
       else
-        "".freeze
+        ''.freeze
       end
     end
 

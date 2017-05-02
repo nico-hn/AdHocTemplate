@@ -301,7 +301,7 @@ module AdHocTemplate
         end
 
         def setup_new_block(line, initial_value)
-          label = line.sub(BLOCK_HEAD, "").chomp
+          label = line.sub(BLOCK_HEAD, '').chomp
           @stack.current_record[label] ||= initial_value
           @stack.current_block_label = label
         end

@@ -52,7 +52,7 @@ module AdHocTemplate
 
     def self.create_unless_exist(path, content)
       return if File.exist? path
-      open(path, "w") {|file| file.print content }
+      open(path, 'w') {|file| file.print content }
     end
 
     private_class_method :expand_path

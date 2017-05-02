@@ -69,7 +69,7 @@ module AdHocTemplate
       if template
         @template_data = File.read(template)
       else
-        STDERR.puts "No template file is given."
+        STDERR.puts 'No template file is given.'
       end
 
       @record_data = record ? File.read(record) : ARGF.read
@@ -106,7 +106,7 @@ module AdHocTemplate
 
     def open_output
       if @output_filename
-        open(@output_filename, "wb") do |out|
+        open(@output_filename, 'wb') do |out|
           yield out
         end
       else
@@ -131,7 +131,7 @@ module AdHocTemplate
     private
 
     def choose_tag_type(given_type)
-      err_msg = "The given type is not found. The default tag is chosen."
+      err_msg = 'The given type is not found. The default tag is chosen.'
 
       if_any_regex_match(TAG_RE_TO_TYPE, given_type, err_msg) do |re, tag_type|
         @tag_type = tag_type
@@ -139,7 +139,7 @@ module AdHocTemplate
     end
 
     def choose_data_format(data_format)
-      err_msg = "The given format is not found. The default format is chosen."
+      err_msg = 'The given format is not found. The default format is chosen.'
       format_part, label_part = data_format.split(/:/, 2)
 
       if_any_regex_match(FORMAT_RE_TO_FORMAT, format_part, err_msg) do |re, format|

@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
-require "pseudohiki/inlineparser"
-require "htmlelement"
+require 'pseudohiki/inlineparser'
+require 'htmlelement'
 
 module AdHocTemplate
   LINE_END_RE = /(?:\r?\n|\r)/
@@ -66,10 +66,10 @@ module AdHocTemplate
 
       def assign_value_to_type(first_leaf)
         if first_leaf.kind_of? String and /\A\s/ =~ first_leaf
-          return first_leaf.sub(/\A#{LINE_END_STR}/, "")
+          return first_leaf.sub(/\A#{LINE_END_STR}/, '')
         end
         @type, first_leaf_content = split_by_newline_or_spaces(first_leaf)
-        first_leaf_content||""
+        first_leaf_content||''
       end
 
       def split_by_newline_or_spaces(first_leaf)
@@ -173,8 +173,8 @@ module AdHocTemplate
         @types[tag_name]
       end
 
-      def self.register(tag_name=:default, tag=["<%", "%>"], iteration_tag=["<%#", "#%>"],
-                        fallback_tag=["<%*", "*%>"], remove_iteration_indent=false)
+      def self.register(tag_name=:default, tag=['<%', '%>'], iteration_tag=['<%#', '#%>'],
+                        fallback_tag=['<%*', '*%>'], remove_iteration_indent=false)
         @types[tag_name] = new(tag, iteration_tag, fallback_tag, remove_iteration_indent)
       end
 
@@ -195,11 +195,11 @@ module AdHocTemplate
       end
 
       register
-      register(:square_brackets, ["[[", "]]"], ["[[#", "#]]"], ["[[*", "*]]"])
-      register(:curly_brackets, ["{{", "}}"], ["{{#", "#}}"], ["{{*", "*}}"])
-      register(:xml_like1, ["<!--%", "%-->"], ["<iterate>", "</iterate>"], ["<fallback>", "</fallback>"], true)
-      register(:xml_like2, ["<fill>", "</fill>"], ["<iterate>", "</iterate>"], ["<fallback>", "</fallback>"], true)
-      register(:xml_comment_like, ["<!--%", "%-->"], ["<!--%iterate%-->", "<!--%/iterate%-->"], ["<!--%fallback%-->", "<!--%/fallback%-->"], true)
+      register(:square_brackets, ['[[', ']]'], ['[[#', '#]]'], ['[[*', '*]]'])
+      register(:curly_brackets, ['{{', '}}'], ['{{#', '#}}'], ['{{*', '*}}'])
+      register(:xml_like1, ['<!--%', '%-->'], ['<iterate>', '</iterate>'], ['<fallback>', '</fallback>'], true)
+      register(:xml_like2, ['<fill>', '</fill>'], ['<iterate>', '</iterate>'], ['<fallback>', '</fallback>'], true)
+      register(:xml_comment_like, ['<!--%', '%-->'], ['<!--%iterate%-->', '<!--%/iterate%-->'], ['<!--%fallback%-->', '<!--%/fallback%-->'], true)
     end
 
     class UserDefinedTagTypeConfigError < StandardError; end
@@ -215,11 +215,11 @@ module AdHocTemplate
         config[item] || raise(UserDefinedTagTypeConfigError,
                               "\"#{item}\" should be defined.")
       end
-      TagType.register(registered_tag_name = config["tag_name"].to_sym,
-                       config["tag"],
-                       config["iteration_tag"],
-                       config["fallback_tag"],
-                       config["remove_indent"] || false)
+      TagType.register(registered_tag_name = config['tag_name'].to_sym,
+                       config['tag'],
+                       config['iteration_tag'],
+                       config['fallback_tag'],
+                       config['remove_indent'] || false)
       registered_tag_name
     end
 
