@@ -44,7 +44,7 @@ module AdHocTemplate
                                                  encoding=Encoding.default_external.names[0])
       recipes = template_paths.map do |path|
         full_path = File.expand_path(path)
-        template_source = open(full_path) {|file| file.read }
+        template_source = open(full_path, &:read)
         extract_recipe(template_source, path, tag_type, encoding)
       end
 

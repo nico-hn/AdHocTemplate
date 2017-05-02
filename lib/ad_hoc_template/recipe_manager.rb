@@ -12,7 +12,7 @@ module AdHocTemplate
     attr_reader :records, :recipe
 
     def self.update_output_files_in_recipe(recipe, force_update=false)
-      recipe_source = open(File.expand_path(recipe)) {|file| file.read }
+      recipe_source = open(File.expand_path(recipe), &:read)
       recipes = YAML.load_stream(recipe_source)
       recipes.each do |recipe|
         manager = new(recipe)
@@ -62,9 +62,7 @@ module AdHocTemplate
     def parse_template
       template_path = File.expand_path(@recipe['template'])
       template_source = open(template_path,
-                             open_mode(@template_encoding)) do |file|
-        file.read
-      end
+                             open_mode(@template_encoding), &:read)
       tag_type = @recipe['tag_type'] || :default
       tag_type = tag_type.to_sym unless tag_type.kind_of? Symbol
       @template = Parser.parse(template_source, tag_type)
@@ -135,9 +133,7 @@ module AdHocTemplate
 
     def read_file(file_name, encoding)
       open(File.expand_path(file_name),
-           open_mode(encoding)) do |file|
-        file.read
-      end
+           open_mode(encoding), &:read)
     end
 
     def open_mode(encoding)
