@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'ad_hoc_template/version'
 require 'ad_hoc_template/parser'
 require 'ad_hoc_template/record_reader'
