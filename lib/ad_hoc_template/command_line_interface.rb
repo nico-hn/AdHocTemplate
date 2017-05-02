@@ -154,7 +154,7 @@ module AdHocTemplate
     end
 
     def make_csv_option(iteration_label, format)
-      return format if iteration_label.nil? or iteration_label.empty?
+      return format if iteration_label.nil? || iteration_label.empty?
       { format => iteration_label }
     end
   end

@@ -45,7 +45,7 @@ module AdHocTemplate
         label, sep = parse_config(config)
         header, *data = csv_to_array(csv_data, sep, label)
         csv_records = data.map {|row| convert_to_hash(header, row) }
-        if label and label.index('|')
+        if label && label.index('|')
           return compose_inner_iteration_records(csv_records, label)
         end
         compose_record(csv_records, label)
@@ -88,7 +88,7 @@ module AdHocTemplate
 
       def self.csv_to_array(csv_data, col_sep, label)
         array = CSV.new(csv_data, col_sep: col_sep).to_a
-        if not label or label == HEADER_POSITION::LEFT
+        if !label || label == HEADER_POSITION::LEFT
           array = array.transpose
         end
         array
@@ -131,7 +131,7 @@ module AdHocTemplate
 
       def self.csv_compatible_format?(data)
         iteration_blocks_count = data.values.count {|v| v.kind_of? Array }
-        iteration_blocks_count == 0 or (iteration_blocks_count == 1 && data.size == 1)
+        iteration_blocks_count == 0 || (iteration_blocks_count == 1 && data.size == 1)
       end
 
       def self.hashes_to_arrays(data)

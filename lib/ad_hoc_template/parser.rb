@@ -14,7 +14,7 @@ module AdHocTemplate
 
       def push(node=TreeStack::Node.new)
         first_leaf = node[0]
-        node[0] = assign_value_to_type(first_leaf) if empty? and first_leaf
+        node[0] = assign_value_to_type(first_leaf) if empty? && first_leaf
         super
       end
 
@@ -128,9 +128,9 @@ module AdHocTemplate
 
       def not_empty_sub_records?(record)
         sub_records = record[type]
-        return false if sub_records.nil? or sub_records.empty?
+        return false if sub_records.nil? || sub_records.empty?
         sub_records.each do |rec|
-          return true if rec.values.any? {|val| val and not val.empty? }
+          return true if rec.values.any? {|val| val && !val.empty? }
         end
         false
       end
@@ -155,7 +155,7 @@ module AdHocTemplate
     class ValueNode < TagNode
       def contains_any_value_assigned_tag_node?(record)
         val = record[join.strip]
-        val and not val.empty?
+        val && !val.empty?
       end
 
       def contains_any_value_tag?
@@ -271,7 +271,7 @@ module AdHocTemplate
 
     def parse
       while token = @tokens.shift
-        next if @tag.tail[token] == current_node.class and pop
+        next if @tag.tail[token] == current_node.class && pop
         next if @tag.head[token] and push @tag.head[token].new
         push Leaf.create(token)
       end

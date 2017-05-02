@@ -16,7 +16,7 @@ module AdHocTemplate
       recipes = YAML.load_stream(recipe_source)
       recipes.each do |recipe|
         manager = new(recipe)
-        if manager.modified_after_last_output? or force_update
+        if manager.modified_after_last_output? || force_update
           manager.update_output_file
         end
       end
@@ -124,7 +124,7 @@ module AdHocTemplate
 
     def determine_data_format!(block)
       data_format = block['data_format']
-      if not data_format and block['data']
+      if !data_format && block['data']
         data_format = guess_file_format(block['data'])
       end
 
@@ -139,14 +139,14 @@ module AdHocTemplate
     def open_mode(encoding)
       encoding ||= Encoding.default_external.names[0]
       mode = 'rb'
-      return mode unless encoding and not encoding.empty?
+      return mode unless encoding && !encoding.empty?
       bom = /\AUTF/i =~ encoding ? 'BOM|' : ''
       mode += ":#{bom}#{encoding}"
     end
 
     def prepare_data_format(block)
       data_format = block['data_format']
-      data_format = :default if not data_format or data_format.empty?
+      data_format = :default if !data_format || data_format.empty?
       data_format = data_format.to_sym
       return data_format unless [:csv, :tsv].include? data_format
       if label = block['label']
