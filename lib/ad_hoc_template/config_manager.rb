@@ -13,9 +13,7 @@ module AdHocTemplate
 
     def self.require_local_settings
       settings_file = File.expand_path(LOCAL_SETTINGS_FILE)
-      if File.exist? settings_file
-        require settings_file
-      end
+      require settings_file if File.exist? settings_file
     end
 
     def self.configure(&config_block)
@@ -45,9 +43,7 @@ module AdHocTemplate
     end
 
     def self.expand_path(path)
-      unless /\A[\.\/]/ =~ path
-        path = File.join(LOCAL_SETTINGS_DIR, path)
-      end
+      path = File.join(LOCAL_SETTINGS_DIR, path) unless /\A[\.\/]/ =~ path
       File.expand_path(path)
     end
 

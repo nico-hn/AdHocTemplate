@@ -146,9 +146,7 @@ module AdHocTemplate
 
     def prepare_data_format(block)
       data_format = block['data_format']
-      if not data_format or data_format.empty?
-        data_format = :default
-      end
+      data_format = :default if not data_format or data_format.empty?
       data_format = data_format.to_sym
       return data_format unless [:csv, :tsv].include? data_format
       if label = block['label']
