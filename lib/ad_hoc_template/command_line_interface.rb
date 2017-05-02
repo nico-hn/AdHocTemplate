@@ -61,7 +61,7 @@ module AdHocTemplate
 
       unless @data_format
         guessed_format = ARGV.length < 2 ? :default : guess_file_format(ARGV[1])
-        @data_format =  guessed_format || :default
+        @data_format = guessed_format || :default
       end
     end
 
@@ -78,7 +78,7 @@ module AdHocTemplate
 
     def render
       AdHocTemplate.render(@record_data, @template_data, @tag_type,
-                            @data_format, @tag_formatter)
+                           @data_format, @tag_formatter)
     end
 
     def generate_entry_format
