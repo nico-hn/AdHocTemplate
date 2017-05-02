@@ -89,7 +89,7 @@ module AdHocTemplate
 
         def initialize(inner_label, cur_label)
           @inner_label = inner_label
-          @label, @key = inner_label.sub(/\A#/, ''.freeze).split(/\|/, 2)
+          @label, @key = inner_label.sub(/\A#/, '').split(/\|/, 2)
           @cur_label = cur_label
         end
 
@@ -103,7 +103,7 @@ module AdHocTemplate
 
         if /\A[^\s:]*:\s/ =~ first_leaf
           @type, remaining_part = first_leaf.split(/:(?:#{LINE_END_STR}|\s)/, 2)
-          @type = @type.empty? ? nil : '#'.freeze + @type
+          @type = @type.empty? ? nil : '#' + @type
           return remaining_part
         end
 

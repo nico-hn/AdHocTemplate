@@ -36,7 +36,7 @@ module AdHocTemplate
       when Parser::IterationNode
         format_iteration_tag(tree, self, memo)
       when Parser::FallbackNode
-        ''.freeze
+        ''
       when Parser::ValueNode
         format_value_tag(tree, self, memo)
       when Parser::Leaf
@@ -102,7 +102,7 @@ module AdHocTemplate
         format_fallback_tags(tag_node.select_fallback_nodes,
                              data_loader.new_with_record(record), memo)
       else
-        ''.freeze
+        ''
       end
     end
 
