@@ -17,7 +17,7 @@ module AdHocTemplate
     end
 
     def find_function(format_label)
-      FUNCTION_TABLE[format_label]||:default
+      FUNCTION_TABLE[format_label] || :default
     end
 
     def format(format_label, var, record)
@@ -31,7 +31,7 @@ module AdHocTemplate
     end
 
     def default(var, record)
-      record[var]||"[#{var}]"
+      record[var] || "[#{var}]"
     end
 
     def html_encode(var, record)

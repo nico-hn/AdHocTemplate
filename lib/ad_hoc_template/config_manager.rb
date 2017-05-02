@@ -118,7 +118,7 @@ AdHocTemplate.local_settings do
 end
 SETTING_TEMPLATE
 
-    @custom_tag_template =<<TAG_TEMPLATE
+    @custom_tag_template = <<TAG_TEMPLATE
 ---
 tag_name: :default
 tag: ["<%", "%>"]

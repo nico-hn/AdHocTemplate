@@ -70,7 +70,7 @@ module AdHocTemplate
           return first_leaf.sub(/\A#{LINE_END_STR}/, '')
         end
         @type, first_leaf_content = split_by_newline_or_spaces(first_leaf)
-        first_leaf_content||''
+        first_leaf_content || ''
       end
 
       def split_by_newline_or_spaces(first_leaf)

@@ -42,7 +42,7 @@ module AdHocTemplate
       class NotSupportedError < StandardError; end
 
       def self.read_record(csv_data, config={ csv: nil })
-        label, sep  = parse_config(config)
+        label, sep = parse_config(config)
         header, *data = csv_to_array(csv_data, sep, label)
         csv_records = data.map {|row| convert_to_hash(header, row) }
         if label and label.index('|')

@@ -26,7 +26,7 @@ module AdHocTemplate
         if iteration_label = tree.type
           sub_checker = self.class.new
           @labels[iteration_label] = [sub_checker.labels]
-          tree.each { |node| node.accept(sub_checker, memo) }
+          tree.each {|node| node.accept(sub_checker, memo) }
         else
           tree.each {|node| node.accept(self, memo) }
         end
