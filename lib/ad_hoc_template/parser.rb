@@ -189,7 +189,7 @@ module AdHocTemplate
         node_tag_pairs = [
           [ValueNode, *tag],
           [IterationNode, *iteration_tag],
-          [FallbackNode, *fallback_tag]
+          [FallbackNode, *fallback_tag],
         ]
 
         @head, @tail, @head_of, @tail_of = PseudoHiki.associate_nodes_with_tags(node_tag_pairs)

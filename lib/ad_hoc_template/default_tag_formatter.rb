@@ -5,7 +5,7 @@ module AdHocTemplate
   class DefaultTagFormatter
     FUNCTION_TABLE = {
       '=' => :default,
-      'h' => :html_encode
+      'h' => :html_encode,
     }
 
     def self.assign_format(format_label, &func)

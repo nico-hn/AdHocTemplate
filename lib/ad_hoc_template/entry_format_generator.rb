@@ -100,7 +100,7 @@ module AdHocTemplate
         'data_format' => nil,
         'data_encoding' => nil,
         'output_file' => nil,
-        'blocks' => []
+        'blocks' => [],
       }
     end
 

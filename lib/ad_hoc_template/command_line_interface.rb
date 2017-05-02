@@ -95,9 +95,9 @@ module AdHocTemplate
 
     def generate_recipe_template(templates)
       encoding = Encoding.default_external.names[0]
-      AdHocTemplate::EntryFormatGenerator.
-        extract_recipes_from_template_files(templates,
-                                            @tag_type)
+      AdHocTemplate::EntryFormatGenerator
+      .extract_recipes_from_template_files(templates,
+                                           @tag_type)
     end
 
     def update_output_files_in_recipe(recipe)
