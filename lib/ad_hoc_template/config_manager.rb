@@ -43,7 +43,7 @@ module AdHocTemplate
     end
 
     def self.expand_path(path)
-      path = File.join(LOCAL_SETTINGS_DIR, path) unless /\A[\.\/]/ =~ path
+      path = File.join(LOCAL_SETTINGS_DIR, path) unless %r{\A[\./]} =~ path
       File.expand_path(path)
     end
 

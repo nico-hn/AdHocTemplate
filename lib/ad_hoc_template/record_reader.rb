@@ -179,11 +179,11 @@ module AdHocTemplate
 
     module DefaultFormReader
       SEPARATOR = /:\s*/o
-      BLOCK_HEAD = /\A\/\/\/@/o
-      ITERATION_HEAD = /\A\/\/\/@#/o
+      BLOCK_HEAD = %r{\A///@}
+      ITERATION_HEAD = %r{\A///@#}
       EMPTY_LINE = /\A#{LINE_END_STR}\Z/o
       ITERATION_MARK = /\A#/o
-      COMMENT_HEAD = /\A\/\/\/\//
+      COMMENT_HEAD = %r{\A////}
       READERS_RE = {
         key_value: SEPARATOR,
         iteration: ITERATION_HEAD,
