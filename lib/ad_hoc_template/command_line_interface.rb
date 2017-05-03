@@ -134,7 +134,7 @@ module AdHocTemplate
     def choose_tag_type(given_type)
       err_msg = 'The given type is not found. The default tag is chosen.'
 
-      if_any_regex_match(TAG_RE_TO_TYPE, given_type, err_msg) do |re, tag_type|
+      if_any_regex_match(TAG_RE_TO_TYPE, given_type, err_msg) do |_, tag_type|
         @tag_type = tag_type
       end
     end
@@ -143,7 +143,7 @@ module AdHocTemplate
       err_msg = 'The given format is not found. The default format is chosen.'
       format_part, label_part = data_format.split(/:/, 2)
 
-      if_any_regex_match(FORMAT_RE_TO_FORMAT, format_part, err_msg) do |re, format|
+      if_any_regex_match(FORMAT_RE_TO_FORMAT, format_part, err_msg) do |_, format|
         @data_format = csv_or_tsv?(format) ? make_csv_option(label_part, format) : format
       end
     end

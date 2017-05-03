@@ -11,7 +11,7 @@ module AdHocTemplate
     }
 
     def guess_file_format(filename)
-      if_any_regex_match(FILE_EXTENTIONS, filename) do |ext_re, format|
+      if_any_regex_match(FILE_EXTENTIONS, filename) do |_, format|
         return format
       end
     end
