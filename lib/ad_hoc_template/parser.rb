@@ -46,7 +46,7 @@ module AdHocTemplate
       end
 
       def cast(node_type=Parser::TagNode)
-        node_type.new.concat(self.clone)
+        node_type.new.concat(clone)
       end
 
       def select_fallback_nodes
