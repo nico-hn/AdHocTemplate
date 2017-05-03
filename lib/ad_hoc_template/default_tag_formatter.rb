@@ -25,7 +25,7 @@ module AdHocTemplate
       func = find_function(format_label)
       case func
       when Symbol, String
-        self.send(func, var, record)
+        send(func, var, record)
       else
         func.call(var, record)
       end
