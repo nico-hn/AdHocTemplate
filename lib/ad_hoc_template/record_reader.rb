@@ -123,9 +123,8 @@ module AdHocTemplate
       end
 
       def self.inner_iteration_labels(outer_label, inner_label, keys)
-        labels = keys.inject({}) do |h, key|
-          h[key] = [outer_label, inner_label, key].join('|')
-          h
+        keys.each_with_object({}) do |key, labels|
+          labels[key] = [outer_label, inner_label, key].join('|')
         end
       end
 
