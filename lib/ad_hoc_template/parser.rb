@@ -212,7 +212,7 @@ module AdHocTemplate
 
     def self.register_user_defined_tag_type(config_source)
       config = YAML.load(config_source)
-      %w(tag_name tag iteration_tag fallback_tag).each do |item|
+      %w[tag_name tag iteration_tag fallback_tag].each do |item|
         config[item] || raise(UserDefinedTagTypeConfigError,
                               "\"#{item}\" should be defined.")
       end
