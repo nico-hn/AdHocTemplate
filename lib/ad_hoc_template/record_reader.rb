@@ -310,7 +310,7 @@ module AdHocTemplate
 
       class BaseReader < Reader
         def setup_stack(line)
-          push_reader_if_match(line, [:iteration, :block, :key_value])
+          push_reader_if_match(line, %i[iteration block key_value])
         end
       end
 
@@ -320,7 +320,7 @@ module AdHocTemplate
           when EMPTY_LINE, ITERATION_HEAD, BLOCK_HEAD
             pop_stack
           end
-          push_reader_if_match(line, [:iteration, :block])
+          push_reader_if_match(line, %i[iteration block])
         end
 
         def read(line)
@@ -337,7 +337,7 @@ module AdHocTemplate
             @stack.remove_trailing_empty_lines_from_last_block!
             pop_stack
           end
-          push_reader_if_match(line, [:iteration, :block])
+          push_reader_if_match(line, %i[iteration block])
         end
 
         def read(line)
