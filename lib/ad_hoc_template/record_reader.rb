@@ -265,9 +265,7 @@ module AdHocTemplate
             key_value: KeyValueReader,
             block: BlockReader,
             iteration: IterationReader,
-          }.each do |k, v|
-            readers[k] = v.new(stack, readers)
-          end
+          }.each {|k, v| readers[k] = v.new(stack, readers) }
           stack.push readers[:base]
           readers
         end
