@@ -302,7 +302,6 @@ module AdHocTemplate
         end
       end
 
-
       class BaseReader < Reader
         def setup_stack(line)
           push_reader_if_match(line, %i[iteration block key_value])
