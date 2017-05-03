@@ -31,7 +31,7 @@ module AdHocTemplate
     module CSVReader
       COL_SEP = {
         csv: CSV::DEFAULT_OPTIONS[:col_sep],
-        tsv: "\t"
+        tsv: "\t",
       }
 
       module HEADER_POSITION
