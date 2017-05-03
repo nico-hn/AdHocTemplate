@@ -26,5 +26,11 @@ module AdHocTemplate
       STDERR.puts failure_message if failure_message
       nil
     end
+
+    private
+
+    def csv_or_tsv?(format)
+      %i[csv tsv].include? format
+    end
   end
 end

@@ -144,7 +144,7 @@ module AdHocTemplate
       format_part, label_part = data_format.split(/:/, 2)
 
       if_any_regex_match(FORMAT_RE_TO_FORMAT, format_part, err_msg) do |re, format|
-        @data_format = [:csv, :tsv].include?(format) ? make_csv_option(label_part, format) : format
+        @data_format = csv_or_tsv?(format) ? make_csv_option(label_part, format) : format
       end
     end
 

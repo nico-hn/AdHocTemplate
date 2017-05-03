@@ -116,8 +116,7 @@ module AdHocTemplate
     end
 
     def setup_main_label
-      if data_format = @default['data_format'] and
-          [:csv, :tsv].include? data_format
+      if data_format = @default['data_format'] and csv_or_tsv? data_format
         @default['label'] ||= RecordReader::CSVReader::HEADER_POSITION::LEFT
       end
     end
@@ -148,7 +147,7 @@ module AdHocTemplate
       data_format = block['data_format']
       data_format = :default if !data_format || data_format.empty?
       data_format = data_format.to_sym
-      return data_format unless [:csv, :tsv].include? data_format
+      return data_format unless csv_or_tsv? data_format
       if label = block['label']
         label = label.sub(/\A#/, '')
         data_format = { data_format => label }
