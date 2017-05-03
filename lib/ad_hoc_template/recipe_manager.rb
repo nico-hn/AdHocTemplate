@@ -140,7 +140,7 @@ module AdHocTemplate
       mode = 'rb'
       return mode unless encoding && !encoding.empty?
       bom = /\AUTF/i =~ encoding ? 'BOM|' : ''
-      mode += ":#{bom}#{encoding}"
+      "#{mode}:#{bom}#{encoding}"
     end
 
     def prepare_data_format(block)
