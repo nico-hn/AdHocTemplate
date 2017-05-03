@@ -86,9 +86,7 @@ module AdHocTemplate
 
       def self.csv_to_array(csv_data, col_sep, label)
         array = CSV.new(csv_data, col_sep: col_sep).to_a
-        if !label || label == HEADER_POSITION::LEFT
-          array = array.transpose
-        end
+        array = array.transpose if !label || label == HEADER_POSITION::LEFT
         array
       end
 
