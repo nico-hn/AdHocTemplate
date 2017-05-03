@@ -148,10 +148,8 @@ module AdHocTemplate
       data_format = :default if !data_format || data_format.empty?
       data_format = data_format.to_sym
       return data_format unless csv_or_tsv? data_format
-      if label = block['label']
-        label = label.sub(/\A#/, '')
-        data_format = { data_format => label }
-      end
+      label = block['label']
+      return { data_format => label.sub(/\A#/, '') } if label
       data_format
     end
 
