@@ -55,11 +55,8 @@ module AdHocTemplate
         data = RecordReader.parse_if_necessary(config_data)
         raise NotSupportedError unless csv_compatible_format?(data)
 
-        if kv_pairs = find_sub_records(data)
-          records = hashes_to_arrays(kv_pairs)
-        else
-          records = data.to_a.transpose
-        end
+        kv_pairs = find_sub_records(data)
+        records = kv_pairs ? hashes_to_arrays(kv_pairs) : data.to_a.transpose
 
         array_to_csv(records, col_sep)
       end
