@@ -37,9 +37,8 @@ module AdHocTemplate
         each_tag_node do |node|
           next unless node.kind_of? IterationNode
           names.push node.type if node.type
-          if inner_names = node.inner_iteration_tag_labels
-            names.concat inner_names
-          end
+          inner_names = node.inner_iteration_tag_labels
+          names.concat inner_names if inner_names
         end
 
         names unless names.empty?
@@ -119,9 +118,8 @@ module AdHocTemplate
 
       def inner_labels
         return unless @type
-        if labels = inner_iteration_tag_labels
-          InnerLabel.labels(labels, @type)
-        end
+        labels = inner_iteration_tag_labels
+        InnerLabel.labels(labels, @type) if labels
       end
 
       private
