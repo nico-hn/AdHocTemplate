@@ -66,9 +66,7 @@ module AdHocTemplate
 
       def self.convert_to_hash(header, row_array)
         {}.tap do |record|
-          header.zip(row_array).each do |key, value|
-            record[key] = value
-          end
+          header.zip(row_array).each {|key, value| record[key] = value }
         end
         # if RUBY_VERSION >= 2.1.0: header.zip(row_array).to_h
       end
