@@ -114,9 +114,9 @@ YAML
         allow(File).to receive(:exist?).with(@settings_dir).and_return(false)
         allow(FileUtils).to receive(:mkdir).and_return(true)
         allow(File).to receive(:exist?).with(@settings_path).and_return(false)
-        allow(@config_manager).to receive(:open).with(@settings_path, 'w').and_yield(@settings_file)
+        allow(@config_manager).to receive(:open).with(@settings_path, 'wb').and_yield(@settings_file)
         allow(File).to receive(:exist?).with(@tag_def_path).and_return(false)
-        allow(@config_manager).to receive(:open).with(@tag_def_path, 'w').and_yield(@tag_def_file)
+        allow(@config_manager).to receive(:open).with(@tag_def_path, 'wb').and_yield(@tag_def_file)
 
         @config_manager.init_local_settings
 
@@ -128,9 +128,9 @@ YAML
         allow(File).to receive(:exist?).with(@settings_dir).and_return(true)
         allow(FileUtils).to receive(:mkdir).and_return(false)
         allow(File).to receive(:exist?).with(@settings_path).and_return(true)
-        allow(@config_manager).to receive(:open).with(@settings_path, 'w').and_yield(@settings_file)
+        allow(@config_manager).to receive(:open).with(@settings_path, 'wb').and_yield(@settings_file)
         allow(File).to receive(:exist?).with(@tag_def_path).and_return(true)
-        allow(@config_manager).to receive(:open).with(@tag_def_path, 'w').and_yield(@tag_def_file)
+        allow(@config_manager).to receive(:open).with(@tag_def_path, 'wb').and_yield(@tag_def_file)
 
         @config_manager.init_local_settings
 
