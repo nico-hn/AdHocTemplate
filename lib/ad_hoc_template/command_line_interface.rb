@@ -124,13 +124,9 @@ module AdHocTemplate
     private
 
     def generate_output
-      if @output_empty_entry
-        generate_entry_format
-      elsif @output_recipe_template
-        generate_recipe_template(ARGV)
-      else
-        render
-      end
+      return generate_entry_format if @output_empty_entry
+      return generate_recipe_template(ARGV) if @output_recipe_template
+      render
     end
 
     def choose_tag_type(given_type)
