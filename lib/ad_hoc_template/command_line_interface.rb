@@ -117,8 +117,7 @@ module AdHocTemplate
       parse_command_line_options
       return update_output_files_in_recipe(@recipe_yaml) if @recipe_yaml
       read_input_files
-      output = generate_output
-      open_output {|out| out.print output }
+      open_output {|out| out.print generate_output }
     end
 
     private
