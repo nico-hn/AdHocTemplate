@@ -88,7 +88,7 @@ module AdHocTemplate
 
     def init_local_settings
       AdHocTemplate::ConfigManager.init_local_settings
-      config_dir = File.expand_path(AdHocTemplate::ConfigManager::LOCAL_SETTINGS_DIR)
+      config_dir = ConfigManager.expand_path('')
       puts "Please edit configuration files created in #{config_dir}"
       exit
     end

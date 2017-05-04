@@ -52,7 +52,6 @@ module AdHocTemplate
       open(path, 'w') {|file| file.print content }
     end
 
-    private_class_method :expand_path
     private_class_method :create_unless_exist
 
     @local_settings_template = <<SETTING_TEMPLATE
