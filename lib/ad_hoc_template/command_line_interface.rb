@@ -152,8 +152,7 @@ module AdHocTemplate
     end
 
     def build_option(iteration_label, format)
-      return format if blank?(iteration_label)
-      return format unless csv_or_tsv?(format)
+      return format if blank?(iteration_label) || !csv_or_tsv?(format)
       { format => iteration_label }
     end
 
