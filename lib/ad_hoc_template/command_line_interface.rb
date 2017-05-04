@@ -143,7 +143,7 @@ module AdHocTemplate
 
       if_any_regex_match(RE_TO_FORMAT, format_part, err_msg) do |_, format|
         @data_format = format
-        return nil if blank?(label_part) || !csv_or_tsv?(format)
+        return nil unless value_assigned?(label_part) && csv_or_tsv?(format)
         @data_format = { format => label_part }
       end
     end
@@ -153,8 +153,8 @@ module AdHocTemplate
       @tag_type = Parser.register_user_defined_tag_type(config)
     end
 
-    def blank?(iteration_label)
-      iteration_label.nil? || iteration_label.empty?
+    def value_assigned?(iteration_label)
+      !(iteration_label.nil? || iteration_label.empty?)
     end
   end
 end
