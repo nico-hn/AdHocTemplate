@@ -427,9 +427,7 @@ module AdHocTemplate
       csv: CSVReader,
       tsv: TSVReader,
       default: DefaultFormReader,
-    }
-
-    FORMAT_NAME_TO_READER.default = DefaultFormReader
+    }.tap {|h| h.default = DefaultFormReader }.freeze
 
     def self.dump(data_source, target_format=:default)
       FORMAT_NAME_TO_READER[target_format].dump(data_source)
