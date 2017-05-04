@@ -24,7 +24,7 @@ module AdHocTemplate
       /\Axml_comment_like/i => :xml_comment_like,
     }
 
-    FORMAT_RE_TO_FORMAT = {
+    RE_TO_FORMAT = {
       /\Ad(efault)?/i => :default,
       /\Ay(a?ml)?/i => :yaml,
       /\Aj(son)?/i => :json,
@@ -141,7 +141,7 @@ module AdHocTemplate
       err_msg = 'The given format is not found. The default format is chosen.'
       format_part, label_part = data_format.split(/:/, 2)
 
-      if_any_regex_match(FORMAT_RE_TO_FORMAT, format_part, err_msg) do |_, format|
+      if_any_regex_match(RE_TO_FORMAT, format_part, err_msg) do |_, format|
         @data_format = csv_or_tsv?(format) ? make_csv_option(label_part, format) : format
       end
     end
