@@ -117,17 +117,21 @@ module AdHocTemplate
       parse_command_line_options
       return update_output_files_in_recipe(@recipe_yaml) if @recipe_yaml
       read_input_files
-      output = if @output_empty_entry
-                 generate_entry_format
-               elsif @output_recipe_template
-                 generate_recipe_template(ARGV)
-               else
-                 render
-               end
+      output = generate_output
       open_output {|out| out.print output }
     end
 
     private
+
+    def generate_output
+      if @output_empty_entry
+        generate_entry_format
+      elsif @output_recipe_template
+        generate_recipe_template(ARGV)
+      else
+        render
+      end
+    end
 
     def choose_tag_type(given_type)
       err_msg = 'The given type is not found. The default tag is chosen.'
