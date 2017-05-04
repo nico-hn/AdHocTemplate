@@ -279,8 +279,7 @@ module AdHocTemplate
           @stack.pop
         end
 
-        def read(line)
-        end
+        def read(line); end
 
         private
 
