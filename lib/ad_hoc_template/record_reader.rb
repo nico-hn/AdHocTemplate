@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
 require 'yaml'
 require 'json'
@@ -142,7 +143,7 @@ module AdHocTemplate
         # For example, a field value may contain carriage returns or line feeds,
         # and in that case, improper handling of the end of record would be damaging.
 
-        CSV.generate('', col_sep: col_sep) do |csv|
+        CSV.generate(String.new, col_sep: col_sep) do |csv|
           records.each {|record| csv << record }
         end
       end
