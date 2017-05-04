@@ -142,7 +142,7 @@ module AdHocTemplate
       format_part, label_part = data_format.split(/:/, 2)
 
       if_any_regex_match(RE_TO_FORMAT, format_part, err_msg) do |_, format|
-        @data_format = csv_or_tsv?(format) ? make_csv_option(label_part, format) : format
+        @data_format = build_option(label_part, format)
       end
     end
 
@@ -151,8 +151,9 @@ module AdHocTemplate
       @tag_type = Parser.register_user_defined_tag_type(config)
     end
 
-    def make_csv_option(iteration_label, format)
+    def build_option(iteration_label, format)
       return format if iteration_label.nil? || iteration_label.empty?
+      return format unless csv_or_tsv?(format)
       { format => iteration_label }
     end
   end
