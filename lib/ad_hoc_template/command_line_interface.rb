@@ -38,6 +38,7 @@ module AdHocTemplate
       @tag_type = :default
       @data_format = nil
       @force_update = false
+      @init_local_settings = false
     end
 
     def parse_command_line_options
@@ -90,7 +91,7 @@ module AdHocTemplate
       AdHocTemplate::ConfigManager.init_local_settings
       config_dir = ConfigManager.expand_path('')
       puts "Please edit configuration files created in #{config_dir}"
-      exit
+      @init_local_settings = true
     end
 
     def generate_recipe_template(templates)
@@ -115,6 +116,7 @@ module AdHocTemplate
 
     def execute
       parse_command_line_options
+      exit if @init_local_settings
       return update_output_files_in_recipe(@recipe_yaml) if @recipe_yaml
       read_input_files
       open_output {|out| out.print generate_output }
