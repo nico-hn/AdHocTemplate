@@ -1,0 +1,14 @@
+Style/SpaceInsideBlockBraces:
+  SpaceBeforeBlockParameters: false
+Style/SpaceAroundEqualsInParameterDefault:
+  EnforcedStyle: no_space
+Style/ClassCheck:
+  EnforcedStyle: kind_of?
+Style/TrailingCommaInLiteral:
+  EnforcedStyleForMultiline: consistent_comma
+Style/SpecialGlobalVars:
+  EnforcedStyle: use_perl_names
+Documentation:
+  Enabled: false
+Style/ParallelAssignment:
+  Enabled: false
