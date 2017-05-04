@@ -586,6 +586,37 @@ TSV
       end
     end
 
+    describe '--init-local-settings' do
+      before do
+        @config_manager = AdHocTemplate::ConfigManager
+        @settings_dir = File.expand_path(@config_manager::LOCAL_SETTINGS_DIR)
+        @setting_file_name = @config_manager::SETTINGS_FILE_NAME
+        @tag_def_file_name = @config_manager::TAG_DEF_FILE_NAME
+        @settings_path = File.expand_path(File.join(@settings_dir, @setting_file_name))
+        @settings_file = StringIO.new('', "w")
+        @tag_def_path = File.expand_path(File.join(@settings_dir, @tag_def_file_name))
+        @tag_def_file = StringIO.new('', "w")
+      end
+
+      it 'output a message indicating the directory created using this option' do
+        allow(File).to receive(:exist?).with(@settings_dir).and_return(true)
+        allow(FileUtils).to receive(:mkdir).and_return(false)
+        allow(File).to receive(:exist?).with(@settings_path).and_return(true)
+        allow(@config_manager).to receive(:open).with(@settings_path, 'w').and_yield(@settings_file)
+        allow(File).to receive(:exist?).with(@tag_def_path).and_return(true)
+        allow(@config_manager).to receive(:open).with(@tag_def_path, 'w').and_yield(@tag_def_file)
+
+        allow(STDOUT).to receive(:puts).with("Please edit configuration files created in #{@settings_dir}")
+
+        set_argv('--init-local-settings')
+        command_line_interface = AdHocTemplate::CommandLineInterface.new
+        command_line_interface.parse_command_line_options
+
+        expect(@settings_file.string).to be_empty
+        expect(@tag_def_file.string).to be_empty
+      end
+    end
+
     describe '--recipe-template' do
       it 'reads template files and geperates a blank recipe' do
         expected_result = <<RECIPE
