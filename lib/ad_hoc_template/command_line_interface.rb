@@ -107,9 +107,7 @@ module AdHocTemplate
 
     def open_output
       if @output_filename
-        open(@output_filename, 'wb') do |out|
-          yield out
-        end
+        open(@output_filename, 'wb') {|out| yield out }
       else
         yield STDOUT
       end
