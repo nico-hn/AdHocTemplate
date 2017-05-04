@@ -142,18 +142,15 @@ module AdHocTemplate
       format_part, label_part = data_format.split(/:/, 2)
 
       if_any_regex_match(RE_TO_FORMAT, format_part, err_msg) do |_, format|
-        @data_format = build_option(label_part, format)
+        @data_format = format
+        return nil if blank?(label_part) || !csv_or_tsv?(format)
+        @data_format = { format => label_part }
       end
     end
 
     def register_user_defined_tag_type(tag_config_yaml)
       config = File.read(File.expand_path(tag_config_yaml))
       @tag_type = Parser.register_user_defined_tag_type(config)
-    end
-
-    def build_option(iteration_label, format)
-      return format if blank?(iteration_label) || !csv_or_tsv?(format)
-      { format => iteration_label }
     end
 
     def blank?(iteration_label)
