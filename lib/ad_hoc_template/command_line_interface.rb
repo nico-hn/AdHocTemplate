@@ -22,7 +22,7 @@ module AdHocTemplate
       /\Axml_like1/i => :xml_like1,
       /\Axml_like2/i => :xml_like2,
       /\Axml_comment_like/i => :xml_comment_like,
-    }
+    }.freeze
 
     RE_TO_FORMAT = {
       /\Ad(efault)?/i => :default,
@@ -30,7 +30,7 @@ module AdHocTemplate
       /\Aj(son)?/i => :json,
       /\Ac(sv)?/i => :csv,
       /\At(sv)?/i => :tsv,
-    }
+    }.freeze
 
     def initialize
       @tag_formatter = AdHocTemplate::DefaultTagFormatter.new

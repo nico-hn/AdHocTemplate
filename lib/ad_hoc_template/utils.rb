@@ -8,7 +8,7 @@ module AdHocTemplate
       /\.json\Z/i => :json,
       /\.csv\Z/i => :csv,
       /\.tsv\Z/i => :tsv,
-    }
+    }.freeze
 
     def guess_file_format(filename)
       if_any_regex_match(FILE_EXTENTIONS, filename) do |_, format|

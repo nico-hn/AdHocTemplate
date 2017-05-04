@@ -33,7 +33,7 @@ module AdHocTemplate
       COL_SEP = {
         csv: CSV::DEFAULT_OPTIONS[:col_sep],
         tsv: "\t",
-      }
+      }.freeze
 
       module HEADER_POSITION
         TOP = '__header_top__'
@@ -182,7 +182,7 @@ module AdHocTemplate
         iteration: ITERATION_HEAD,
         block: BLOCK_HEAD,
         empty_line: EMPTY_LINE,
-      }
+      }.freeze
 
       class ReaderState
         attr_accessor :current_block_label
