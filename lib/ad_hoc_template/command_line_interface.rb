@@ -142,9 +142,8 @@ module AdHocTemplate
       format_part, label_part = data_format.split(/:/, 2)
 
       if_any_regex_match(RE_TO_FORMAT, format_part, err_msg) do |_, format|
-        @data_format = format
-        return nil unless value_assigned?(label_part) && csv_or_tsv?(format)
-        @data_format = { format => label_part }
+        csv_with_label = value_assigned?(label_part) && csv_or_tsv?(format)
+        @data_format = csv_with_label ? { format => label_part } : format
       end
     end
 
