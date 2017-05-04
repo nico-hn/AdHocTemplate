@@ -210,10 +210,7 @@ module AdHocTemplate
 
     def self.register_user_defined_tag_type(config_source)
       config = YAML.load(config_source)
-      %w[tag_name tag iteration_tag fallback_tag].each do |item|
-        config[item] || raise(UserDefinedTagTypeConfigError,
-                              "\"#{item}\" should be defined.")
-      end
+      check_validity_of_config(config)
       TagType.register(registered_tag_name = config['tag_name'].to_sym,
                        config['tag'],
                        config['iteration_tag'],
@@ -255,11 +252,19 @@ module AdHocTemplate
       end
     end
 
+    def self.check_validity_of_config(config)
+      %w[tag_name tag iteration_tag fallback_tag].each do |item|
+        config[item] || raise(UserDefinedTagTypeConfigError,
+                              "\"#{item}\" should be defined.")
+      end
+    end
+
     private_class_method(:remove_indents_and_newlines_if_necessary,
                          :remove_indent_before_iteration_tags,
                          :remove_indent_before_fallback_tags,
                          :regexp_escape_tag_pair,
-                         :remove_trailing_newline_of_end_tags)
+                         :remove_trailing_newline_of_end_tags,
+                         :check_validity_of_config)
 
     def initialize(source, tag)
       @tag = tag
