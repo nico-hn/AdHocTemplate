@@ -36,7 +36,7 @@ module AdHocTemplate
     end
 
     def html_encode(var, record)
-      HtmlElement.escape(record[var]||var)
+      HtmlElement.escape(record[var] || var)
     end
   end
 end

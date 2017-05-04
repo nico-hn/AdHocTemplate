@@ -77,7 +77,7 @@ module AdHocTemplate
         when Hash
           format, label = config.to_a[0]
         end
-        col_sep = COL_SEP[format||:csv]
+        col_sep = COL_SEP[format || :csv]
         return label, col_sep
       end
 
@@ -388,7 +388,7 @@ module AdHocTemplate
       def self.format_key_value_block(key_names, labels)
         [].tap do |blocks|
           key_names.each do |key|
-            blocks.push "///@#{key}#{$/*2}#{labels[key]}"
+            blocks.push "///@#{key}#{$/ * 2}#{labels[key]}"
           end
         end.join($/)
       end
