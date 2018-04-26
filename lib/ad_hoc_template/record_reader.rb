@@ -451,7 +451,7 @@ module AdHocTemplate
       data.each do |k, v|
         if v.kind_of? Array
           v.each {|sub_rec| convert_values_to_string(sub_rec) }
-        elsif v and not v.kind_of? String
+        elsif v && !v.kind_of?(String)
           data[k] = v.to_s
         end
       end

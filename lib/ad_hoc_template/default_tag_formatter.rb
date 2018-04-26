@@ -9,7 +9,7 @@ module AdHocTemplate
     }
 
     def self.assign_format(format_label, &func)
-      if format_label.kind_of? Hash and not func
+      if format_label.kind_of?(Hash) && !func
         func_name, label = format_label.to_a.flatten
         FUNCTION_TABLE[label] = func_name
       else

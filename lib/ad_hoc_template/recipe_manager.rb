@@ -116,7 +116,7 @@ module AdHocTemplate
     end
 
     def setup_main_label
-      if data_format = @default['data_format'] and csv_or_tsv? data_format
+      if data_format = @default['data_format'] && csv_or_tsv?(data_format)
         @default['label'] ||= RecordReader::CSVReader::HEADER_POSITION::LEFT
       end
     end

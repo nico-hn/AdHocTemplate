@@ -65,7 +65,7 @@ module AdHocTemplate
       end
 
       def assign_value_to_type(first_leaf)
-        if first_leaf.kind_of? String and /\A\s/ =~ first_leaf
+        if first_leaf.kind_of?(String) && /\A\s/ =~ first_leaf
           return first_leaf.sub(/\A#{LINE_END_STR}/, '')
         end
         @type, first_leaf_content = split_by_newline_or_spaces(first_leaf)
@@ -275,7 +275,7 @@ module AdHocTemplate
     def parse
       while token = @tokens.shift
         next if @tag.tail[token] == current_node.class && pop
-        next if @tag.head[token] and push @tag.head[token].new
+        next if @tag.head[token] && push(@tag.head[token].new)
         push Leaf.create(token)
       end
 
