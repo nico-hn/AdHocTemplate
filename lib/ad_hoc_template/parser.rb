@@ -139,7 +139,7 @@ module AdHocTemplate
         first_leaf.sub(/\A#{LINE_END_STR}/, '')
       end
 
-      def contains_any_value_assigned_tag_node?(record)
+      def contains_any_value_assigned_tag_node?(_record)
         false
       end
 
