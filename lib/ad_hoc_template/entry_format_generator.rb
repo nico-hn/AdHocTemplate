@@ -91,7 +91,7 @@ module AdHocTemplate
     end
 
     def self.recipe_entry(template_path, tag_type, encoding)
-      recipe = {
+      {
         'template' => template_path,
         'tag_type' => tag_type,
         'template_encoding' => encoding,
