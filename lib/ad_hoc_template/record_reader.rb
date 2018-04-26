@@ -79,7 +79,7 @@ module AdHocTemplate
           format, label = config.to_a[0]
         end
         col_sep = COL_SEP[format || :csv]
-        return label, col_sep
+        [label, col_sep]
       end
 
       def self.csv_to_array(csv_data, col_sep, label)
@@ -413,7 +413,7 @@ module AdHocTemplate
           LINE_END_RE =~ labels[e]
         end
 
-        return iteration_part, key_value_part, block_part
+        [iteration_part, key_value_part, block_part]
       end
 
       private_class_method :format_key_value_pairs
