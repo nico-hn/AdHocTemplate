@@ -50,7 +50,7 @@ module AdHocTemplate
         opt.on(:tag_type) {|given_type| choose_tag_type(given_type) }
         opt.on(:data_format) {|data_format| choose_data_format(data_format) }
         opt.on(:tag_config) {|yaml| register_user_defined_tag_type(yaml) }
-        opt.on(:entry_format) {|entry_format| @output_empty_entry = true }
+        opt.on(:entry_format) { @output_empty_entry = true }
         opt.on(:init_local_settings) { init_local_settings }
         opt.on(:recipe_template) { @output_recipe_template = true }
         opt.on(:cooking_recipe) {|recipe_yaml| @recipe_yaml = recipe_yaml }
