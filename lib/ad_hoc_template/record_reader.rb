@@ -9,7 +9,8 @@ module AdHocTemplate
   module RecordReader
     module YAMLReader
       def self.read_record(yaml_data)
-        RecordReader.convert_values_to_string(YAML.load(yaml_data))
+        RecordReader.convert_values_to_string(YAML.safe_load(yaml_data,
+                                                             [Symbol]))
       end
 
       def self.dump(config_data)

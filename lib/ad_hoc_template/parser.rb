@@ -209,7 +209,7 @@ module AdHocTemplate
     end
 
     def self.register_user_defined_tag_type(config_source)
-      config = YAML.load(config_source)
+      config = YAML.safe_load(config_source, [Symbol])
       check_validity_of_config(config)
       TagType.register(registered_tag_name = config['tag_name'].to_sym,
                        config['tag'],
