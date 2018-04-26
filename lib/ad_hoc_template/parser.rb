@@ -241,7 +241,7 @@ module AdHocTemplate
 
     def self.regexp_escape_tag_pair(tag_type, node_class)
       [tag_type.head_of[node_class],
-        tag_type.tail_of[node_class]].map {|tag| Regexp.escape(tag) }
+       tag_type.tail_of[node_class],].map {|tag| Regexp.escape(tag) }
     end
 
     def self.remove_trailing_newline_of_end_tags(node_types, source, tag_type)
