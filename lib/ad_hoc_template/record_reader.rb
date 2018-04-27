@@ -141,8 +141,9 @@ module AdHocTemplate
       def self.array_to_csv(records, col_sep)
         # I do not adopt "records.map {|rec| rec.to_csv }.join",
         # because I'm not sure if it is sufficient for certain data or not.
-        # For example, a field value may contain carriage returns or line feeds,
-        # and in that case, improper handling of the end of record would be damaging.
+        # For example, a field value may contain carriage returns or line
+        # feeds, and in that case, improper handling of the end of record
+        # would be damaging.
 
         CSV.generate(String.new, col_sep: col_sep) do |csv|
           records.each {|record| csv << record }
