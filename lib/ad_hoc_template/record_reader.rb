@@ -396,11 +396,10 @@ module AdHocTemplate
 
       def self.format_iteration_block(key_names, labels)
         key_names.map do |iteration_label|
-          iteration_block = ["///@#{iteration_label}#{$/}"]
-          labels[iteration_label].each do |sub_record|
-            iteration_block.push format_key_value_pairs(sub_record.keys, sub_record)
+          iteration_block = labels[iteration_label].map do |sub_record|
+            format_key_value_pairs(sub_record.keys, sub_record)
           end
-          iteration_block.join($/)
+          iteration_block.unshift("///@#{iteration_label}#{$/}")
         end.join($/)
       end
 
