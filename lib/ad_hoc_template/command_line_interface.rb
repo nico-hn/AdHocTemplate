@@ -100,8 +100,8 @@ module AdHocTemplate
     end
 
     def update_output_files_in_recipe(recipe)
-      AdHocTemplate::RecipeManager.update_output_files_in_recipe(recipe,
-                                                                 @force_update)
+      AdHocTemplate::RecipeManager
+        .update_output_files_in_recipe(recipe, @force_update)
     end
 
     def open_output
