@@ -405,9 +405,8 @@ module AdHocTemplate
       end
 
       def self.categorize_keys(labels)
-        iteration_part, rest = labels.partition do |e|
-          e[1].kind_of? Array
-        end.map {|e| e.map(&:first) }
+        iteration_part, rest = labels.partition {|e| e[1].kind_of? Array }
+                                 .map {|e| e.map(&:first) }
 
         block_part, key_value_part = rest.partition do |e|
           LINE_END_RE =~ labels[e]
