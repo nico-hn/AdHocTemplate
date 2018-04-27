@@ -12,3 +12,5 @@ Documentation:
   Enabled: false
 Style/ParallelAssignment:
   Enabled: false
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: indented_relative_to_receiver 
