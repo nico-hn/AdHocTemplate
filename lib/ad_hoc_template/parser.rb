@@ -163,6 +163,33 @@ module AdHocTemplate
     class Leaf < Parser::Leaf; end
 
     class TagType
+      PREDEFINED = {
+        default: [
+          ['<%', '%>'], ['<%#', '#%>'],
+          ['<%*', '*%>'], false,
+        ],
+        square_brackets: [
+          ['[[', ']]'], ['[[#', '#]]'],
+          ['[[*', '*]]'], false,
+        ],
+        curly_brackets: [
+          ['{{', '}}'], ['{{#', '#}}'],
+          ['{{*', '*}}'], false,
+        ],
+        xml_like1: [
+          ['<!--%', '%-->'], ['<iterate>', '</iterate>'],
+          ['<fallback>', '</fallback>'], true,
+        ],
+        xml_like2: [
+          ['<fill>', '</fill>'], ['<iterate>', '</iterate>'],
+          ['<fallback>', '</fallback>'], true,
+        ],
+        xml_comment_like: [
+          ['<!--%', '%-->'], ['<!--%iterate%-->', '<!--%/iterate%-->'],
+          ['<!--%fallback%-->', '<!--%/fallback%-->'], true,
+        ]
+      }.freeze
+
       attr_reader :head, :tail, :token_pat, :remove_iteration_indent
       attr_reader :head_of, :tail_of
       @types = {}
@@ -192,12 +219,7 @@ module AdHocTemplate
         @head, @tail, @head_of, @tail_of = PseudoHiki.associate_nodes_with_tags(node_tag_pairs)
       end
 
-      register(:default, ['<%', '%>'], ['<%#', '#%>'], ['<%*', '*%>'], false)
-      register(:square_brackets, ['[[', ']]'], ['[[#', '#]]'], ['[[*', '*]]'])
-      register(:curly_brackets, ['{{', '}}'], ['{{#', '#}}'], ['{{*', '*}}'])
-      register(:xml_like1, ['<!--%', '%-->'], ['<iterate>', '</iterate>'], ['<fallback>', '</fallback>'], true)
-      register(:xml_like2, ['<fill>', '</fill>'], ['<iterate>', '</iterate>'], ['<fallback>', '</fallback>'], true)
-      register(:xml_comment_like, ['<!--%', '%-->'], ['<!--%iterate%-->', '<!--%/iterate%-->'], ['<!--%fallback%-->', '<!--%/fallback%-->'], true)
+      PREDEFINED.each {|tag_name, tags| register(tag_name, *tags) }
     end
 
     class UserDefinedTagTypeConfigError < StandardError; end
