@@ -432,7 +432,7 @@ CONFIG
         defined_tag_type = AdHocTemplate::Parser::TagType[:xml_like3]
         expect(defined_tag_type.head_of[iteration_tag_node]).to eq('<repeat>')
         expect(defined_tag_type.tail_of[iteration_tag_node]).to eq('</repeat>')
-        expect(defined_tag_type.remove_iteration_indent).to eq(true)
+        expect(defined_tag_type.strip_iteration_indent).to eq(true)
       end
 
       it "raises an error if a given definition does not contain sufficient information" do

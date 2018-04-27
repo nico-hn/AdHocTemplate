@@ -190,7 +190,7 @@ module AdHocTemplate
         ]
       }.freeze
 
-      attr_reader :head, :tail, :token_pat, :remove_iteration_indent
+      attr_reader :head, :tail, :token_pat, :strip_iteration_indent
       attr_reader :head_of, :tail_of
       @types = {}
 
@@ -199,14 +199,14 @@ module AdHocTemplate
       end
 
       def self.register(tag_name, tag, iteration_tag,
-                        fallback_tag, remove_iteration_indent=false)
-        @types[tag_name] = new(tag, iteration_tag, fallback_tag, remove_iteration_indent)
+                        fallback_tag, strip_iteration_indent=false)
+        @types[tag_name] = new(tag, iteration_tag, fallback_tag, strip_iteration_indent)
       end
 
-      def initialize(tag, iteration_tag, fallback_tag, remove_iteration_indent)
+      def initialize(tag, iteration_tag, fallback_tag, strip_iteration_indent)
         assign_type(tag, iteration_tag, fallback_tag)
         @token_pat = PseudoHiki.compile_token_pat(@head.keys, @tail.keys)
-        @remove_iteration_indent = remove_iteration_indent
+        @strip_iteration_indent = strip_iteration_indent
       end
 
       def assign_type(tag, iteration_tag, fallback_tag)
@@ -243,7 +243,7 @@ module AdHocTemplate
     def self.remove_indents_and_newlines_if_necessary(str, tag_name)
       node_types = [IterationNode, FallbackNode]
       tag_type = TagType[tag_name]
-      if TagType[tag_name].remove_iteration_indent
+      if TagType[tag_name].strip_iteration_indent
         str = remove_indent_before_iteration_tags(str, tag_type)
         str = remove_indent_before_fallback_tags(str, tag_type)
       end
