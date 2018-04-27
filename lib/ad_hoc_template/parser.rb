@@ -187,7 +187,7 @@ module AdHocTemplate
         xml_comment_like: [
           ['<!--%', '%-->'], ['<!--%iterate%-->', '<!--%/iterate%-->'],
           ['<!--%fallback%-->', '<!--%/fallback%-->'], true,
-        ]
+        ],
       }.freeze
 
       attr_reader :head, :tail, :token_pat, :strip_iteration_indent
