@@ -253,12 +253,12 @@ module AdHocTemplate
     def self.remove_indent_before_iteration_tags(template_source, tag_type)
       start_tag, end_tag = regexp_escape_tag_pair(tag_type, IterationNode)
       template_source.gsub(/^([ \t]+#{start_tag}\S*#{LINE_END_STR})/, &:lstrip)
-        .gsub(/^([ \t]+#{end_tag}#{LINE_END_STR})/, &:lstrip)
+        .gsub(end_tag_alone_re(end_tag), &:lstrip)
     end
 
     def self.remove_indent_before_fallback_tags(template_source, tag_type)
       tag_re_str = regexp_escape_tag_pair(tag_type, FallbackNode).join('|')
-      template_source.gsub(/^([ \t]+(?:#{tag_re_str})#{LINE_END_STR})/, &:lstrip)
+      template_source.gsub(end_tag_alone_re(tag_re_str), &:lstrip)
     end
 
     def self.regexp_escape_tag_pair(tag_type, node_class)
@@ -273,6 +273,10 @@ module AdHocTemplate
       end
     end
 
+    def self.end_tag_alone_re(tag)
+      /^([ \t]+(?:#{tag})#{LINE_END_STR})/
+    end
+
     def self.check_validity_of_config(config)
       %w[tag_name tag iteration_tag fallback_tag].each do |item|
         config[item] || raise(UserDefinedTagTypeConfigError,
@@ -285,6 +289,7 @@ module AdHocTemplate
                          :remove_indent_before_fallback_tags,
                          :regexp_escape_tag_pair,
                          :remove_trailing_newline_of_end_tags,
+                         :end_tag_alone_re,
                          :check_validity_of_config)
 
     def initialize(source, tag)
