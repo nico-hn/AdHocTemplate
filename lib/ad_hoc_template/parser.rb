@@ -171,8 +171,8 @@ module AdHocTemplate
         @types[tag_name]
       end
 
-      def self.register(tag_name=:default, tag=['<%', '%>'], iteration_tag=['<%#', '#%>'],
-                        fallback_tag=['<%*', '*%>'], remove_iteration_indent=false)
+      def self.register(tag_name, tag, iteration_tag,
+                        fallback_tag, remove_iteration_indent=false)
         @types[tag_name] = new(tag, iteration_tag, fallback_tag, remove_iteration_indent)
       end
 
@@ -192,7 +192,7 @@ module AdHocTemplate
         @head, @tail, @head_of, @tail_of = PseudoHiki.associate_nodes_with_tags(node_tag_pairs)
       end
 
-      register
+      register(:default, ['<%', '%>'], ['<%#', '#%>'], ['<%*', '*%>'], false)
       register(:square_brackets, ['[[', ']]'], ['[[#', '#]]'], ['[[*', '*]]'])
       register(:curly_brackets, ['{{', '}}'], ['{{#', '#}}'], ['{{*', '*}}'])
       register(:xml_like1, ['<!--%', '%-->'], ['<iterate>', '</iterate>'], ['<fallback>', '</fallback>'], true)
