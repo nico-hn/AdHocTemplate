@@ -386,7 +386,12 @@ module AdHocTemplate
         iteration_part = format_iteration_block(iteration_keys, labels)
         block_part = format_key_value_block(block_keys, labels)
 
-        [key_value_part, iteration_part, block_part].join($/).sub(/(#{$/}+)\Z/, $/)
+        all_parts = [key_value_part, iteration_part, block_part].join($/)
+        remove_redundant_newlines(all_parts)
+      end
+
+      def self.remove_redundant_newlines(str)
+        str.sub(/(#{$/}+)\Z/, $/)
       end
 
       def self.format_key_value_pairs(key_names, labels={})
@@ -421,6 +426,7 @@ module AdHocTemplate
         [iteration_part, key_value_part, block_part]
       end
 
+      private_class_method :remove_redundant_newlines
       private_class_method :format_key_value_pairs
       private_class_method :format_key_value_block
       private_class_method :format_iteration_block
