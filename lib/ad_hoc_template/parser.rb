@@ -200,7 +200,8 @@ module AdHocTemplate
 
       def self.register(tag_name, tag, iteration_tag,
                         fallback_tag, strip_iteration_indent=false)
-        @types[tag_name] = new(tag, iteration_tag, fallback_tag, strip_iteration_indent)
+        @types[tag_name] = new(tag, iteration_tag,
+                               fallback_tag, strip_iteration_indent)
       end
 
       def initialize(tag, iteration_tag, fallback_tag, strip_iteration_indent)
