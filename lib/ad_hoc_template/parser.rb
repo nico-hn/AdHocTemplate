@@ -233,7 +233,7 @@ module AdHocTemplate
 
     def self.parse(str, tag_name=:default)
       str = remove_indents_and_newlines_if_necessary(str, tag_name)
-      new(str, TagType[tag_name]).parse.tree
+      new(str, TagType[tag_name]).parse!.tree
     end
 
     def self.register_user_defined_tag_type(config_source)
@@ -305,13 +305,14 @@ module AdHocTemplate
       super()
     end
 
-    def parse
-      while token = @tokens.shift
+    def parse!
+      @tokens.each do |token|
         next if @tag.tail[token] == current_node.class && pop
         next if @tag.head[token] && push(@tag.head[token].new)
         push Leaf.create(token)
       end
 
+      @tokens = nil
       self
     end
   end
