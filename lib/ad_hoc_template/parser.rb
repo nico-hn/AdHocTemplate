@@ -216,8 +216,14 @@ module AdHocTemplate
           [FallbackNode, *fallback_tag],
         ]
 
-        @head, @tail, @head_of, @tail_of = PseudoHiki.associate_nodes_with_tags(node_tag_pairs)
+        @head, @tail, @head_of, @tail_of = map_nodes_to_tags(node_tag_pairs)
       end
+
+      def map_nodes_to_tags(node_tag_pairs)
+        PseudoHiki.associate_nodes_with_tags(node_tag_pairs)
+      end
+
+      private :map_nodes_to_tags
 
       PREDEFINED.each {|tag_name, tags| register(tag_name, *tags) }
     end
