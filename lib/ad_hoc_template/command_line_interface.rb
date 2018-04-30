@@ -11,7 +11,8 @@ AdHocTemplate::ConfigManager.require_local_settings
 module AdHocTemplate
   class CommandLineInterface
     include Utils
-    attr_accessor :output_filename, :template_data, :record_data, :tag_type, :data_format
+    attr_accessor :output_filename, :tag_type, :data_format,
+                  :template_data, :record_data
     attr_writer :output_empty_entry
 
     TAG_RE_TO_TYPE = {
