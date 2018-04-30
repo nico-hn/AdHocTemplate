@@ -20,6 +20,8 @@ module AdHocTemplate
       private_class_method :choose_parser
     end
 
-    assign_format('ph') {|var, record| PseudoHikiFormatter.to_xhtml(var, record) }
+    assign_format('ph') do |var, record|
+      PseudoHikiFormatter.to_xhtml(var, record)
+    end
   end
 end
