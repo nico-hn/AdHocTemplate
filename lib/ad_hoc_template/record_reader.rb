@@ -4,6 +4,8 @@ require 'yaml'
 require 'json'
 require 'csv'
 
+require 'ad_hoc_template/shim'
+
 module AdHocTemplate
   module RecordReader
     module YAMLReader
@@ -261,6 +263,8 @@ module AdHocTemplate
       end
 
       class Reader
+        using Shim unless //.respond_to? :match?
+
         def self.setup_reader(stack)
           readers = {}
           {
@@ -288,7 +292,9 @@ module AdHocTemplate
 
         def push_reader_if_match(line, readers)
           readers.each do |reader|
-            return @stack.push(@readers[reader]) if READERS_RE[reader] === line
+            if READERS_RE[reader].match?(line)
+              return @stack.push(@readers[reader])
+            end
           end
         end
 
