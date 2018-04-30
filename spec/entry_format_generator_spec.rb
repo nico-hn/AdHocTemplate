@@ -296,7 +296,7 @@ RECIPE
 
       template_names = %w(template1.html template2.html)
       template_names.each do |template_name|
-        allow(AdHocTemplate::EntryFormatGenerator).to receive(:open).with(File.expand_path(template_name)).and_yield(StringIO.new(@template))
+        allow(AdHocTemplate::EntryFormatGenerator).to receive(:open).with(File.expand_path(template_name), 'rb:BOM|UTF-8').and_yield(StringIO.new(@template))
       end
 
       result = AdHocTemplate::EntryFormatGenerator.extract_recipes_from_template_files(template_names)

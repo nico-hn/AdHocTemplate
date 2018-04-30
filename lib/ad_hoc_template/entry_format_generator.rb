@@ -44,13 +44,18 @@ module AdHocTemplate
     def self.extract_recipes_from_template_files(template_paths,
                                                  tag_type=:default,
                                                  encoding=DEFAULT_ENCODING)
-      recipes = template_paths.map do |path|
-        full_path = File.expand_path(path)
-        template_source = open(full_path, &:read)
-        extract_recipe(template_source, path, tag_type, encoding)
+      recipes = map_read_files(template_paths, encoding) do |path, src|
+        extract_recipe(src, path, tag_type, encoding)
       end
 
       recipes.join
+    end
+
+    def self.map_read_files(paths, encoding=DEFAULT_ENCODING)
+      paths.map do |path|
+        full_path = File.expand_path(path)
+        yield path, open(full_path, "rb:BOM|#{encoding}", &:read)
+      end
     end
 
     def self.extract_recipe(template_source, template_path,
@@ -115,6 +120,7 @@ module AdHocTemplate
       }
     end
 
+    private_class_method :map_read_files
     private_class_method :extract_form_as_ruby_objects
     private_class_method :pull_up_inner_iterations
     private_class_method :each_iteration_label
