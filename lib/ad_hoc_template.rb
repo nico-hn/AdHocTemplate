@@ -86,7 +86,8 @@ module AdHocTemplate
     def merge_inner_iteration_records(record, inner_labels, data_loader)
       new_record = nil
       inner_labels.each do |label|
-        if inner_data = data_loader.record[label.full_label(record)]
+        inner_data = data_loader.record[label.full_label(record)]
+        if inner_data
           new_record ||= record.dup
           new_record[label.inner_label] = inner_data
         end
