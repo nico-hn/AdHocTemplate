@@ -2,6 +2,8 @@
 
 module AdHocTemplate
   module EntryFormatGenerator
+    DEFAULT_ENCODING = Encoding.default_external.names[0]
+
     class LabelChecker
       attr_reader :labels
       def initialize
@@ -39,8 +41,9 @@ module AdHocTemplate
       RecordReader.dump(labels, target_format)
     end
 
-    def self.extract_recipes_from_template_files(template_paths, tag_type=:default,
-                                                 encoding=Encoding.default_external.names[0])
+    def self.extract_recipes_from_template_files(template_paths,
+                                                 tag_type=:default,
+                                                 encoding=DEFAULT_ENCODING)
       recipes = template_paths.map do |path|
         full_path = File.expand_path(path)
         template_source = open(full_path, &:read)
