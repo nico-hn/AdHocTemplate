@@ -56,7 +56,7 @@ module AdHocTemplate
     def self.map_read_files(paths, encoding=DEFAULT_ENCODING)
       paths.map do |path|
         full_path = File.expand_path(path)
-        yield path, open(full_path, "rb:BOM|#{encoding}", &:read)
+        yield path, File.open(full_path, "rb:BOM|#{encoding}", &:read)
       end
     end
 
