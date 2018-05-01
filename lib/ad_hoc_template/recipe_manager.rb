@@ -131,8 +131,8 @@ module AdHocTemplate
     end
 
     def read_file(file_name, encoding)
-      open(File.expand_path(file_name),
-           open_mode(encoding), &:read)
+      File.open(File.expand_path(file_name),
+                open_mode(encoding), &:read)
     end
 
     def open_mode(encoding)
