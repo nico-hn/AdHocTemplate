@@ -337,7 +337,7 @@ RECIPE
       output_file_path = File.expand_path(reader.recipe['output_file'])
       output_file = StringIO.new(@template)
       expect_any_instance_of(AdHocTemplate::RecipeManager).to receive(:open).with(template_path, open_mode).and_yield(StringIO.new(@template))
-      expect_any_instance_of(AdHocTemplate::RecipeManager).to receive(:open).with(output_file_path, 'wb:UTF-8').and_yield(output_file)
+      allow(File).to receive(:open).with(output_file_path, 'wb:UTF-8').and_yield(output_file)
 
       reader.update_output_file
       expect(output_file.string).to eq(@expected_result)

@@ -73,7 +73,8 @@ module AdHocTemplate
       content = AdHocTemplate::DataLoader.format(@template, @records)
       mode = @template_encoding ? "wb:#{@template_encoding}" : 'wb'
       if @output_file
-        open(File.expand_path(@output_file), mode) {|file| file.print content }
+        File.open(File.expand_path(@output_file),
+                  mode) {|file| file.print content }
       else
         STDOUT.print content
       end
