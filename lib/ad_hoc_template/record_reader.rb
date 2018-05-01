@@ -32,6 +32,8 @@ module AdHocTemplate
     end
 
     module CSVReader
+      using Shim unless ''.respond_to?(:+@)
+
       COL_SEP = {
         csv: CSV::DEFAULT_OPTIONS[:col_sep],
         tsv: "\t",
@@ -147,7 +149,7 @@ module AdHocTemplate
         # feeds, and in that case, improper handling of the end of record
         # would be damaging.
 
-        CSV.generate(String.new, col_sep: col_sep) do |csv|
+        CSV.generate(+'', col_sep: col_sep) do |csv|
           records.each {|record| csv << record }
         end
       end
@@ -328,6 +330,8 @@ module AdHocTemplate
       end
 
       class BlockReader < Reader
+        using Shim unless ''.respond_to?(:+@)
+
         def setup_stack(line)
           case line
           when ITERATION_HEAD, BLOCK_HEAD
@@ -341,7 +345,7 @@ module AdHocTemplate
           block_value = @stack.last_block_value
           case line
           when BLOCK_HEAD
-            setup_new_block(line, String.new)
+            setup_new_block(line, +'')
           when EMPTY_LINE, COMMENT_HEAD
             block_value << line unless block_value.empty?
           else

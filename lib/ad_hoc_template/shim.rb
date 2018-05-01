@@ -13,5 +13,14 @@ module AdHocTemplate
 
       alias_method(:match?, :===)
     end
+
+    refine String do
+      ##
+      # Regexp.match?() is available for Ruby >= 2.3,
+      # and the following implementation does not satisfy
+      # the full specification of the original method.
+
+      alias_method(:+@, :dup)
+    end
   end
 end
