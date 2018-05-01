@@ -60,8 +60,8 @@ module AdHocTemplate
 
     def parse_template
       template_path = File.expand_path(@recipe['template'])
-      template_source = open(template_path,
-                             open_mode(@template_encoding), &:read)
+      template_source = File.open(template_path,
+                                  open_mode(@template_encoding), &:read)
       tag_type = @recipe['tag_type'] || :default
       tag_type = tag_type.to_sym unless tag_type.kind_of? Symbol
       @template = Parser.parse(template_source, tag_type)
