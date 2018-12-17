@@ -1,0 +1,13 @@
+---
+template: ja/template.html
+tag_type: :xml_comment_like
+template_encoding: UTF-8
+data: ja/main.aht
+data_format: 
+data_encoding: UTF-8
+output_file: single_page.html
+blocks:
+- label: "#委員一覧"
+  data: ja/members.tsv
+  data_format: 
+  data_encoding: 

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>第<!--%h 開催回数 %-->回 △□○検討委員会</title>
+    <style type="text/css">
+      h1, h2, h3 {
+        background: #aaffff;
+        padding-left: 0.5em;
+      }
+      h3 {
+        border-style: solid;
+        border-color: #00ffff;
+        border-width: 0 0 0 0.5em;
+      }
+      table, th, td {
+        border-style: solid;
+        border-width: 1px;
+      }
+      table {
+        border-collapse: collapse;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>第<!--%h 開催回数 %-->回 △□○検討委員会</h1>
+    <h2><!--%h 議題 %--></h2>
+
+    <!--%ph 概要 %-->
+
+    <table>
+      <caption>委員名簿</caption>
+      <thead>
+        <tr><th>委員名</th><th>所属</th></tr>
+      </thead>
+      <!--%iterate%-->委員一覧:
+      <tr>
+        <td><!--%h 氏名 %--></td>
+        <td><!--%h 所属 %-->
+	        <!--%iterate%-->
+	        (備考: <!--%ph 備考 %-->)
+	        <!--%/iterate%-->
+        </td>
+      </tr>
+      <!--%/iterate%-->
+    </table>
+
+    <h2>議事次第</h2>
+
+    <!--%ph 議事次第 %-->
+  </body>
+</html>
